@@ -1,0 +1,6 @@
+*.png
+_TOP/
+_TEST/
+_DEMO/
+*.circ
+*archived*
