@@ -3,8 +3,8 @@
 
 // signed
 
-`include "adder/AddSub32bFlag.v"
-`include "multiplier/Divider32bu.v"
+`include "./Components/adder/AddSub32bFlag.v"
+`include "./Components/multiplier/Divider32bu.v"
 
 module Divider32b(
     clk,

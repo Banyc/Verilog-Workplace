@@ -3,8 +3,8 @@
 
 // unsigned
 
-`include "adder/AddSub32bFlag.v"
-`include "register/ShiftReg32b.v"
+`include "./Components/adder/AddSub32bFlag.v"
+`include "./Components/register/ShiftReg32b.v"
 
 module Multiplier32bu(
     clk,

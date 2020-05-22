@@ -1,7 +1,7 @@
 `ifndef __ShiftReg32bL
 `define __ShiftReg32bL
 
-`include "register/ShiftReg8b.v"
+`include "./Components/register/ShiftReg8b.v"
 
 // left shift
 

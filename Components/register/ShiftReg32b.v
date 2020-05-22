@@ -1,7 +1,7 @@
 `ifndef __ShiftReg32b
 `define __ShiftReg32b
 
-`include "register/ShiftReg8b.v"
+`include "./Components/register/ShiftReg8b.v"
 
 module ShiftReg32b(
     clk, load, S_L, s_in, p_in, Q

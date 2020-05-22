@@ -5,9 +5,9 @@
 // Non-Restoring Division For Unsigned Integer
 // algorithm - <https://www.geeksforgeeks.org/non-restoring-division-unsigned-integer/?ref=rp>
 
-`include "adder/AddSub32bFlag.v"
-`include "register/ShiftReg32b.v"
-`include "register/ShiftReg32bL.v"
+`include "./Components/adder/AddSub32bFlag.v"
+`include "./Components/register/ShiftReg32b.v"
+`include "./Components/register/ShiftReg32bL.v"
 
 
 module Divider32bu(
