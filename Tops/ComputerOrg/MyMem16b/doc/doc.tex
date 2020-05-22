@@ -1,0 +1,236 @@
+\PassOptionsToPackage{unicode=true}{hyperref} % options for packages loaded elsewhere
+\PassOptionsToPackage{hyphens}{url}
+%
+\documentclass[UTF8]{ctexart}
+\usepackage{lmodern}
+\usepackage{amssymb,amsmath}
+\usepackage{ifxetex,ifluatex}
+\usepackage{fixltx2e} % provides \textsubscript
+\ifnum 0\ifxetex 1\fi\ifluatex 1\fi=0 % if pdftex
+  \usepackage[T1]{fontenc}
+  \usepackage{textcomp} % provides euro and other symbols
+\else % if luatex or xelatex
+  \usepackage{unicode-math}
+  \defaultfontfeatures{Ligatures=TeX,Scale=MatchLowercase}
+\fi
+% use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+% use microtype if available
+\IfFileExists{microtype.sty}{%
+\usepackage[]{microtype}
+\UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\IfFileExists{parskip.sty}{%
+\usepackage{parskip}
+}{% else
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{6pt plus 2pt minus 1pt}
+}
+\usepackage{hyperref}
+\hypersetup{
+            pdfborder={0 0 0},
+            breaklinks=true}
+\urlstyle{same}  % don't use monospace font for urls
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\newenvironment{Shaded}{}{}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\BuiltInTok}[1]{#1}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{#1}}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{#1}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{#1}}}
+\newcommand{\ExtensionTok}[1]{#1}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{#1}}
+\newcommand{\ImportTok}[1]{#1}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{#1}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{#1}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{#1}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{#1}}}}
+\usepackage{graphicx,grffile}
+\makeatletter
+\def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth\else\Gin@nat@width\fi}
+\def\maxheight{\ifdim\Gin@nat@height>\textheight\textheight\else\Gin@nat@height\fi}
+\makeatother
+% Scale images if necessary, so that they will not overflow the page
+% margins by default, and it is still possible to overwrite the defaults
+% using explicit options in \includegraphics[width, height, ...]{}
+\setkeys{Gin}{width=\maxwidth,height=\maxheight,keepaspectratio}
+\setlength{\emergencystretch}{3em}  % prevent overfull lines
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+\setcounter{secnumdepth}{0}
+% Redefines (sub)paragraphs to behave more like sections
+\ifx\paragraph\undefined\else
+\let\oldparagraph\paragraph
+\renewcommand{\paragraph}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+\let\oldsubparagraph\subparagraph
+\renewcommand{\subparagraph}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+
+% set default figure placement to htbp
+\makeatletter
+\def\fps@figure{htbp}
+\makeatother
+
+
+\date{}
+
+\begin{document}
+
+\hypertarget{ux5b58ux50a8ux5668ux5b9eux73b0-ux5b58ux50a8ux5668ux8bfbux5199}{%
+\section{存储器实现 \&
+存储器读写}\label{ux5b58ux50a8ux5668ux5b9eux73b0-ux5b58ux50a8ux5668ux8bfbux5199}}
+
+\hypertarget{ux5b9eux9a8cux76eeux7684}{%
+\subsection{实验目的}\label{ux5b9eux9a8cux76eeux7684}}
+
+目标：存储器读写。自选合适的方式选择地址写入32位数据，并能按任意地址读出存储器数据。系统按16位zjie编址。
+
+输入：
+
+　开　关：八个开关表示8位按16位zjie编址的存储器地址。
+
+　按　钮：{[}可选{]}当按字读出时，最右按/不按选择显示大头/小头不同设计。
+
+输出：
+
+　发光管：自定。
+
+　四数码：显示存储器读写地址(按zjie寻址)。
+
+　八数码：显示32位存储器读写数据。
+
+\hypertarget{ux5b9eux9a8cux8fc7ux7a0b}{%
+\subsection{实验过程}\label{ux5b9eux9a8cux8fc7ux7a0b}}
+
+首先编写 COE 文件如下：
+
+\begin{verbatim}
+memory_initialization_radix = 16;
+memory_initialization_vector =
+    00010203,
+    04050607,
+    08090A0B,
+    0C0D0E0F,
+    00102030,
+    40506070,
+    8090A0B0,
+    C0D0E0F0
+    ;
+\end{verbatim}
+
+接着利用 IP cores 生成一个 word size 为 32 bits，并且 words 的数量为 8
+的 Block Memory
+
+\begin{figure}
+\centering
+\includegraphics{img/2020-04-21-14-18-42.png}
+\caption{Memory Settings}
+\end{figure}
+
+然后导入 COE
+
+\begin{figure}
+\centering
+\includegraphics{img/2020-04-21-14-19-40.png}
+\caption{COE Config}
+\end{figure}
+
+确认无误以后，编写控制代码如下：
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{Ram32b myram(.clka(clk), .wea(write_en), .dina(m_write_data), .addra(addr[}\DecValTok{3}\NormalTok{:}\DecValTok{1}\NormalTok{]), .douta(m_read_data));}
+
+\KeywordTok{always}\NormalTok{ @(*) }\KeywordTok{begin}
+    \KeywordTok{if}\NormalTok{ (is_little_endian) }\KeywordTok{begin}
+        \KeywordTok{if}\NormalTok{ (addr[}\DecValTok{0}\NormalTok{] == }\DecValTok{0}\NormalTok{) }\KeywordTok{begin}
+\NormalTok{            read_data_}\DecValTok{1}\NormalTok{ = m_read_data[}\DecValTok{15}\NormalTok{:}\DecValTok{0}\NormalTok{];}
+        \KeywordTok{end} \KeywordTok{else} \KeywordTok{begin}
+\NormalTok{            read_data_}\DecValTok{1}\NormalTok{ = m_read_data[}\DecValTok{31}\NormalTok{:}\DecValTok{16}\NormalTok{];}
+        \KeywordTok{end}
+    \KeywordTok{end} \KeywordTok{else} \KeywordTok{begin}
+        \KeywordTok{if}\NormalTok{ (addr[}\DecValTok{0}\NormalTok{] == }\DecValTok{0}\NormalTok{) }\KeywordTok{begin}
+\NormalTok{            read_data_}\DecValTok{1}\NormalTok{ = \{m_read_data[}\DecValTok{7}\NormalTok{:}\DecValTok{0}\NormalTok{], m_read_data[}\DecValTok{15}\NormalTok{:}\DecValTok{8}\NormalTok{]\};}
+        \KeywordTok{end} \KeywordTok{else} \KeywordTok{begin}
+\NormalTok{            read_data_}\DecValTok{1}\NormalTok{ = \{m_read_data[}\DecValTok{23}\NormalTok{:}\DecValTok{16}\NormalTok{], m_read_data[}\DecValTok{31}\NormalTok{:}\DecValTok{24}\NormalTok{]\};}
+        \KeywordTok{end}
+    \KeywordTok{end}
+    \KeywordTok{if}\NormalTok{ (addr[}\DecValTok{0}\NormalTok{] == }\DecValTok{0}\NormalTok{) }\KeywordTok{begin}
+\NormalTok{        m_write_data = \{m_read_data[}\DecValTok{31}\NormalTok{:}\DecValTok{16}\NormalTok{], write_data\};}
+    \KeywordTok{end} \KeywordTok{else} \KeywordTok{begin}
+\NormalTok{        m_write_data = \{write_data, m_read_data[}\DecValTok{15}\NormalTok{:}\DecValTok{0}\NormalTok{]\};}
+    \KeywordTok{end}
+\KeywordTok{end}
+\end{Highlighting}
+\end{Shaded}
+
+测试代码，波形图呈现在实例分析小节。
+
+编写 Top 模块，实现相应功能：
+
+输入：
+
+　开　关：八个开关表示8位按16位zjie编址的存储器地址。
+
+　按　钮：{[}可选{]}当按字读出时，最右按/不按选择显示大头/小头不同设计。
+
+输出：
+
+　发光管：自定。
+
+　四数码：显示存储器读写地址(按zjie寻址)。
+
+　八数码：显示32位存储器读写数据。
+
+形成最终项目：
+
+\begin{figure}
+\centering
+\includegraphics{img/2020-04-21-14-31-27.png}
+\caption{Project}
+\end{figure}
+
+\hypertarget{ux5b9eux4f8bux5206ux6790}{%
+\subsection{实例分析}\label{ux5b9eux4f8bux5206ux6790}}
+
+波形图如下：
+
+\begin{figure}
+\centering
+\includegraphics{img/2020-04-21-14-04-23.png}
+\caption{波形图}
+\end{figure}
+
+可以看出，在 big-endian 的模式下，原本的储存的数值 0x0203
+输出方式成功改变成了 0x0302。接着可以观察到，当我改变 0x1 地址下的值为
+0x4141 以后，当前地址的值的确被改变了。将读取地址变为 0x0
+之后，可以看到储存在 0x0 的值并没有随之发生变化，因此可以证明对
+half-word 的操作不会影响到储存器的其他值。
+
+\end{document}
