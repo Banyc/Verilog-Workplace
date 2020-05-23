@@ -2,6 +2,7 @@
 `define __Multiplier32bu
 
 // unsign
+// malfunctioned
 
 `include "./Components/adder/AddSub32bFlag.v"
 `include "./Components/register/ShiftReg32b.v"

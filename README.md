@@ -1,4 +1,4 @@
-# Components
+# Verilog Workplace
 
 ## Build
 
@@ -13,3 +13,4 @@ EVERYTHING UNDER THE SAME DIRECTORY IS OWNED BY 3170106317 AND IS PRIVATE, AND S
 ## Tutorial
 
 - <https://www.fpga4student.com/>
+- blocking vs non-blocking - <https://youtu.be/kwgvU2MIq1I>
