@@ -27,9 +27,9 @@
 // 考虑2：以显存文本方式显示。
 
 // NOTICE: this line should only used for development. In ISE, this line won't be in effect.
-`include "./Components/register/ipcore_dir/Ram32b.v"
+`include "./Components/memory/ipcore_dir/Ram32b.v"
 
-module Register16b_ipCores(
+module Ram16b_ipCores(
     clk,
     // rst,
     addr,
@@ -81,4 +81,4 @@ module Register16b_ipCores(
         end
     end
 
-endmodule // Register16b_ipCores
+endmodule // Ram16b_ipCores

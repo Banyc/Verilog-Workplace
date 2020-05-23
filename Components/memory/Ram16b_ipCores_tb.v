@@ -27,9 +27,9 @@
 // 考虑2：以显存文本方式显示。
 
 // NOTICE: this line should only used for development. In ISE, this line won't be in effect.
-`include "./Components/register/Register16b_ipCores.v"
+`include "./Components/memory/Ram16b_ipCores.v"
 
-module Register16b_ipCores_tb(
+module Ram16b_ipCores_tb(
 );
 
     reg clk;
@@ -42,7 +42,7 @@ module Register16b_ipCores_tb(
     // endian
     reg is_little_endian;
 
-    Register16b_ipCores ram16b(
+    Ram16b_ipCores ram16b(
         clk,
         addr,  // the last bit is to distinguish the upper half or the later half of the read word
         // write
@@ -89,4 +89,4 @@ module Register16b_ipCores_tb(
         clk = ~clk;
     end
 
-endmodule // Register16b_ipCores_tb
+endmodule // Ram16b_ipCores_tb

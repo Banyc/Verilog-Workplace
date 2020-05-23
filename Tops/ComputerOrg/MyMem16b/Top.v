@@ -30,7 +30,7 @@
 `include "./Components/clock/clkdiv.v"
 `include "./Components/hexDisplay/DispNum.v"
 `include "./Components/hexDisplay/SEG_DRV.v"
-`include "./Components/register/Register16b_ipCores.v"
+`include "./Components/memory/Ram16b_ipCores.v"
 
 module Top(
     clk,
@@ -67,7 +67,7 @@ module Top(
 
     wire [15:0] read_data_1;
 
-    Register16b_ipCores m0(
+    Ram16b_ipCores m0(
         clk,
         // rst,
         SW[3:0],  // address
