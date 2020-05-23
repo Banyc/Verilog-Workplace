@@ -9,6 +9,7 @@ module OpcodeControl(
     regDst,
     jump,
     branch,
+    branch_ne,
     memRead,
     memtoReg,
     aluOp,
@@ -20,6 +21,7 @@ module OpcodeControl(
     output wire regDst;
     output wire jump;
     output wire branch;
+    output wire branch_ne;
     output wire memRead;
     output wire memtoReg;
     // alu operation type
@@ -33,25 +35,38 @@ module OpcodeControl(
     output wire aluSrc;
     output wire regWrite;
 
-    // 6'b000000
-    wire isR = &(~opcode);
-    // 6'b100011
-    wire isLw =  opcode[5]&~opcode[4]&~opcode[3]&~opcode[2]& opcode[1]& opcode[0];
-    // 6'b101011
-    wire isSw =  opcode[5]&~opcode[4]& opcode[3]&~opcode[2]& opcode[1]& opcode[0];
-    // 6'b000100
-    wire isBeq = ~opcode[5]&~opcode[4]&~opcode[3]& opcode[2]&~opcode[1]&~opcode[0];
-    // 6'b000010
-    wire isJ = ~opcode[5]&~opcode[4]&~opcode[3]&~opcode[2]& opcode[1]&~opcode[0];
+    reg isR;
+    reg isJ;
+    // reg isJal;
+    reg isBeq;
+    reg isBne;
+    reg isLw;
+    reg isSw;
+
+    always @(*) begin
+        case (opcode)
+            `RType: isR <= 1;
+            `J: isJ <= 1;
+            // `JAL: isJal <= 1;
+            `BEQ: isBeq <= 1;
+            `BNE: isBne <= 1;
+
+            `LW: isLw <= 1;
+            `SW: isSw <= 1;
+        endcase
+    end
 
 
     assign regDst = isR;
+    // assign jump = isJ || isJal;
     assign jump = isJ;
     assign branch = isBeq;
+    assign branch_ne = isBne;
     assign memRead = isLw;
     // load memory to register
     assign memtoReg = isLw;
 
+    // aluOp
     always @(*) begin
         case (opcode)
             // from funct field
@@ -67,6 +82,7 @@ module OpcodeControl(
 
     assign memWrite = isSw;
     assign aluSrc = isLw || isSw;
+    // assign regWrite = ~(isSw || isBeq || isBne || isJ || isJr);
     assign regWrite = isLw || isR;
 
 endmodule // OpcodeControl

@@ -33,6 +33,7 @@ module SingleCycleCpu(
     wire regDst;
     wire jump;
     wire branch;
+    wire branch_ne;
     wire memRead;
     wire memtoReg;
     wire [1:0] aluOp;
@@ -52,7 +53,7 @@ module SingleCycleCpu(
     wire [2:0] aluOpOut;
     wire [31:0] aluResult;
     wire isAluResultZero;
-    wire isZeroAndBranch;
+    wire isBranch;
     // memory
     wire [31:0] branchAddress;
     wire [31:0] nextPc;
@@ -92,6 +93,7 @@ module SingleCycleCpu(
         .regDst(regDst),
         .jump(jump),
         .branch(branch),
+        .branch_ne(branch_ne),
         .memRead(memRead),
         .memtoReg(memtoReg),
         .aluOp(aluOp),
@@ -146,7 +148,7 @@ module SingleCycleCpu(
         .aluResult(aluResult),
         .zero(isAluResultZero)
     );
-    assign isZeroAndBranch = isAluResultZero & branch;
+    assign isBranch = isAluResultZero & branch | ~isAluResultZero & branch_ne;
     //  this is in execution section
     Mux2to1_5b regDstMux(
         .S(regDst),
@@ -157,7 +159,7 @@ module SingleCycleCpu(
 
     // __memory__
     Mux2to1_32b branchMux(
-        .S(isZeroAndBranch),
+        .S(isBranch),
         .I0(pcPlusFour),
         .I1(offsetedPc),
         .O(branchAddress)
