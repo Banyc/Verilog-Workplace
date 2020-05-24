@@ -23,7 +23,8 @@ module AluControl(
             // `AluOpType_Funct: begin
             2'b10: begin
                 case (funct)
-                    6'b000000: aluOpOut <= `ALU_sll;
+                    `SLL: aluOpOut <= `ALU_sll;
+                    `SRL: aluOpOut <= `ALU_srl;
                     6'b100000: aluOpOut <= `ALU_add;
                     6'b100010: aluOpOut <= `ALU_sub;
                     6'b100100: aluOpOut <= `ALU_and;

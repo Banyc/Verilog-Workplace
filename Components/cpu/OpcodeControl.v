@@ -58,6 +58,7 @@ module OpcodeControl(
     reg isLw;
     reg isSw;
     reg isSll;
+    reg isSrl;
     reg isLui;
 
     always @(*) begin
@@ -74,6 +75,7 @@ module OpcodeControl(
         isLw = 0;
         isSw = 0;
         isSll = 0;
+        isSrl = 0;
         isLui = 0;
         case (opcode)
             `RType: isR = 1;
@@ -93,6 +95,7 @@ module OpcodeControl(
         case (funct)
             `JR: isJr = isR & 1;
             `SLL: isSll = 1;
+            `SRL: isSrl = 1;
         endcase
     end
 
@@ -127,7 +130,7 @@ module OpcodeControl(
     assign memWrite = isSw;
     assign aluSrc = isLw || isSw || isAddi || isAndi || isOri || isXori;
     assign regWrite = ~(isSw || isBeq || isBne || isJ || isJr);
-    assign shiftLeftLogical = isSll;
+    assign shiftLeftLogical = isSll || isSrl;
     assign loadUpperImmediate = isLui;
 
 endmodule // OpcodeControl

@@ -131,6 +131,7 @@
 `define ALU_nor      4'b1100
 // customized
 `define ALU_sll      4'b1001
+`define ALU_srl      4'b1010
 `define ALU_xor      4'b1000
 
 // enum Funct

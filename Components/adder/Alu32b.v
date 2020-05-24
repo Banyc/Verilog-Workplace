@@ -7,6 +7,7 @@
 `include "./Components/adder/Nor32b.v"
 `include "./Components/adder/And32b.v"
 `include "./Components/shift/ShiftLeftN.v"
+`include "./Components/shift/ShiftRightN.v"
 `include "./Components/cpu/OpcodeEnum.v"
 
 module Alu32b(
@@ -42,6 +43,7 @@ module Alu32b(
     wire [31:0] xorResult;
     wire [31:0] norResult;
     wire [31:0] shiftLeftResult;
+    wire [31:0] shiftRightResult;
 
     And32b ander(leftOperand, rightOperand, andResult);
     Or32b orer(leftOperand, rightOperand, orResult);
@@ -50,6 +52,11 @@ module Alu32b(
         .from(rightOperand),
         .shamt(leftOperand[4:0]),
         .to(shiftLeftResult)
+    );
+    ShiftRightN shiftRight(
+        .from(rightOperand),
+        .shamt(leftOperand[4:0]),
+        .to(shiftRightResult)
     );
 
     Xor32b xorer(leftOperand, rightOperand, xorResult);
@@ -71,6 +78,7 @@ module Alu32b(
                 end
             end
             `ALU_sll: aluResult <= shiftLeftResult;
+            `ALU_srl: aluResult <= shiftRightResult;
             `ALU_xor: aluResult <= xorResult;
             // default: 
         endcase
