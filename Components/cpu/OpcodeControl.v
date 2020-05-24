@@ -9,6 +9,7 @@ module OpcodeControl(
     funct,
     regDst,
     jump,
+    jumpAndLink,
     jumpRegister,
     branch,
     branch_ne,
@@ -23,6 +24,7 @@ module OpcodeControl(
     input wire [5:0] funct;
     output wire regDst;
     output wire jump;
+    output wire jumpAndLink;
     output wire jumpRegister;
     output wire branch;
     output wire branch_ne;
@@ -41,8 +43,8 @@ module OpcodeControl(
 
     reg isR;
     reg isJ;
+    reg isJal;
     reg isJr;
-    // reg isJal;
     reg isBeq;
     reg isBne;
     reg isAddi;
@@ -52,8 +54,8 @@ module OpcodeControl(
     always @(*) begin
         isR = 0;
         isJ = 0;
+        isJal = 0;
         isJr = 0;
-        // isJal = 0;
         isBeq = 0;
         isBne = 0;
         isAddi = 0;
@@ -62,7 +64,7 @@ module OpcodeControl(
         case (opcode)
             `RType: isR = 1;
             `J: isJ = 1;
-            // `JAL: isJal = 1;
+            `JAL: isJal = 1;
             `BEQ: isBeq = 1;
             `BNE: isBne = 1;
             `ADDI: isAddi = 1;
@@ -76,8 +78,8 @@ module OpcodeControl(
     end
 
     assign regDst = isR;
-    // assign jump = isJ || isJal;
-    assign jump = isJ;
+    assign jump = isJ || isJal;
+    assign jumpAndLink = isJal;
     assign jumpRegister = isJr;
     assign branch = isBeq;
     assign branch_ne = isBne;

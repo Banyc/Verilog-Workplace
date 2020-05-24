@@ -32,6 +32,7 @@ module SingleCycleCpu(
     // instruction decoding
     wire regDst;
     wire jump;
+    wire jumpAndLink;
     wire jumpRegister;
     wire branch;
     wire branch_ne;
@@ -41,7 +42,6 @@ module SingleCycleCpu(
     wire memWrite;
     wire aluSrc;
     wire regWrite;
-    wire [4:0] writeRegister;
     wire [31:0] registerReadData1;
     wire [31:0] registerReadData2;
     wire [31:0] leftShiftedTargetAddress;
@@ -55,12 +55,15 @@ module SingleCycleCpu(
     wire [31:0] aluResult;
     wire isAluResultZero;
     wire isBranch;
+    wire [4:0] secondaryRegister;  // from rt or rd
+    wire [4:0] writeRegister;  // from secondaryRegister or $ra
     // memory
     wire [31:0] memoryReadData;
     // write back
     wire [31:0] branchAddress;
     wire [31:0] branchJumpAddress;
     wire [31:0] pcSource;
+    wire [31:0] memtoRegMuxOutData;
     wire [31:0] registerWriteData;
 
     // __instruction fetching__
@@ -95,6 +98,7 @@ module SingleCycleCpu(
         .funct(instruction[5:0]),
         .regDst(regDst),
         .jump(jump),
+        .jumpAndLink(jumpAndLink),
         .jumpRegister(jumpRegister),
         .branch(branch),
         .branch_ne(branch_ne),
@@ -158,6 +162,12 @@ module SingleCycleCpu(
         .S(regDst),
         .I0(instruction[20:16]),
         .I1(instruction[15:11]),
+        .O(secondaryRegister)
+    );
+    Mux2to1_5b jumpAndLinkForRegisterAddressMux(
+        .S(jumpAndLink),
+        .I0(secondaryRegister),
+        .I1(5'b11111),
         .O(writeRegister)
     );
 
@@ -195,6 +205,12 @@ module SingleCycleCpu(
         .S(memtoReg),
         .I0(aluResult),
         .I1(memoryReadData),
+        .O(memtoRegMuxOutData)
+    );
+    Mux2to1_32b jumpAndLinkForRegisterDataMux(
+        .S(jumpAndLink),
+        .I0(memtoRegMuxOutData),
+        .I1(pcPlusFour),
         .O(registerWriteData)
     );
 
