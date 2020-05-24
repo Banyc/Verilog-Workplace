@@ -16,12 +16,9 @@ module AluControl(
 
     always @(*) begin
         case (aluOp)
-            // `AluOpType_Add: aluOpOut <= `ALU_add;
-            2'b00: aluOpOut <= `ALU_add;
-            // `AluOpType_Sub: aluOpOut <= `ALU_sub;
-            2'b01: aluOpOut <= `ALU_sub;
-            // `AluOpType_Funct: begin
-            2'b10: begin
+            `AluOpType_Add: aluOpOut <= `ALU_add;
+            `AluOpType_Sub: aluOpOut <= `ALU_sub;
+            `AluOpType_Funct: begin
                 case (funct)
                     `SLL: aluOpOut <= `ALU_sll;
                     `SRL: aluOpOut <= `ALU_srl;
@@ -34,11 +31,12 @@ module AluControl(
                     // default: 
                 endcase
             end
-            2'b11: begin
+            `AluOpType_Immediate: begin
                 case (opcode)
                     `ANDI: aluOpOut <= `ALU_and;
                     `ORI: aluOpOut <= `ALU_or;
                     `XORI: aluOpOut <= `ALU_xor;
+                    `SLTI: aluOpOut <= `ALU_slt;
                 endcase
             end
             // default: 

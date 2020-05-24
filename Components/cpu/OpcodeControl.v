@@ -56,6 +56,7 @@ module OpcodeControl(
     reg isAndi;
     reg isOri;
     reg isXori;
+    reg isSlti;
     reg isLw;
     reg isSw;
     reg isSll;
@@ -74,6 +75,7 @@ module OpcodeControl(
         isAndi = 0;
         isOri = 0;
         isXori = 0;
+        isSlti = 0;
         isLw = 0;
         isSw = 0;
         isSll = 0;
@@ -89,6 +91,7 @@ module OpcodeControl(
             `ANDI: isAndi = 1;
             `ORI: isOri = 1;
             `XORI: isXori = 1;
+            `SLTI: isSlti = 1;
 
             `LW: isLw = 1;
             `SW: isSw = 1;
@@ -134,7 +137,8 @@ module OpcodeControl(
     end
 
     assign memWrite = isSw;
-    assign aluSrc = isLw || isSw || isAddi || isAndi || isOri || isXori;
+    // select immediate as source B of ALU
+    assign aluSrc = isLw || isSw || isAddi || isAndi || isOri || isXori || isSlti;
     assign regWrite = ~(isSw || isBeq || isBne || isJ || isJr);
     assign shiftLeftLogical = isSll || isSrl;
     assign loadUpperImmediate = isLui;
