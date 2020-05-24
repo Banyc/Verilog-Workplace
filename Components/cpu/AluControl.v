@@ -28,6 +28,7 @@ module AluControl(
                     6'b100010: aluOpOut <= `ALU_sub;
                     6'b100100: aluOpOut <= `ALU_and;
                     6'b100101: aluOpOut <= `ALU_or;
+                    6'b100110: aluOpOut <= `ALU_xor;
                     6'b101010: aluOpOut <= `ALU_slt;
                     // default: 
                 endcase
@@ -35,6 +36,8 @@ module AluControl(
             2'b11: begin
                 case (opcode)
                     `ANDI: aluOpOut <= `ALU_and;
+                    `ORI: aluOpOut <= `ALU_or;
+                    `XORI: aluOpOut <= `ALU_xor;
                 endcase
             end
             // default: 

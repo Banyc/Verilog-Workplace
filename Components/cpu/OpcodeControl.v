@@ -53,6 +53,8 @@ module OpcodeControl(
     reg isBne;
     reg isAddi;
     reg isAndi;
+    reg isOri;
+    reg isXori;
     reg isLw;
     reg isSw;
     reg isSll;
@@ -67,6 +69,8 @@ module OpcodeControl(
         isBne = 0;
         isAddi = 0;
         isAndi = 0;
+        isOri = 0;
+        isXori = 0;
         isLw = 0;
         isSw = 0;
         isSll = 0;
@@ -79,6 +83,8 @@ module OpcodeControl(
             `BNE: isBne = 1;
             `ADDI: isAddi = 1;
             `ANDI: isAndi = 1;
+            `ORI: isOri = 1;
+            `XORI: isXori = 1;
 
             `LW: isLw = 1;
             `SW: isSw = 1;
@@ -112,12 +118,14 @@ module OpcodeControl(
             `SW: aluOp = `AluOpType_Add;
             `ADDI: aluOp = `AluOpType_Add;
             `ANDI: aluOp = `AluOpType_Immediate;
+            `ORI: aluOp = `AluOpType_Immediate;
+            `XORI: aluOp = `AluOpType_Immediate;
             // default: 
         endcase
     end
 
     assign memWrite = isSw;
-    assign aluSrc = isLw || isSw || isAddi || isAndi;
+    assign aluSrc = isLw || isSw || isAddi || isAndi || isOri || isXori;
     assign regWrite = ~(isSw || isBeq || isBne || isJ || isJr);
     assign shiftLeftLogical = isSll;
     assign loadUpperImmediate = isLui;

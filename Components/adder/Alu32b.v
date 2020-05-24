@@ -3,6 +3,8 @@
 
 `include "./Components/adder/AddSub32bFlag.v"
 `include "./Components/adder/Or32b.v"
+`include "./Components/adder/Xor32b.v"
+`include "./Components/adder/Nor32b.v"
 `include "./Components/adder/And32b.v"
 `include "./Components/shift/ShiftLeftN.v"
 `include "./Components/cpu/OpcodeEnum.v"
@@ -37,6 +39,8 @@ module Alu32b(
     // and / or
     wire [31:0] andResult;
     wire [31:0] orResult;
+    wire [31:0] xorResult;
+    wire [31:0] norResult;
     wire [31:0] shiftLeftResult;
 
     And32b ander(leftOperand, rightOperand, andResult);
@@ -48,6 +52,9 @@ module Alu32b(
         .to(shiftLeftResult)
     );
 
+    Xor32b xorer(leftOperand, rightOperand, xorResult);
+    Nor32b norer(leftOperand, rightOperand, norResult);
+
     // output
     always @(*) begin
         case (aluOp)
@@ -55,6 +62,7 @@ module Alu32b(
             `ALU_sub: aluResult <= addSubResult;
             `ALU_and: aluResult <= andResult;
             `ALU_or: aluResult <= orResult;
+            `ALU_nor: aluResult <= norResult;
             `ALU_slt: begin
                 if (addSubSign) begin
                     aluResult <= 1;
@@ -63,6 +71,7 @@ module Alu32b(
                 end
             end
             `ALU_sll: aluResult <= shiftLeftResult;
+            `ALU_xor: aluResult <= xorResult;
             // default: 
         endcase
     end

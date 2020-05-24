@@ -23,7 +23,7 @@
     - sw
     - beq
     - bne
-    - sltie 
+    - slti
 - J-Type:
     - J
     - Jal*
