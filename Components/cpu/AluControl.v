@@ -25,12 +25,12 @@ module AluControl(
                 case (funct)
                     `SLL: aluOpOut <= `ALU_sll;
                     `SRL: aluOpOut <= `ALU_srl;
-                    6'b100000: aluOpOut <= `ALU_add;
-                    6'b100010: aluOpOut <= `ALU_sub;
-                    6'b100100: aluOpOut <= `ALU_and;
-                    6'b100101: aluOpOut <= `ALU_or;
-                    6'b100110: aluOpOut <= `ALU_xor;
-                    6'b101010: aluOpOut <= `ALU_slt;
+                    `ADD: aluOpOut <= `ALU_add;
+                    `SUB: aluOpOut <= `ALU_sub;
+                    `AND: aluOpOut <= `ALU_and;
+                    `OR: aluOpOut <= `ALU_or;
+                    `XOR: aluOpOut <= `ALU_xor;
+                    `SLT: aluOpOut <= `ALU_slt;
                     // default: 
                 endcase
             end
