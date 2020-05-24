@@ -98,7 +98,7 @@ module SingleCycleCpu(
         .from({6'b0, instruction[25:0]}),
         .to(leftShiftedTargetAddress)
     );
-    assign jumpAddress = {pcPlusFour[31:28], leftShiftedTargetAddress[27:0]};
+    assign jumpAddress = {pcPlusFour[31:28], leftShiftedTargetAddress[27:0]};  // {(PC + 4)[31:28], target << 2}
     OpcodeControl control(
         .opcode(instruction[31:26]),
         .funct(instruction[5:0]),
@@ -140,14 +140,14 @@ module SingleCycleCpu(
     // __executing__
     LeftShift2b immediateShiftLeft2(
         .from(extendedImmediate),
-        .to(leftShiftedImmediate)
+        .to(leftShiftedImmediate)  // {signs, immediate << 2}
     );
     AddSub32bFlag pcOffsetAdder(
         .A(pcPlusFour),
         .B(leftShiftedImmediate),
         .Ci(1'b0),
         .Ctrl(1'b0),
-        .S(offsetedPc),
+        .S(offsetedPc),  // PC + 4 + (immediate << 2)
         .CF(), .OF(), .ZF(), .SF(), .PF()  // 符号SF、进位CF、溢出OF、零标志ZF、奇偶PF
     );
     Mux2to1_32b aluSrcAMux(
@@ -206,13 +206,13 @@ module SingleCycleCpu(
         Mux2to1_32b branchMux(
             .S(isBranch),
             .I0(pcPlusFour),
-            .I1(offsetedPc),
+            .I1(offsetedPc),  // PC + 4 + (immediate << 2)
             .O(branchAddress)
         );
         Mux2to1_32b jumpMux(
             .S(jump),
             .I0(branchAddress),
-            .I1(jumpAddress),
+            .I1(jumpAddress),  // {(PC + 4)[31:28], target << 2}
             .O(branchJumpAddress)
         );
         Mux2to1_32b jumpRegisterMux(
