@@ -115,9 +115,10 @@
 
 // enum AluOpType
 
-`define AluOpType_Add   2'b00
-`define AluOpType_Sub   2'b01
-`define AluOpType_Funct 2'b10
+`define AluOpType_Add       2'b00
+`define AluOpType_Sub       2'b01
+`define AluOpType_Funct     2'b10
+`define AluOpType_Immediate 2'b11
 
 // enum AluControl
 

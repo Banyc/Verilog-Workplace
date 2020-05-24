@@ -163,6 +163,7 @@ module SingleCycleCpu(
         .O(aluSourceB)
     );  // source B of ALU
     AluControl aluControl(
+        .opcode(instruction[31:26]),
         .funct(instruction[5:0]),
         .aluOp(aluOp),
         .aluOpOut(aluOpOut)
