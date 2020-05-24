@@ -6,8 +6,10 @@
 // ALU control + main controls
 module OpcodeControl(
     opcode,
+    funct,
     regDst,
     jump,
+    jumpRegister,
     branch,
     branch_ne,
     memRead,
@@ -18,8 +20,10 @@ module OpcodeControl(
     regWrite
 );
     input wire [5:0] opcode;
+    input wire [5:0] funct;
     output wire regDst;
     output wire jump;
+    output wire jumpRegister;
     output wire branch;
     output wire branch_ne;
     output wire memRead;
@@ -37,6 +41,7 @@ module OpcodeControl(
 
     reg isR;
     reg isJ;
+    reg isJr;
     // reg isJal;
     reg isBeq;
     reg isBne;
@@ -44,22 +49,33 @@ module OpcodeControl(
     reg isSw;
 
     always @(*) begin
+        isR = 0;
+        isJ = 0;
+        isJr = 0;
+        // isJal = 0;
+        isBeq = 0;
+        isBne = 0;
+        isLw = 0;
+        isSw = 0;
         case (opcode)
-            `RType: isR <= 1;
-            `J: isJ <= 1;
-            // `JAL: isJal <= 1;
-            `BEQ: isBeq <= 1;
-            `BNE: isBne <= 1;
+            `RType: isR = 1;
+            `J: isJ = 1;
+            // `JAL: isJal = 1;
+            `BEQ: isBeq = 1;
+            `BNE: isBne = 1;
 
-            `LW: isLw <= 1;
-            `SW: isSw <= 1;
+            `LW: isLw = 1;
+            `SW: isSw = 1;
+        endcase
+        case (funct)
+            `JR: isJr = isR & 1;
         endcase
     end
-
 
     assign regDst = isR;
     // assign jump = isJ || isJal;
     assign jump = isJ;
+    assign jumpRegister = isJr;
     assign branch = isBeq;
     assign branch_ne = isBne;
     assign memRead = isLw;
@@ -70,20 +86,19 @@ module OpcodeControl(
     always @(*) begin
         case (opcode)
             // from funct field
-            `RType: aluOp <= `AluOpType_Funct;
+            `RType: aluOp = `AluOpType_Funct;
             // sub
-            `BEQ: aluOp <= `AluOpType_Sub;
+            `BEQ: aluOp = `AluOpType_Sub;
             // add
-            `LW: aluOp <= `AluOpType_Add;
-            `SW: aluOp <= `AluOpType_Add;
+            `LW: aluOp = `AluOpType_Add;
+            `SW: aluOp = `AluOpType_Add;
             // default: 
         endcase
     end
 
     assign memWrite = isSw;
     assign aluSrc = isLw || isSw;
-    // assign regWrite = ~(isSw || isBeq || isBne || isJ || isJr);
-    assign regWrite = isLw || isR;
+    assign regWrite = ~(isSw || isBeq || isBne || isJ || isJr);
 
 endmodule // OpcodeControl
 

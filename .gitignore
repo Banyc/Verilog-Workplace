@@ -5,4 +5,5 @@ _TEST/
 _DEMO/
 *.circ
 *archived*
-
+*.vcd
+*.vvp

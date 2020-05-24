@@ -4,7 +4,7 @@
 `include "./Components/adder/AddSub32bFlag.v"
 `include "./Components/adder/Or32b.v"
 `include "./Components/adder/And32b.v"
-`include "./Components/cpu/OpcodeTable.v"
+`include "./Components/cpu/OpcodeEnum.v"
 
 module Alu32b(
     aluOp,

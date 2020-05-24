@@ -32,6 +32,7 @@ module SingleCycleCpu(
     // instruction decoding
     wire regDst;
     wire jump;
+    wire jumpRegister;
     wire branch;
     wire branch_ne;
     wire memRead;
@@ -55,17 +56,18 @@ module SingleCycleCpu(
     wire isAluResultZero;
     wire isBranch;
     // memory
-    wire [31:0] branchAddress;
-    wire [31:0] nextPc;
     wire [31:0] memoryReadData;
     // write back
+    wire [31:0] branchAddress;
+    wire [31:0] branchJumpAddress;
+    wire [31:0] pcSource;
     wire [31:0] registerWriteData;
 
     // __instruction fetching__
     Pc pc(
         .clk(clk),
         .rst(rst),
-        .d(nextPc),
+        .d(pcSource),
         .q(pcOut)
     );
     AddSub32bFlag pcIncrementAdder(
@@ -90,8 +92,10 @@ module SingleCycleCpu(
     assign jumpAddress = {pcPlusFour[31:28], leftShiftedTargetAddress[27:0]};
     OpcodeControl control(
         .opcode(instruction[31:26]),
+        .funct(instruction[5:0]),
         .regDst(regDst),
         .jump(jump),
+        .jumpRegister(jumpRegister),
         .branch(branch),
         .branch_ne(branch_ne),
         .memRead(memRead),
@@ -158,12 +162,6 @@ module SingleCycleCpu(
     );
 
     // __memory__
-    Mux2to1_32b branchMux(
-        .S(isBranch),
-        .I0(pcPlusFour),
-        .I1(offsetedPc),
-        .O(branchAddress)
-    );
     Ram32b dataMemory(
         .clk(clk),
         .rst(rst),
@@ -175,11 +173,23 @@ module SingleCycleCpu(
     );
 
     // __write back__
+    Mux2to1_32b branchMux(
+        .S(isBranch),
+        .I0(pcPlusFour),
+        .I1(offsetedPc),
+        .O(branchAddress)
+    );
     Mux2to1_32b jumpMux(
         .S(jump),
         .I0(branchAddress),
         .I1(jumpAddress),
-        .O(nextPc)
+        .O(branchJumpAddress)
+    );
+    Mux2to1_32b jumpRegisterMux(
+        .S(jumpRegister),
+        .I0(branchJumpAddress),
+        .I1(registerReadData1),
+        .O(pcSource)
     );
     Mux2to1_32b memtoRegMux(
         .S(memtoReg),
