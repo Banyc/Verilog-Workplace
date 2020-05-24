@@ -18,7 +18,8 @@ module OpcodeControl(
     aluOp,
     memWrite,
     aluSrc,
-    regWrite
+    regWrite,
+    shiftLeftLogical
 );
     input wire [5:0] opcode;
     input wire [5:0] funct;
@@ -40,6 +41,7 @@ module OpcodeControl(
     output wire memWrite;
     output wire aluSrc;
     output wire regWrite;
+    output wire shiftLeftLogical;
 
     reg isR;
     reg isJ;
@@ -50,6 +52,7 @@ module OpcodeControl(
     reg isAddi;
     reg isLw;
     reg isSw;
+    reg isSll;
 
     always @(*) begin
         isR = 0;
@@ -61,6 +64,7 @@ module OpcodeControl(
         isAddi = 0;
         isLw = 0;
         isSw = 0;
+        isSll = 0;
         case (opcode)
             `RType: isR = 1;
             `J: isJ = 1;
@@ -74,6 +78,7 @@ module OpcodeControl(
         endcase
         case (funct)
             `JR: isJr = isR & 1;
+            `SLL: isSll = 1;
         endcase
     end
 
@@ -105,6 +110,7 @@ module OpcodeControl(
     assign memWrite = isSw;
     assign aluSrc = isLw || isSw || isAddi;
     assign regWrite = ~(isSw || isBeq || isBne || isJ || isJr);
+    assign shiftLeftLogical = isSll;
 
 endmodule // OpcodeControl
 

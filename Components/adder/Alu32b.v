@@ -4,6 +4,7 @@
 `include "./Components/adder/AddSub32bFlag.v"
 `include "./Components/adder/Or32b.v"
 `include "./Components/adder/And32b.v"
+`include "./Components/shift/ShiftLeftN.v"
 `include "./Components/cpu/OpcodeEnum.v"
 
 module Alu32b(
@@ -13,7 +14,7 @@ module Alu32b(
     aluResult,
     zero
 );
-    input wire [2:0] aluOp;
+    input wire [3:0] aluOp;
     input wire [31:0] leftOperand;
     input wire [31:0] rightOperand;
     output reg [31:0] aluResult;
@@ -36,9 +37,16 @@ module Alu32b(
     // and / or
     wire [31:0] andResult;
     wire [31:0] orResult;
+    wire [31:0] shiftLeftResult;
 
     And32b ander(leftOperand, rightOperand, andResult);
     Or32b orer(leftOperand, rightOperand, orResult);
+
+    ShiftLeftN shiftLeft(
+        .from(rightOperand),
+        .shamt(leftOperand[4:0]),
+        .to(shiftLeftResult)
+    );
 
     // output
     always @(*) begin
@@ -54,6 +62,7 @@ module Alu32b(
                     aluResult <= 0;
                 end
             end
+            `ALU_sll: aluResult <= shiftLeftResult;
             // default: 
         endcase
     end

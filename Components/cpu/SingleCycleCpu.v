@@ -42,6 +42,7 @@ module SingleCycleCpu(
     wire memWrite;
     wire aluSrc;
     wire regWrite;
+    wire shiftLeftLogical;
     wire [31:0] registerReadData1;
     wire [31:0] registerReadData2;
     wire [31:0] leftShiftedTargetAddress;
@@ -50,8 +51,9 @@ module SingleCycleCpu(
     // executing
     wire [31:0] leftShiftedImmediate;
     wire [31:0] offsetedPc;
+    wire [31:0] aluSourceA;
     wire [31:0] aluSourceB;
-    wire [2:0] aluOpOut;
+    wire [3:0] aluOpOut;
     wire [31:0] aluResult;
     wire isAluResultZero;
     wire isBranch;
@@ -107,7 +109,8 @@ module SingleCycleCpu(
         .aluOp(aluOp),
         .memWrite(memWrite),
         .aluSrc(aluSrc),
-        .regWrite(regWrite)
+        .regWrite(regWrite),
+        .shiftLeftLogical(shiftLeftLogical)
     );
     RegFile registers(
         .clk(clk),
@@ -138,12 +141,18 @@ module SingleCycleCpu(
         .S(offsetedPc),
         .CF(), .OF(), .ZF(), .SF(), .PF()  // 符号SF、进位CF、溢出OF、零标志ZF、奇偶PF
     );
+    Mux2to1_32b aluSrcAMux(
+        .S(shiftLeftLogical),
+        .I0(registerReadData1),
+        .I1({27'b0, instruction[10:6]}),
+        .O(aluSourceA)
+    );
     Mux2to1_32b aluSrcMux(
         .S(aluSrc),
         .I0(registerReadData2),
         .I1(extendedImmediate),
         .O(aluSourceB)
-    );
+    );  // source B of ALU
     AluControl aluControl(
         .funct(instruction[5:0]),
         .aluOp(aluOp),
@@ -151,7 +160,7 @@ module SingleCycleCpu(
     );
     Alu32b alu(
         .aluOp(aluOpOut),
-        .leftOperand(registerReadData1),
+        .leftOperand(aluSourceA),
         .rightOperand(aluSourceB),
         .aluResult(aluResult),
         .zero(isAluResultZero)

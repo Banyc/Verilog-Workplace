@@ -121,12 +121,15 @@
 
 // enum AluControl
 
-`define ALU_add      3'b010
-`define ALU_sub      3'b110
-`define ALU_and      3'b000
-`define ALU_or       3'b001
+`define ALU_and      4'b0000
+`define ALU_or       4'b0001
+`define ALU_add      4'b0010
+`define ALU_sub      4'b0110
 // set on less than
-`define ALU_slt      3'b111
+`define ALU_slt      4'b0111
+`define ALU_nor      4'b1100
+// customized
+`define ALU_sll      4'b1001
 
 // enum Funct
 
