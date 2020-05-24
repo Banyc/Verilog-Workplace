@@ -45,6 +45,7 @@ module OpcodeControl(
     // reg isJal;
     reg isBeq;
     reg isBne;
+    reg isAddi;
     reg isLw;
     reg isSw;
 
@@ -55,6 +56,7 @@ module OpcodeControl(
         // isJal = 0;
         isBeq = 0;
         isBne = 0;
+        isAddi = 0;
         isLw = 0;
         isSw = 0;
         case (opcode)
@@ -63,6 +65,7 @@ module OpcodeControl(
             // `JAL: isJal = 1;
             `BEQ: isBeq = 1;
             `BNE: isBne = 1;
+            `ADDI: isAddi = 1;
 
             `LW: isLw = 1;
             `SW: isSw = 1;
@@ -92,12 +95,13 @@ module OpcodeControl(
             // add
             `LW: aluOp = `AluOpType_Add;
             `SW: aluOp = `AluOpType_Add;
+            `ADDI: aluOp = `AluOpType_Add;
             // default: 
         endcase
     end
 
     assign memWrite = isSw;
-    assign aluSrc = isLw || isSw;
+    assign aluSrc = isLw || isSw || isAddi;
     assign regWrite = ~(isSw || isBeq || isBne || isJ || isJr);
 
 endmodule // OpcodeControl
