@@ -49,6 +49,7 @@ module OpcodeControl(
     reg isJ;
     reg isJal;
     reg isJr;
+    reg isJalr;
     reg isBeq;
     reg isBne;
     reg isAddi;
@@ -66,6 +67,7 @@ module OpcodeControl(
         isJ = 0;
         isJal = 0;
         isJr = 0;
+        isJalr = 0;
         isBeq = 0;
         isBne = 0;
         isAddi = 0;
@@ -94,15 +96,19 @@ module OpcodeControl(
         endcase
         case (funct)
             `JR: isJr = isR & 1;
+            `JALR: isJalr = isR & 1;
             `SLL: isSll = 1;
             `SRL: isSrl = 1;
         endcase
     end
 
     assign regDst = isR;
+    // jump to target, not to register
     assign jump = isJ || isJal;
-    assign jumpAndLink = isJal;
-    assign jumpRegister = isJr;
+    // save PC + 4 to register $ra
+    assign jumpAndLink = isJal || isJalr;
+    // jump to register
+    assign jumpRegister = isJr || isJalr;
     assign branch = isBeq;
     assign branch_ne = isBne;
     assign memRead = isLw;
