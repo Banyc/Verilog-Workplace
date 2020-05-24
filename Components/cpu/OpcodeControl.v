@@ -19,7 +19,8 @@ module OpcodeControl(
     memWrite,
     aluSrc,
     regWrite,
-    shiftLeftLogical
+    shiftLeftLogical,
+    loadUpperImmediate
 );
     input wire [5:0] opcode;
     input wire [5:0] funct;
@@ -42,6 +43,7 @@ module OpcodeControl(
     output wire aluSrc;
     output wire regWrite;
     output wire shiftLeftLogical;
+    output wire loadUpperImmediate;
 
     reg isR;
     reg isJ;
@@ -53,6 +55,7 @@ module OpcodeControl(
     reg isLw;
     reg isSw;
     reg isSll;
+    reg isLui;
 
     always @(*) begin
         isR = 0;
@@ -65,6 +68,7 @@ module OpcodeControl(
         isLw = 0;
         isSw = 0;
         isSll = 0;
+        isLui = 0;
         case (opcode)
             `RType: isR = 1;
             `J: isJ = 1;
@@ -75,6 +79,7 @@ module OpcodeControl(
 
             `LW: isLw = 1;
             `SW: isSw = 1;
+            `LUI: isLui = 1;
         endcase
         case (funct)
             `JR: isJr = isR & 1;
@@ -111,6 +116,7 @@ module OpcodeControl(
     assign aluSrc = isLw || isSw || isAddi;
     assign regWrite = ~(isSw || isBeq || isBne || isJ || isJr);
     assign shiftLeftLogical = isSll;
+    assign loadUpperImmediate = isLui;
 
 endmodule // OpcodeControl
 

@@ -3,6 +3,7 @@
 
 `include "./Components/shift/LeftShift2b.v"
 `include "./Components/shift/SignExtend16To32.v"
+`include "./Components/shift/ShiftLeft16b.v"
 `include "./Components/register/RegFile.v"
 `include "./Components/register/Pc.v"
 `include "./Components/mux/Mux2to1_5b.v"
@@ -43,11 +44,13 @@ module SingleCycleCpu(
     wire aluSrc;
     wire regWrite;
     wire shiftLeftLogical;
+    wire loadUpperImmediate;
     wire [31:0] registerReadData1;
     wire [31:0] registerReadData2;
     wire [31:0] leftShiftedTargetAddress;
     wire [31:0] jumpAddress;
     wire [31:0] extendedImmediate;
+    wire [31:0] upperImmediate;
     // executing
     wire [31:0] leftShiftedImmediate;
     wire [31:0] offsetedPc;
@@ -66,6 +69,7 @@ module SingleCycleCpu(
     wire [31:0] branchJumpAddress;
     wire [31:0] pcSource;
     wire [31:0] memtoRegMuxOutData;
+    wire [31:0] jumpAndLinkForRegisterDataMuxOutData;
     wire [31:0] registerWriteData;
 
     // __instruction fetching__
@@ -110,7 +114,8 @@ module SingleCycleCpu(
         .memWrite(memWrite),
         .aluSrc(aluSrc),
         .regWrite(regWrite),
-        .shiftLeftLogical(shiftLeftLogical)
+        .shiftLeftLogical(shiftLeftLogical),
+        .loadUpperImmediate(loadUpperImmediate)
     );
     RegFile registers(
         .clk(clk),
@@ -126,6 +131,10 @@ module SingleCycleCpu(
     SignExtend16To32 signExtend(
         .from(instruction[15:0]),
         .to(extendedImmediate)
+    );
+    ShiftLeftN ShiftLeft16b(
+        .from(extendedImmediate),
+        .to(upperImmediate)
     );
 
     // __executing__
@@ -192,36 +201,44 @@ module SingleCycleCpu(
     );
 
     // __write back__
-    Mux2to1_32b branchMux(
-        .S(isBranch),
-        .I0(pcPlusFour),
-        .I1(offsetedPc),
-        .O(branchAddress)
-    );
-    Mux2to1_32b jumpMux(
-        .S(jump),
-        .I0(branchAddress),
-        .I1(jumpAddress),
-        .O(branchJumpAddress)
-    );
-    Mux2to1_32b jumpRegisterMux(
-        .S(jumpRegister),
-        .I0(branchJumpAddress),
-        .I1(registerReadData1),
-        .O(pcSource)
-    );
-    Mux2to1_32b memtoRegMux(
-        .S(memtoReg),
-        .I0(aluResult),
-        .I1(memoryReadData),
-        .O(memtoRegMuxOutData)
-    );
-    Mux2to1_32b jumpAndLinkForRegisterDataMux(
-        .S(jumpAndLink),
-        .I0(memtoRegMuxOutData),
-        .I1(pcPlusFour),
-        .O(registerWriteData)
-    );
+        // PC-related
+        Mux2to1_32b branchMux(
+            .S(isBranch),
+            .I0(pcPlusFour),
+            .I1(offsetedPc),
+            .O(branchAddress)
+        );
+        Mux2to1_32b jumpMux(
+            .S(jump),
+            .I0(branchAddress),
+            .I1(jumpAddress),
+            .O(branchJumpAddress)
+        );
+        Mux2to1_32b jumpRegisterMux(
+            .S(jumpRegister),
+            .I0(branchJumpAddress),
+            .I1(registerReadData1),
+            .O(pcSource)
+        );
+        // related to write data for registers
+        Mux2to1_32b memtoRegMux(
+            .S(memtoReg),
+            .I0(aluResult),
+            .I1(memoryReadData),
+            .O(memtoRegMuxOutData)
+        );
+        Mux2to1_32b jumpAndLinkForRegisterDataMux(
+            .S(jumpAndLink),
+            .I0(memtoRegMuxOutData),
+            .I1(pcPlusFour),
+            .O(jumpAndLinkForRegisterDataMuxOutData)
+        );
+        Mux2to1_32b loadUpperImmediateMux(
+            .S(loadUpperImmediate),
+            .I0(jumpAndLinkForRegisterDataMuxOutData),
+            .I1(upperImmediate),
+            .O(registerWriteData)
+        );
 
 endmodule // SingleCycleCpu
 
