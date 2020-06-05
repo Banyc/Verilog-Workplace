@@ -44,10 +44,12 @@ module Alu32b(
     wire [31:0] norResult;
     wire [31:0] shiftLeftResult;
     wire [31:0] shiftRightResult;
+    wire [31:0] shiftLeft16Result;
 
     And32b ander(leftOperand, rightOperand, andResult);
     Or32b orer(leftOperand, rightOperand, orResult);
 
+    // shift
     ShiftLeftN shiftLeft(
         .from(rightOperand),
         .shamt(leftOperand[4:0]),
@@ -58,7 +60,9 @@ module Alu32b(
         .shamt(leftOperand[4:0]),
         .to(shiftRightResult)
     );
+    assign shiftLeft16Result = rightOperand << 16;
 
+    // others
     Xor32b xorer(leftOperand, rightOperand, xorResult);
     Nor32b norer(leftOperand, rightOperand, norResult);
 
@@ -80,6 +84,7 @@ module Alu32b(
             `ALU_sll: aluResult <= shiftLeftResult;
             `ALU_srl: aluResult <= shiftRightResult;
             `ALU_xor: aluResult <= xorResult;
+            `ALU_sll16: aluResult <= shiftLeft16Result;
             // default: 
         endcase
     end

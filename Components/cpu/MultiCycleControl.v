@@ -67,6 +67,11 @@ module MultiCycleControl(
     output reg irWrite;
     output reg [1:0] pcSource;
     output reg [1:0] aluOp;
+    // 0 := B
+    // 1 := 4
+    // 2 := immediate
+    // 3 := immediate << 2
+    // (deprecated) 4 := immediate << 16
     output reg [1:0] aluSrcB;
     output reg aluSrcA;
     output reg regWrite;
@@ -180,7 +185,7 @@ module MultiCycleControl(
                 aluSrcA = 0;
                 iorD = 0;
                 irWrite = 1;
-                aluSrcB = 2'b01;
+                aluSrcB = 1;
                 aluOp = 2'b00;
                 pcWrite = 1;
                 pcSource = 2'b00;
@@ -192,7 +197,7 @@ module MultiCycleControl(
                 // B = $target
                 // ALUOut = PC + immediate << 2
                 aluSrcA = 0;
-                aluSrcB = 2'b11;
+                aluSrcB = 3;
                 aluOp = 2'b00;
                 
                 // next state
@@ -206,7 +211,7 @@ module MultiCycleControl(
                     nextState = `BneCompletion;
                 else if (isJ)
                     nextState = `JumpCompletion;
-                else if (isAddi || isAndi || isOri || isSlti)
+                else if (isAddi || isAndi || isOri || isSlti || isLui)
                     nextState = `ITypeExecute;
                 else
                     // throw interrupt
@@ -215,7 +220,7 @@ module MultiCycleControl(
             `MemoryAccessComputation: begin
                 // ALUOut = A + immediate
                 aluSrcA = 1;
-                aluSrcB = 2'b10;
+                aluSrcB = 2;
                 aluOp = 2'b00;
 
                 // next state
@@ -252,7 +257,7 @@ module MultiCycleControl(
             `Execution: begin
                 // ALUOut = A <operator> B
                 aluSrcA = 1;
-                aluSrcB = 2'b00;
+                aluSrcB = 0;
                 aluOp = 2'b10;
                 
                 nextState = `RTypeCompletion;
@@ -269,7 +274,7 @@ module MultiCycleControl(
                 // ALUOut = A - B
                 // PC = ALUOut if isZero
                 aluSrcA = 1;
-                aluSrcB = 2'b00;
+                aluSrcB = 0;
                 aluOp = 2'b01;
                 pcWriteCond = 1;
                 pcSource = 2'b01;
@@ -280,7 +285,7 @@ module MultiCycleControl(
                 // ALUOut = A - B
                 // PC = ALUOut if not isZero
                 aluSrcA = 1;
-                aluSrcB = 2'b00;
+                aluSrcB = 0;
                 aluOp = 2'b01;
                 pcWriteCond = 2;
                 pcSource = 2'b01;

@@ -38,6 +38,7 @@ module AluControl(
                     `ORI: aluOpOut <= `ALU_or;
                     `XORI: aluOpOut <= `ALU_xor;
                     `SLTI: aluOpOut <= `ALU_slt;
+                    `LUI: aluOpOut <= `ALU_sll16;
                 endcase
             end
             // default: 

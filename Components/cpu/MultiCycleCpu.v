@@ -10,6 +10,7 @@
 `include "./Components/mux/Mux2to1_5b.v"
 `include "./Components/mux/Mux2to1_32b.v"
 `include "./Components/mux/Mux4to1_32b.v"
+`include "./Components/mux/Mux8to1_32b.v"
 `include "./Components/memory/Ram32b.v"
 `include "./Components/adder/Alu32b.v"
 `include "./Components/cpu/MultiCycleControl.v"
