@@ -42,7 +42,7 @@
     - xor
     - nor
     - slt
-    - srl*
+    <!-- - srl* -->
 - I-Type:
     - lw
     - sw
@@ -60,4 +60,4 @@
 
 ## Multi-Cycle
 
-
+- <https://syssec.ethz.ch/content/dam/ethz/special-interest/infk/inst-infsec/system-security-group-dam/education/Digitaltechnik_14/21_Architecture_MultiCycle.pdf>

@@ -169,6 +169,8 @@ module MultiCycleControl(
                 nextState = `IR;
             end
             `IR: begin
+                // instructionReg = mem[PC]
+                // PC += 4
                 memRead = 1;
                 aluSrcA = 0;
                 iorD = 0;
@@ -181,6 +183,9 @@ module MultiCycleControl(
                 nextState = `ID_RF;
             end
             `ID_RF: begin
+                // A = $source
+                // B = $target
+                // ALUOut = PC + immediate << 2
                 aluSrcA = 0;
                 aluSrcB = 2'b11;
                 aluOp = 2'b00;
@@ -201,8 +206,9 @@ module MultiCycleControl(
                     nextState = `RESET;
             end
             `MemoryAccessComputation: begin
+                // ALUOut = A + immediate
                 aluSrcA = 1;
-                aluSrcB = 2'b00;
+                aluSrcB = 2'b10;
                 aluOp = 2'b00;
 
                 // next state
@@ -215,12 +221,14 @@ module MultiCycleControl(
                     nextState = `RESET;
             end
             `MemoryAccessRead: begin
+                // memDataReg = mem[ALUOut]
                 memRead = 1;
                 iorD = 1;
                 
                 nextState = `WriteBackStep;
             end
             `WriteBackStep: begin
+                // regs[%target] = memDataReg
                 regWrite = 1;
                 memToReg = 1;
                 regDst = 0;
@@ -228,12 +236,14 @@ module MultiCycleControl(
                 nextState = `IR;
             end
             `MemoryAccessWrite: begin
+                // mem[ALUOut] = B
                 memWrite = 1;
                 iorD = 1;
                 
                 nextState = `IR;
             end
             `Execution: begin
+                // ALUOut = A <operator> B
                 aluSrcA = 1;
                 aluSrcB = 2'b00;
                 aluOp = 2'b10;
@@ -241,6 +251,7 @@ module MultiCycleControl(
                 nextState = `RTypeCompletion;
             end
             `RTypeCompletion: begin
+                // regs[$destination] = ALUOut
                 regDst = 1;
                 regWrite = 1;
                 memToReg = 0;
@@ -248,6 +259,8 @@ module MultiCycleControl(
                 nextState = `IR;
             end
             `BranchCompletion: begin
+                // ALUOut = A - B
+                // PC = ALUOut if isZero
                 aluSrcA = 1;
                 aluSrcB = 2'b00;
                 aluOp = 2'b01;
@@ -257,6 +270,8 @@ module MultiCycleControl(
                 nextState = `IR;
             end
             `BneCompletion: begin
+                // ALUOut = A - B
+                // PC = ALUOut if not isZero
                 aluSrcA = 1;
                 aluSrcB = 2'b00;
                 aluOp = 2'b01;
@@ -266,6 +281,7 @@ module MultiCycleControl(
                 nextState = `IR;
             end
             `JumpCompletion: begin
+                // PC = PC <concat> target << 2
                 pcWrite = 1;
                 pcSource = 2'b10;
                 
