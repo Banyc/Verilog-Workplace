@@ -192,6 +192,8 @@ module MultiCycleControl(
                     nextState = `Execution;
                 else if (isBeq)
                     nextState = `BranchCompletion;
+                else if (isBne)
+                    nextState = `BneCompletion;
                 else if (isJ)
                     nextState = `JumpCompletion;
                 else
