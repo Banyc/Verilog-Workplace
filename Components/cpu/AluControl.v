@@ -26,6 +26,7 @@ module AluControl(
                     `SUB: aluOpOut <= `ALU_sub;
                     `AND: aluOpOut <= `ALU_and;
                     `OR: aluOpOut <= `ALU_or;
+                    `NOR: aluOpOut <= `ALU_nor;
                     `XOR: aluOpOut <= `ALU_xor;
                     `SLT: aluOpOut <= `ALU_slt;
                     // default: 

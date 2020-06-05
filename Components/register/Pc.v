@@ -4,11 +4,13 @@
 module Pc(
     clk,
     rst,
+    enableWrite,
     d,
     q
 );
     input wire clk;
     input wire rst;
+    input wire enableWrite;
     input wire [31:0] d;
     output reg [31:0] q;
 
@@ -17,7 +19,8 @@ module Pc(
             // q <= 32'h00400020;
             q <= 32'h00000000;
         end else begin
-            q <= d;
+            if (enableWrite)
+                q <= d;
         end
     end
 

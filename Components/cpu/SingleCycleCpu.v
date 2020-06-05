@@ -76,6 +76,7 @@ module SingleCycleCpu(
     Pc pc(
         .clk(clk),
         .rst(rst),
+        .enableWrite(1'b1),
         .d(pcSource),
         .q(pcOut)
     );
@@ -128,28 +129,29 @@ module SingleCycleCpu(
         .readData1(registerReadData1),
         .readData2(registerReadData2)
     );
-    SignExtend16To32 signExtend(
-        .from(instruction[15:0]),
-        .to(extendedImmediate)
-    );
+    // PC + (signExtend(instruction[15:0]) << 2)
+        SignExtend16To32 signExtend(
+            .from(instruction[15:0]),
+            .to(extendedImmediate)
+        );
+        LeftShift2b immediateShiftLeft2(
+            .from(extendedImmediate),
+            .to(leftShiftedImmediate)  // {signs, immediate << 2}
+        );
+        AddSub32bFlag pcOffsetAdder(
+            .A(pcPlusFour),
+            .B(leftShiftedImmediate),
+            .Ci(1'b0),
+            .Ctrl(1'b0),
+            .S(offsetedPc),  // PC + 4 + (immediate << 2)
+            .CF(), .OF(), .ZF(), .SF(), .PF()  // 符号SF、进位CF、溢出OF、零标志ZF、奇偶PF
+        );
     ShiftLeftN ShiftLeft16b(
         .from(extendedImmediate),
         .to(upperImmediate)
     );
 
     // __executing__
-    LeftShift2b immediateShiftLeft2(
-        .from(extendedImmediate),
-        .to(leftShiftedImmediate)  // {signs, immediate << 2}
-    );
-    AddSub32bFlag pcOffsetAdder(
-        .A(pcPlusFour),
-        .B(leftShiftedImmediate),
-        .Ci(1'b0),
-        .Ctrl(1'b0),
-        .S(offsetedPc),  // PC + 4 + (immediate << 2)
-        .CF(), .OF(), .ZF(), .SF(), .PF()  // 符号SF、进位CF、溢出OF、零标志ZF、奇偶PF
-    );
     Mux2to1_32b aluSrcAMux(
         .S(shiftLeftLogical),
         .I0(registerReadData1),
