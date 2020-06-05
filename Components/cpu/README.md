@@ -44,6 +44,10 @@
     - slt
     <!-- - srl* -->
 - I-Type:
+    - addi
+    - andi
+    - ori
+    - xori
     - lw
     - sw
     - beq

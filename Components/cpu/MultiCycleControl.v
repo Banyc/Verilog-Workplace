@@ -23,6 +23,11 @@
 
 // bne
 `define BneCompletion 4'hA
+// I-type execute
+// `define AddiExecute 4'hB
+`define ITypeExecute 4'hB
+// I-type writeback
+`define ITypeWriteBack 4'hC
 
 
 module MultiCycleControl(
@@ -201,6 +206,8 @@ module MultiCycleControl(
                     nextState = `BneCompletion;
                 else if (isJ)
                     nextState = `JumpCompletion;
+                else if (isAddi || isAndi || isOri || isSlti)
+                    nextState = `ITypeExecute;
                 else
                     // throw interrupt
                     nextState = `RESET;
@@ -284,6 +291,22 @@ module MultiCycleControl(
                 // PC = PC <concat> target << 2
                 pcWrite = 1;
                 pcSource = 2'b10;
+                
+                nextState = `IR;
+            end
+            `ITypeExecute: begin
+                // ALUOut = A <operator> immediate
+                aluOp = `AluOpType_Immediate;
+                aluSrcA = 1;
+                aluSrcB = 2;
+                
+                nextState = `ITypeWriteBack;
+            end
+            `ITypeWriteBack: begin
+                // regs[$target] = ALUOut
+                regDst = 0;
+                memToReg = 0;
+                regWrite = 1;
                 
                 nextState = `IR;
             end
