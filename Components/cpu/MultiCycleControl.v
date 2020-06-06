@@ -211,7 +211,7 @@ module MultiCycleControl(
                     nextState = `BneCompletion;
                 else if (isJ)
                     nextState = `JumpCompletion;
-                else if (isAddi || isAndi || isOri || isSlti || isLui)
+                else if (isAddi || isAndi || isOri || isXori || isSlti || isLui)
                     nextState = `ITypeExecute;
                 else
                     // throw interrupt

@@ -48,10 +48,12 @@
     - andi
     - ori
     - xori
+    - lui
     - lw
     - sw
     - beq
     - bne
+    - slti
 - J-Type:
     - J
 
