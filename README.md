@@ -2,9 +2,14 @@
 
 ## Build
 
-- Move `Top.v` and UCF file out to the same directory as this readme
-- copy all files and directories at the same directory as this readme to the project folder
-- Load to the board
+1. Move `Top.v` and UCF file out to the same directory as this readme
+1. copy all files and directories at the same directory as this readme to the project folder
+1. Load to the board
+
+## Test by IVerilog
+
+1. Move file `COMPONENT_tb.v` to this directory;
+1. Run `make aCOMPONENT_tb.v`.
 
 ## License
 

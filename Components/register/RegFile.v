@@ -11,7 +11,11 @@ module RegFile(
     writeEnable,
 
     readData1,
-    readData2
+    readData2,
+
+    // debug only
+    readRegisterDebug,
+    readDataDebug
 );
     input wire clk;
     input wire rst;
@@ -22,6 +26,11 @@ module RegFile(
     input wire writeEnable;
     output reg [31:0] readData1;
     output reg [31:0] readData2;
+
+    // debug
+    input wire [4:0] readRegisterDebug;
+    output wire [31:0] readDataDebug;
+    assign readDataDebug = memory[readRegisterDebug];
 
     reg [31:0] memory [31:1];
 

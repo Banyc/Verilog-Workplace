@@ -1,5 +1,5 @@
-`ifndef __MultiCycleCpu__
-`define __MultiCycleCpu__
+`ifndef __MultiCycleCpuWithMem__
+`define __MultiCycleCpuWithMem__
 
 `include "./Components/shift/LeftShift2b.v"
 `include "./Components/shift/SignExtend16To32.v"
@@ -15,24 +15,9 @@
 `include "./Components/cpu/MultiCycleControl.v"
 `include "./Components/cpu/AluControl.v"
 
-module MultiCycleCpu(
+module MultiCycleCpuWithMem(
     clk,
     rst,
-    // ports for Ram32b
-    memoryReadDataAddress,
-    memRead,
-    memWrite,
-    registerReadData2,
-    freshMemoryReadData,
-    // ports for RegFile
-    readRegister1,
-    readRegister2,
-    writeRegister,
-    registerWriteData,
-    regWrite,
-    freshRegisterReadData1,
-    freshRegisterReadData2,
-    // custom outputs
     instruction,
     pcOut
 );
@@ -40,12 +25,7 @@ module MultiCycleCpu(
     input wire rst;
 
     output wire [31:0] instruction;
-    output wire [4:0] readRegister1;
-    output wire [4:0] readRegister2;
     output wire [31:0] pcOut;
-
-    assign readRegister1 = instruction[25:21];
-    assign readRegister2 = instruction[20:16];
 
     // instruction fetching
     // wire [31:0] instruction;
@@ -55,20 +35,20 @@ module MultiCycleCpu(
     wire [1:0] pcWriteCond;
     wire pcWrite;
     wire iorD;
-    output wire memRead;
-    output wire memWrite;
+    wire memRead;
+    wire memWrite;
     wire memToReg;
     wire irWrite;
     wire [1:0] pcSource;
     wire [1:0] aluOp;
     wire [1:0] aluSrcB;
     wire aluSrcA;
-    output wire regWrite;
+    wire regWrite;
     wire regDst;
-    input wire [31:0] freshRegisterReadData1;
-    input wire [31:0] freshRegisterReadData2;
+    wire [31:0] freshRegisterReadData1;
+    wire [31:0] freshRegisterReadData2;
     wire [31:0] registerReadData1;
-    output wire [31:0] registerReadData2;
+    wire [31:0] registerReadData2;
     wire [31:0] leftShiftedTargetAddress;
     wire [31:0] jumpAddress;
     wire [31:0] extendedImmediate;
@@ -83,17 +63,17 @@ module MultiCycleCpu(
     wire isAluResultZero;
     wire isBranch;
     wire [4:0] secondaryRegister;  // from rt or rd
-    output wire [4:0] writeRegister;  // from secondaryRegister or $ra
+    wire [4:0] writeRegister;  // from secondaryRegister or $ra
     // memory
-    output wire [31:0] memoryReadDataAddress;
-    input wire [31:0] freshMemoryReadData;
+    wire [31:0] memoryReadDataAddress;
+    wire [31:0] freshMemoryReadData;
     // write back
     wire [31:0] branchAddress;
     wire [31:0] branchJumpAddress;
     wire [31:0] nextPc;
     wire [31:0] memtoRegMuxOutData;
     wire [31:0] jumpAndLinkForRegisterDataMuxOutData;
-    output wire [31:0] registerWriteData;
+    wire [31:0] registerWriteData;
 
     // __instruction fetching__
     Pc pc(
@@ -141,6 +121,19 @@ module MultiCycleCpu(
         .aluSrcA(aluSrcA),
         .regWrite(regWrite),
         .regDst(regDst)
+    );
+    RegFile registers(
+        .clk(clk),
+        .rst(rst),
+        .readRegister1(instruction[25:21]),
+        .readRegister2(instruction[20:16]),
+        .writeRegister(writeRegister),
+        .writeData(registerWriteData),
+        .writeEnable(regWrite),
+        .readData1(freshRegisterReadData1),
+        .readData2(freshRegisterReadData2),
+        .readRegisterDebug(5'b0),
+        .readDataDebug()
     );
     Register32b aRegister(
         .clk(clk),
@@ -216,6 +209,15 @@ module MultiCycleCpu(
         .I0(pcOut),
         .I1(aluResult),
         .O(memoryReadDataAddress)
+    );
+    Ram32b dataMemory(
+        .clk(clk),
+        .rst(rst),
+        .address(memoryReadDataAddress),
+        .readEnable(memRead),
+        .writeEnable(memWrite),
+        .writeData(registerReadData2),
+        .readData(freshMemoryReadData)
     );
 
     // __write back__

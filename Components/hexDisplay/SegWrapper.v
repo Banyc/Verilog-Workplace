@@ -12,8 +12,10 @@ module SegWrapper(
 );
     input wire clk;
     input wire rst;
+    // enable; 0: enabled
     input wire [7:0] ens;
     input wire [31:0] nums;
+    // 1: activated
     input wire [7:0] points;
     output wire SEG_CLK;
     output wire SEG_DT;

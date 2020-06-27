@@ -6,7 +6,7 @@ module LedWrapper(
     rst,
     bitmap,
     LED_CLK,
-    LED_DO,
+    LED_DO
 );
     input wire clk;
     input wire rst;

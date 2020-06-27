@@ -1,6 +1,6 @@
-`include "./Components/cpu/MultiCycleCpu.v"
+`include "./Components/cpu/MultiCycleCpuWithMem.v"
 
-module MultiCycleCpu_tb(
+module MultiCycleCpuWithMem_tb(
     
 );
     reg clk;
@@ -8,7 +8,7 @@ module MultiCycleCpu_tb(
     wire [31:0] instruction;
     wire [31:0] pcOut;
 
-    MultiCycleCpu uut(
+    MultiCycleCpuWithMem uut(
         clk,
         rst,
         instruction,
@@ -20,7 +20,7 @@ module MultiCycleCpu_tb(
 
     // integer idx;
     initial begin
-        $dumpfile("MultiCycleCpu_tb.vcd"); $dumpvars(0, MultiCycleCpu_tb);
+        $dumpfile("MultiCycleCpuWithMem_tb.vcd"); $dumpvars(0, MultiCycleCpuWithMem_tb);
         // for (idx = 1; idx < 32; idx = idx + 1)
         //     $dumpvars(0, uut.registers.memory[idx]);
         $dumpvars(0, uut.registers.memory[1]);
@@ -79,4 +79,4 @@ module MultiCycleCpu_tb(
         #10;
     end
 
-endmodule // MultiCycleCpu_tb
+endmodule // MultiCycleCpuWithMem_tb
