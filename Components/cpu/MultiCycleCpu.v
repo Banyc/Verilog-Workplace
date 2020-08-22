@@ -34,7 +34,8 @@ module MultiCycleCpu(
     freshRegisterReadData2,
     // custom outputs
     instruction,
-    pcOut
+    pcOut,
+    state
 );
     input wire clk;
     input wire rst;
@@ -43,6 +44,7 @@ module MultiCycleCpu(
     output wire [4:0] readRegister1;
     output wire [4:0] readRegister2;
     output wire [31:0] pcOut;
+    output wire [3:0] state;
 
     assign readRegister1 = instruction[25:21];
     assign readRegister2 = instruction[20:16];
@@ -140,7 +142,10 @@ module MultiCycleCpu(
         .aluSrcB(aluSrcB),
         .aluSrcA(aluSrcA),
         .regWrite(regWrite),
-        .regDst(regDst)
+        .regDst(regDst),
+
+        // custom
+        .state(state)
     );
     Register32b aRegister(
         .clk(clk),

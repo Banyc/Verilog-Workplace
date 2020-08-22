@@ -27,12 +27,13 @@ module RegFile(
     output reg [31:0] readData1;
     output reg [31:0] readData2;
 
+    reg [31:0] memory [31:1];
+
     // debug
     input wire [4:0] readRegisterDebug;
     output wire [31:0] readDataDebug;
-    assign readDataDebug = memory[readRegisterDebug];
-
-    reg [31:0] memory [31:1];
+    assign readDataDebug = readRegisterDebug == 0 ? 0
+                                                    : memory[readRegisterDebug];
 
     always @(*) begin
         if (readRegister1 == 0) begin

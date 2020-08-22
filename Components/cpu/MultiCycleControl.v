@@ -48,7 +48,10 @@ module MultiCycleControl(
     aluSrcB,
     aluSrcA,
     regWrite,
-    regDst
+    regDst,
+
+    // custom output
+    state
 );
     input wire clk;
     input wire rst;
@@ -77,7 +80,8 @@ module MultiCycleControl(
     output reg regWrite;
     output reg regDst;
 
-    reg [3:0] state;
+    // reg [3:0] state;
+    output reg [3:0] state;
     reg [3:0] nextState;
 
     reg isR;

@@ -27,7 +27,7 @@ module MultiCycleCpu_tb(
     wire [31:0] freshRegisterReadData2;
     wire [31:0] instruction;
     wire [31:0] pcOut;
-    wire [4:0] readRegisterDebug;
+    reg [4:0] readRegisterDebug;
     wire [31:0] readDataDebug;
 
     wire manualClk;
@@ -67,6 +67,13 @@ module MultiCycleCpu_tb(
         .writeData(registerReadData2),
         .readData(freshMemoryReadData)
     );
+    // Ram32bIp dataMemoryIp(
+    //     .clka(!cpuClk),
+    //     .wea(memWrite),
+    //     .addra(memoryReadDataAddress[10 : 2]),
+    //     .dina(registerReadData2),
+    //     .douta(freshMemoryReadData)
+    // );
 
     // Register
     RegFile registers(
@@ -93,17 +100,9 @@ module MultiCycleCpu_tb(
             cpuClkCounter = cpuClkCounter + 1;
     end
 
-    // pcOut counter
-    reg [4:0] pcOutCounter = 0;
-    always @(pcOut or rst) begin
-        if (rst)
-            pcOutCounter = 0;
-        else
-            pcOutCounter = pcOutCounter + 1;
-    end
-
     wire integer pcHuman;
-    assign pcHuman = pcOut/4 + 1;
+    // assign pcHuman = pcOut/4 + 1;
+    assign pcHuman = pcOut/4;
 
     // integer idx;
     initial begin
@@ -144,6 +143,7 @@ module MultiCycleCpu_tb(
 
         // $monitor("instruction: %b, clock:%b\n", instruction, clk);
         $monitor("instruction: %b, PC: %d", instruction, pcHuman);
+        readRegisterDebug = 1;
         rst = 0;
         # 12;
         rst = 1;
@@ -155,7 +155,8 @@ module MultiCycleCpu_tb(
         
         # 10;
 
-        #10000; $finish;
+        // #10000; $finish;
+        #90000; $finish;
     end
 
     always begin

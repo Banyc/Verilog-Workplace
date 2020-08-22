@@ -3,6 +3,7 @@
 `include "./Components/hexDisplay/DispNum.v"
 `include "./Components/hexDisplay/SegWrapper.v"
 `include "./Components/cpu/MultiCycleCpu.v"
+// `include "./ipcore_dir/Ram32bIp.v"
 
 module Top(
     clk,
@@ -55,6 +56,7 @@ module Top(
     wire [31:0] freshRegisterReadData2;
     wire [31:0] instruction;
     wire [31:0] pcOut;
+    wire [3:0] state;
     wire [4:0] readRegisterDebug;
     wire [31:0] readDataDebug;
 
@@ -85,7 +87,9 @@ module Top(
         .freshRegisterReadData2(freshRegisterReadData2),
         // custom outputs
         .instruction(instruction),
-        .pcOut(pcOut)
+        .pcOut(pcOut),
+
+        .state(state)
     );
 
     // Memory
@@ -98,6 +102,13 @@ module Top(
         .writeData(registerReadData2),
         .readData(freshMemoryReadData)
     );
+    // Ram32bIp dataMemoryIp(
+    //     .clka(!cpuClk),
+    //     .wea(memWrite),
+    //     .addra(memoryReadDataAddress[11 : 2]),
+    //     .dina(registerReadData2),
+    //     .douta(freshMemoryReadData)
+    // );
 
     // Register
     RegFile registers(
@@ -124,22 +135,19 @@ module Top(
             cpuClkCounter = cpuClkCounter + 1;
     end
 
-    // pcOut counter
-    reg [4:0] pcOutCounter = 0;
-    always @(pcOut or rst) begin
-        if (rst)
-            pcOutCounter = 0;
-        else
-            pcOutCounter = pcOutCounter + 1;
+    // debug
+    reg [15:0] rstCount = 0;
+    always @(posedge rst) begin
+        rstCount = rstCount + 1;
     end
 
     // __input__
     // btn 
     wire [3:0] goodBtn;
-    pbdebounceWrapper easePress0(clk, BTN[0], goodBtn[0]);
-    pbdebounceWrapper easePress1(clk, BTN[1], goodBtn[1]);
-    pbdebounceWrapper easePress2(clk, BTN[2], goodBtn[2]);
-    pbdebounceWrapper easePress3(clk, BTN[3], goodBtn[3]);
+    pbdebounceWrapper easePress0(clk, !BTN[0], goodBtn[0]);
+    pbdebounceWrapper easePress1(clk, !BTN[1], goodBtn[1]);
+    pbdebounceWrapper easePress2(clk, !BTN[2], goodBtn[2]);
+    pbdebounceWrapper easePress3(clk, !BTN[3], goodBtn[3]);
 
     // __control by input__
     assign manualClk = goodBtn[3];
@@ -159,7 +167,12 @@ module Top(
                 displayContent = readDataDebug[31:16];
             end
             2: begin
-                displayContent = {cpuClkCounter[3:0], 4'b0000, pcOutCounter[3:0], pcOut[3:0]};
+                displayContent = {cpuClkCounter[3:0], 4'b0000, state[3:0], pcOut[3:0]};
+            end
+            3: begin
+                // debug
+                // displayContent = {cpuClkCounter, state[3:0], 3'b0, BTN[2], 3'b0, rst};
+                displayContent = {instruction[15:0]};
             end
         endcase
     end
@@ -169,7 +182,8 @@ module Top(
     assign LED[7] = manualClk;
     assign LED[6] = clk;
     assign LED[5] = rst;
-    assign LED[4:0] = pcOutCounter;
+    assign LED[4] = 0;
+    assign LED[3:0] = state;
 
     // hex display
     DispNum m6(clk, 1'b0, displayContent, 4'b0, ~{4'b1111}, AN, SEGMENT);

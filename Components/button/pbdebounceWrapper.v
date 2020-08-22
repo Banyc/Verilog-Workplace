@@ -10,7 +10,7 @@ module pbdebounceWrapper(
 );
 	wire [31:0] clk_div;
 
-	clkdiv m2(.clk(clk), .rst(1'b0),.clkdiv(clk_div));
+	clkdiv m2(.clk(clk), .rst(1'b0), .clkdiv(clk_div));
 	pbdebounce m0(.clk_1ms(clk_div[17]), .button(button), .pbreg(pbreg));
 
 endmodule
