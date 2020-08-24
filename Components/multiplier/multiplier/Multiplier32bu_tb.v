@@ -1,6 +1,6 @@
-`include "./Components/multiplier/multiplier/Multiplier32b.v"
+`include "./Components/multiplier/multiplier/Multiplier32bu.v"
 
-module Multiplier32b_tb(
+module Multiplier32bu_tb(
     
 );
     reg clk;
@@ -10,7 +10,7 @@ module Multiplier32b_tb(
     wire finish;
     wire [63:0] p;
 
-    Multiplier32b uut(
+    Multiplier32bu uut(
         clk,
         a,
         b,
@@ -20,7 +20,7 @@ module Multiplier32b_tb(
     );
 
     initial begin
-        $dumpfile("Multiplier32b_tb.vcd"); $dumpvars(0, Multiplier32b_tb);
+        $dumpfile("Multiplier32bu_tb.vcd"); $dumpvars(0, Multiplier32bu_tb);
         clk = 0;
         a = 351;  //  15F
         b = 23;  // 17
@@ -30,25 +30,43 @@ module Multiplier32b_tb(
         # 5;
 
         start = 1;
-
         # 10;
-
         start = 0;
 
         # 10;
         
-        a = 32'hfffffffe;
-        // a = 2;
+        a = 3;
         b = 3;
-        // -6
+        // 9
         
         # 3000;
 
         start = 1;
-
         # 20;
-
         start = 0;
+
+        # 3000;
+
+        a = 32'h7fffffff;
+        // a = 2147483647;
+        b = 32'h7fffffff;
+        // b = 2147483647;
+        // 4611686014132420609
+        // 0x3FFFFFFF00000001
+
+        start = 1;
+        # 20;
+        start = 0;
+        
+        # 3000;
+
+        start = 1;
+        # 20;
+        start = 0;
+
+        a = 32'hffffffff;
+        b = 32'hffffffff;
+        // 0xFFFF FFFE 0000 0001
 
         # 10000; $finish;
     end
