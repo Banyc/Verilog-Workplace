@@ -1,7 +1,7 @@
 `ifndef __Multiplier32bu
 `define __Multiplier32bu
 
-// signed 2's complement
+// unsigned
 
 `include "./Components/adder/AddSub32bFlag.v"
 `include "./Components/shift/Shift65b.v"

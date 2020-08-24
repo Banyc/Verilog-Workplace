@@ -1,7 +1,7 @@
 `ifndef __Divider32bu
 `define __Divider32bu
 
-// signed 2's complement
+// unsigned
 
 `include "./Components/adder/AddSub32bFlag.v"
 `include "./Components/shift/Shift65b.v"
@@ -11,10 +11,10 @@
 
 module Divider32bu (
     clk,
-    a,
-    b,
-    quo,
-    rem,
+    a,  // dividend
+    b,  // divisor
+    quo,  // quotient
+    rem,  // remainder
     rst,  // positive to start
     finish
 );
