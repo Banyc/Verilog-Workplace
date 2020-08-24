@@ -125,6 +125,7 @@ module OpcodeControl(
             `RType: aluOp = `AluOpType_Funct;
             // sub
             `BEQ: aluOp = `AluOpType_Sub;
+            `BNE: aluOp = `AluOpType_Sub;
             // add
             `LW: aluOp = `AluOpType_Add;
             `SW: aluOp = `AluOpType_Add;
