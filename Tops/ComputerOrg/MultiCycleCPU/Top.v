@@ -63,8 +63,18 @@ module Top(
     wire manualClk;
     wire clkMode;  // 0: manual; 1: auto
 
+    // assign cpuClk = (realClkMode) ? clk :
+    //                             manualClk;
     assign cpuClk = (clkMode) ? clk :
                                 manualClk;
+
+    // reg realClkMode;
+
+    // always @(*) begin
+    //     if (clk == 0) begin
+    //         realClkMode = clkMode;
+    //     end
+    // end
 
     // __subject__
     // CPU
@@ -106,6 +116,7 @@ module Top(
     //     .clka(!cpuClk),
     //     .wea(memWrite),
     //     .addra(memoryReadDataAddress[11 : 2]),
+    //     // .addra(memoryReadDataAddress[9 : 0]),
     //     .dina(registerReadData2),
     //     .douta(freshMemoryReadData)
     // );
@@ -172,7 +183,7 @@ module Top(
             3: begin
                 // debug
                 // displayContent = {cpuClkCounter, state[3:0], 3'b0, BTN[2], 3'b0, rst};
-                displayContent = {instruction[15:0]};
+                displayContent = {pcOut[15:0]};
             end
         endcase
     end
@@ -202,7 +213,8 @@ module Top(
         .clk(clk),
         .rst(1'b0),
         .ens(8'b0),
-        .nums(pcOut),  // show PC
+        // .nums(pcOut),  // show PC
+        .nums(instruction),  // show instruction
         .points(8'b0),
         .SEG_CLK(SEG_CLK),
         .SEG_DT(SEG_DT)
