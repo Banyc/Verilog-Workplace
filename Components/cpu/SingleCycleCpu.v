@@ -18,13 +18,20 @@
 module SingleCycleCpu(
     clk,
     rst,
+    // custom outputs
     instruction,
-    pcOut
+    pcOut,
+    // debug only
+    readRegisterDebug,
+    readDataDebug
 );
     input wire clk;
     input wire rst;
     output wire [31:0] instruction;
     output wire [31:0] pcOut;
+
+    input wire [4:0] readRegisterDebug;
+    output wire [31:0] readDataDebug;
 
     // instruction fetching
     // wire [31:0] instruction;
@@ -93,6 +100,12 @@ module SingleCycleCpu(
         .readAddress(pcOut),
         .data(instruction)
     );
+    // TODO: test clk. If not working, change clk to !clk
+    // Rom32bIp instructionMemoryIp(
+    //     .clka(clk),
+    //     .addra(pcOut),
+    //     .douta(instruction)
+    // );
 
     // __instruction decoding__
     LeftShift2b instructionShiftLeft2(
@@ -127,7 +140,10 @@ module SingleCycleCpu(
         .writeData(registerWriteData),
         .writeEnable(regWrite),
         .readData1(registerReadData1),
-        .readData2(registerReadData2)
+        .readData2(registerReadData2),
+
+        .readRegisterDebug(readRegisterDebug),
+        .readDataDebug(readDataDebug)
     );
     // PC + (signExtend(instruction[15:0]) << 2)
         SignExtend16To32 signExtend(
@@ -202,6 +218,13 @@ module SingleCycleCpu(
         .writeData(registerReadData2),
         .readData(memoryReadData)
     );
+    // Ram32bIp dataMemoryIp(
+    //     .clka(!clk),
+    //     .wea(memWrite),
+    //     .addra(aluResult[11 : 2]),
+    //     .dina(registerReadData2),
+    //     .douta(memoryReadData)
+    // );
 
     // __write back__
         // PC-related
