@@ -31,13 +31,13 @@ module Shift65b (
                 q <= {q[64], q[64:1]};
             end
             `Shift65b_Operation_ShiftLeftArithmetic: begin
-                q <= {d[63:0], d[0]};
+                q <= {q[63:0], q[0]};
             end
             `Shift65b_Operation_ShiftRightLogical: begin
                 q <= {1'b0, q[64:1]};
             end
             `Shift65b_Operation_ShiftLeftLogical: begin
-                q <= {d[63:0], 1'b0};
+                q <= {q[63:0], 1'b0};
             end
         endcase
     end
