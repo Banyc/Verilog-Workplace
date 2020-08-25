@@ -19,7 +19,7 @@ module Divider32b (
     finish
 );
     input wire clk;
-    input wire [63:0] a;
+    input wire [31:0] a;
     input wire [31:0] b;
     input wire rst;
     output wire finish;
@@ -28,14 +28,14 @@ module Divider32b (
     wire [32:0] quoFromDivider;
     wire [31:0] remFromDivider;
 
-    wire [63:0] aUnsigned;
+    wire [31:0] aUnsigned;
     wire [31:0] bUnsigned;
 
-    assign aUnsigned = a[63] == 0 ? a : ~a + 1;
+    assign aUnsigned = a[31] == 0 ? a : ~a + 1;
     assign bUnsigned = b[31] == 0 ? b : ~b + 1;
 
-    assign quo = !(a[63] ^ b[31]) ? quoFromDivider : ~quoFromDivider + 1;
-    assign rem = !(a[63]) ? remFromDivider : ~remFromDivider + 1;
+    assign quo = !(a[31] ^ b[31]) ? quoFromDivider : ~quoFromDivider + 1;
+    assign rem = !(a[31]) ? remFromDivider : ~remFromDivider + 1;
 
     Divider32bu divider32bu (
         clk,

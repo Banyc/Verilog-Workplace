@@ -4,7 +4,7 @@ module Divider32b_tb(
     
 );
     reg clk;
-    reg [63:0] a;
+    reg [31:0] a;
     reg [31:0] b;
     reg start;
     wire finish;
@@ -67,7 +67,7 @@ module Divider32b_tb(
         
         # 3000;
 
-        a = 64'hfffffffffffffff9;
+        a = 32'hfffffff9;
         b = 32'hfffffffe;
 
         start = 1;
@@ -76,7 +76,7 @@ module Divider32b_tb(
         
         # 3000;
 
-        a = 64'hfffffffffffffff9;
+        a = 32'hfffffff9;
         b = 32'h2;
 
         start = 1;

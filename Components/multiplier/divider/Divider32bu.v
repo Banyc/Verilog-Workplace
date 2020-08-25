@@ -2,6 +2,7 @@
 `define __Divider32bu
 
 // unsigned
+// restoring algorithm
 
 `include "./Components/adder/AddSub32bFlag.v"
 `include "./Components/shift/Shift65b.v"
@@ -19,7 +20,7 @@ module Divider32bu (
     finish
 );
     input wire clk;
-    input wire [63:0] a;
+    input wire [31:0] a;
     input wire [31:0] b;
     input wire rst;
     output wire finish;
@@ -59,7 +60,7 @@ module Divider32bu (
 
     Mux4to1_65b remainderSourceMux (
         muxRemainderSourceSelector,
-        {1'b0, a},
+        {33'b0, a},
         {!carry, aluResult, quo[31:0]},
         {rem, quo[32:1], quotientRightmostBit},
         65'b0,

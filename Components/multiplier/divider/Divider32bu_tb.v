@@ -4,7 +4,7 @@ module Divider32bu_tb(
     
 );
     reg clk;
-    reg [63:0] a;
+    reg [31:0] a;
     reg [31:0] b;
     reg start;
     wire finish;
