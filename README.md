@@ -19,3 +19,37 @@ EVERYTHING UNDER THE SAME DIRECTORY IS OWNED BY 3170106317 AND IS PRIVATE, AND S
 
 - <https://www.fpga4student.com/>
 - blocking vs non-blocking - <https://youtu.be/kwgvU2MIq1I>
+
+## Notes
+
+### outdated read problem
+
+```verilog
+always @(state) began
+    case (state)
+        state1: began
+            shiftRegister = 1;
+        end
+        state2: began
+            // read register
+        end
+    endcase
+end
+```
+
+... When reading the register, the value has not been shifted.
+
+To solve the problem (to get the updated value):
+
+```verilog
+always @(*) began
+    case (state)
+        state1: began
+            shiftRegister = 1;
+        end
+        state2: began
+            // read register
+        end
+    endcase
+end
+```
