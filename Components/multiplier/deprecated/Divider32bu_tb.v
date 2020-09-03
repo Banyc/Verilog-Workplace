@@ -1,4 +1,4 @@
-`include "./Components/multiplier/Divider32bu.v"
+`include "./Components/multiplier/deprecated/Divider32bu.v"
 
 module Divider32bu_tb(
     

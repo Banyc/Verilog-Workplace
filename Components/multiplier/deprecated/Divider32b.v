@@ -4,7 +4,7 @@
 // signed
 
 `include "./Components/adder/AddSub32bFlag.v"
-`include "./Components/multiplier/Divider32bu.v"
+`include "./Components/multiplier/deprecated/Divider32bu.v"
 
 module Divider32b(
     clk,
