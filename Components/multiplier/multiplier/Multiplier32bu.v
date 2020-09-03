@@ -4,7 +4,7 @@
 // unsigned
 
 `include "./Components/adder/AddSub32bFlag.v"
-`include "./Components/shift/Shift65b.v"
+`include "./Components/register/ShiftReg65b.v"
 `include "./Components/register/Register32b.v"
 `include "./Components/mux/Mux2to1_65b.v"
 `include "./Components/multiplier/multiplier/Multiplier32bControl.v"
@@ -62,17 +62,18 @@ module Multiplier32bu (
 
     always @(*) begin
         if (productionWrite) begin
-            productionOperation = `Shift65b_Operation_WriteD;
+            productionOperation = `ShiftReg65b_Operation_WriteD;
         end else if (productionShiftRight) begin
-            productionOperation = `Shift65b_Operation_ShiftRightLogical;
+            productionOperation = `ShiftReg65b_Operation_ShiftRightLogical;
         end else begin
-            productionOperation = `Shift65b_Operation_DoNothing;
+            productionOperation = `ShiftReg65b_Operation_DoNothing;
         end
     end
 
-    Shift65b production (
+    ShiftReg65b production (
         .clk(clk),
         .operation(productionOperation),
+        .shiftIn(1'b0),
         .d(productionSource),
         .q({carryBitOfProduction, p})
     );

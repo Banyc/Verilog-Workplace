@@ -4,7 +4,7 @@
 // signed 2's complement
 
 `include "./Components/adder/AddSub32bFlag.v"
-`include "./Components/shift/Shift65b.v"
+`include "./Components/register/ShiftReg65b.v"
 `include "./Components/register/Register32b.v"
 `include "./Components/mux/Mux2to1_65b.v"
 `include "./Components/multiplier/multiplier/Multiplier32bu.v"

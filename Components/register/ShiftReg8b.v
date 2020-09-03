@@ -1,6 +1,7 @@
 `ifndef __ShiftReg8b
 `define __ShiftReg8b
 
+// shift right
 module ShiftReg8b(
     clk, S_L, s_in, p_in, Q
 );

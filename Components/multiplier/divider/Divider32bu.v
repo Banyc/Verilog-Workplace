@@ -5,7 +5,7 @@
 // restoring algorithm
 
 `include "./Components/adder/AddSub32bFlag.v"
-`include "./Components/shift/Shift65b.v"
+`include "./Components/register/ShiftReg65b.v"
 `include "./Components/register/Register32b.v"
 `include "./Components/mux/Mux4to1_65b.v"
 `include "./Components/multiplier/divider/Divider32bControl.v"
@@ -69,17 +69,18 @@ module Divider32bu (
 
     always @(*) begin
         if (remainderWrite) begin
-            remainderOperation = `Shift65b_Operation_WriteD;
+            remainderOperation = `ShiftReg65b_Operation_WriteD;
         end else if (remainderShiftLeft) begin
-            remainderOperation = `Shift65b_Operation_ShiftLeftLogical;
+            remainderOperation = `ShiftReg65b_Operation_ShiftLeftLogical;
         end else begin
-            remainderOperation = `Shift65b_Operation_DoNothing;
+            remainderOperation = `ShiftReg65b_Operation_DoNothing;
         end
     end
 
-    Shift65b remainderRegister (
+    ShiftReg65b remainderRegister (
         .clk(clk),
         .operation(remainderOperation),
+        .shiftIn(1'b0),
         .d(remainderSource),
         .q({rem, quo})
     );

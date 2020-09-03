@@ -3,6 +3,7 @@
 
 `include "./Components/register/ShiftReg8b.v"
 
+// shift right
 module ShiftReg32b(
     clk, load, S_L, s_in, p_in, Q
 );
