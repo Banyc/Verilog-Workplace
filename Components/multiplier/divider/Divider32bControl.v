@@ -5,7 +5,6 @@
 
 `define Divider32bControl_RemainderSourceMux_InitialDividend 2'h0
 `define Divider32bControl_RemainderSourceMux_Alu 2'h1
-`define Divider32bControl_RemainderSourceMux_RightmostBit 2'h2
 
 module Divider32bControl (
     clk,
@@ -13,6 +12,7 @@ module Divider32bControl (
     remainderLeftmostBit,
     aluIsSubtract,
     remainderShiftLeft,
+    remainderAppendBit,
     remainderWrite,
     quotientRightmostBit,
     muxRemainderSourceSelector,
@@ -24,6 +24,7 @@ module Divider32bControl (
     input wire remainderLeftmostBit;
     output reg aluIsSubtract;
     output reg remainderShiftLeft;
+    output reg remainderAppendBit;
     output reg remainderWrite;
     output reg quotientRightmostBit;
     output reg [1:0] muxRemainderSourceSelector;
@@ -52,7 +53,7 @@ module Divider32bControl (
     // parameter SHIFT_LEFT_1 = 4'h3;
     parameter APPEND_ONE = 4'h4;
     // parameter ADD = 4'h5;
-    parameter SHIFT_LEFT_2 = 4'h6;
+    parameter SHIFT_LEFT_APPEND_ZERO = 4'h6;
     // parameter APPEND_ZERO = 4'h7;
     parameter HALT = 4'hF;
 
@@ -67,6 +68,7 @@ module Divider32bControl (
     always @(*) begin
         aluIsSubtract = 0;
         remainderShiftLeft = 0;
+        remainderAppendBit = 0;
         remainderWrite = 0;
         quotientRightmostBit = 0;
         muxRemainderSourceSelector = 0;
@@ -106,10 +108,11 @@ module Divider32bControl (
             AFTER_SUBTRACT: begin
                 if (remainderLeftmostBit == 1) begin
                     // succeeded
-                    // shift left
+                    // shift left + append 1
                     remainderShiftLeft = 1;
+                    remainderAppendBit = 1;
 
-                    nextState = APPEND_ONE;
+                    nextState = SUBTRACT;
                 end else begin
                     // failed
                     // add
@@ -117,29 +120,15 @@ module Divider32bControl (
                     remainderWrite = 1;
                     muxRemainderSourceSelector = `Divider32bControl_RemainderSourceMux_Alu;
 
-                    nextState = SHIFT_LEFT_2;
+                    nextState = SHIFT_LEFT_APPEND_ZERO;
                 end
             end
-            APPEND_ONE: begin
-                remainderWrite = 1;
-                muxRemainderSourceSelector = `Divider32bControl_RemainderSourceMux_RightmostBit;
-                quotientRightmostBit = 1;
-                
-                nextState = SUBTRACT;
-            end
-            SHIFT_LEFT_2: begin
+            SHIFT_LEFT_APPEND_ZERO: begin
                 remainderShiftLeft = 1;
+                remainderAppendBit = 0;
                 
-                // nextState = APPEND_ZERO;
                 nextState = SUBTRACT;
             end
-            // APPEND_ZERO: begin
-            //     remainderWrite = 1;
-            //     muxRemainderSourceSelector = `Divider32bControl_RemainderSourceMux_RightmostBit;
-            //     quotientRightmostBit = 0;
-                
-            //     nextState = SUBTRACT;
-            // end
 
             HALT: begin
                 isHalt = 1;

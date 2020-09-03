@@ -1,6 +1,7 @@
 
 ```graphviz
 digraph state_machine {
+    label="division control: restoring algorithm";
     rankdir=LR;
     size="8,5"
     compound=true;
@@ -12,22 +13,18 @@ digraph state_machine {
         afterSub[shape="none"][style="invis"][label=""];
         cluster_afterSub_start [shape = point];
         add;
-        shiftLeft_1;
+        shiftLeft_append1;
 
         cluster_afterSub_start -> add [label="failed"];
-        cluster_afterSub_start -> shiftLeft_1 [label="succeeded"];
+        cluster_afterSub_start -> shiftLeft_append1 [label="succeeded"];
     };
     reset -> sub;
     sub -> afterSub [lhead="cluster_afterSub"];
     sub -> halt;
 
-    add -> shiftLeft_2;
-    <!-- shiftLeft_2 -> append_0; -->
-    shiftLeft_2 -> sub;
+    add -> shiftLeft_append0;
+    shiftLeft_append0 -> sub;
 
-    shiftLeft_1 -> append_1;
-
-    <!-- append_0 -> sub; -->
-    append_1 -> sub;
+    shiftLeft_append1 -> sub;
 }
 ```

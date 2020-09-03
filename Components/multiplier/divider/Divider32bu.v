@@ -30,6 +30,7 @@ module Divider32bu (
     // control wires
     wire aluIsSubtract;
     wire remainderShiftLeft;
+    wire remainderAppendBit;
     wire remainderWrite;
     wire quotientRightmostBit;
     wire [1:0] muxRemainderSourceSelector;
@@ -62,7 +63,7 @@ module Divider32bu (
         muxRemainderSourceSelector,
         {33'b0, a},
         {!carry, aluResult, quo[31:0]},
-        {rem, quo[32:1], quotientRightmostBit},
+        65'b0,
         65'b0,
         remainderSource
     );
@@ -71,7 +72,7 @@ module Divider32bu (
         if (remainderWrite) begin
             remainderOperation = `ShiftReg65b_Operation_WriteD;
         end else if (remainderShiftLeft) begin
-            remainderOperation = `ShiftReg65b_Operation_ShiftLeftLogical;
+            remainderOperation = `ShiftReg65b_Operation_ShiftLeftCustom;
         end else begin
             remainderOperation = `ShiftReg65b_Operation_DoNothing;
         end
@@ -80,7 +81,7 @@ module Divider32bu (
     ShiftReg65b remainderRegister (
         .clk(clk),
         .operation(remainderOperation),
-        .shiftIn(1'b0),
+        .shiftIn(remainderAppendBit),
         .d(remainderSource),
         .q({rem, quo})
     );
@@ -91,6 +92,7 @@ module Divider32bu (
         .remainderLeftmostBit(rem[31]),
         .aluIsSubtract(aluIsSubtract),
         .remainderShiftLeft(remainderShiftLeft),
+        .remainderAppendBit(remainderAppendBit),
         .remainderWrite(remainderWrite),
         .quotientRightmostBit(quotientRightmostBit),
         .muxRemainderSourceSelector(muxRemainderSourceSelector),
