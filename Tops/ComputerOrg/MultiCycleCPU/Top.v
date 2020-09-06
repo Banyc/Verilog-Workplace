@@ -2,7 +2,7 @@
 `include "./Components/LED/LedWrapper.v"
 `include "./Components/hexDisplay/DispNum.v"
 `include "./Components/hexDisplay/SegWrapper.v"
-`include "./Components/cpu/MultiCycleCpu.v"
+`include "./Components/cpu/multiCycleCpu/MultiCycleCpu.v"
 // `include "./ipcore_dir/Ram32bIp.v"
 
 module Top(

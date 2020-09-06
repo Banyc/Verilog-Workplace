@@ -12,7 +12,7 @@
 `include "./Components/memory/Ram32b.v"
 `include "./Components/adder/Alu32b.v"
 `include "./Components/adder/AddSub32bFlag.v"
-`include "./Components/cpu/OpcodeControl.v"
+`include "./Components/cpu/singleCycleCpu/OpcodeControl.v"
 `include "./Components/cpu/AluControl.v"
 
 module SingleCycleCpu(
