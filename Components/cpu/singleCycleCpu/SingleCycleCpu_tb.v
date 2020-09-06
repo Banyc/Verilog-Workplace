@@ -1,4 +1,4 @@
-`include "./Components/cpu/SingleCycleCpu.v"
+`include "./Components/cpu/singleCycleCpu/SingleCycleCpu.v"
 
 module SingleCycleCpu_tb(
     
