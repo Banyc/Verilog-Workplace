@@ -28,6 +28,7 @@ module Rom32b(
 
     always @(posedge rst) begin
         if (rst) begin
+            // big endian
             $readmemh("./Components/memory/rom.txt", memory);
         end
     end

@@ -30,24 +30,25 @@ module Ram32b(
 
     always @(posedge rst) begin
         if (rst) begin
+            // big endian
             $readmemh("./Components/memory/ram.txt", memory);
         end
     end
     always @(posedge clk) begin
         if (writeEnable) begin
-            memory[address] <= writeData[7:0];
-            memory[address + 1] <= writeData[15:8];
-            memory[address + 2] <= writeData[23:16];
-            memory[address + 3] <= writeData[31:24];
+            memory[address] <= writeData[31:24];
+            memory[address + 1] <= writeData[23:16];
+            memory[address + 2] <= writeData[15:8];
+            memory[address + 3] <= writeData[7:0];
         end
     end
     always @(negedge clk) begin
         if (readEnable) begin
             readData <= {
-                memory[address + 3],
-                memory[address + 2],
+                memory[address],
                 memory[address + 1],
-                memory[address]
+                memory[address + 2],
+                memory[address + 3]
             };
         end
     end
