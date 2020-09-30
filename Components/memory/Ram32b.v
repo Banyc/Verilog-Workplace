@@ -44,10 +44,10 @@ module Ram32b(
     always @(negedge clk) begin
         if (readEnable) begin
             readData <= {
-                memory[address],
-                memory[address + 1],
+                memory[address + 3],
                 memory[address + 2],
-                memory[address + 3]
+                memory[address + 1],
+                memory[address]
             };
         end
     end

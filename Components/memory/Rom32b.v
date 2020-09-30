@@ -28,7 +28,7 @@ module Rom32b(
 
     always @(posedge rst) begin
         if (rst) begin
-            $readmemb("./Components/memory/rom.txt", memory);
+            $readmemh("./Components/memory/rom.txt", memory);
         end
     end
 
