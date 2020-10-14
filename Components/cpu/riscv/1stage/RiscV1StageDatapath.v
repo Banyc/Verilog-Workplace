@@ -18,18 +18,28 @@
 `include "Components/cpu/riscv/shared/targetGeneration/JumpTargGen.v"
 `include "Components/cpu/riscv/shared/BranchCondGen.v"
 `include "Components/cpu/riscv/1stage/RiscV1StageControl.v"
-`include "Components/memory/Ram32b.v"
-`include "Components/memory/Rom32b.v"
 
 
 module RiscV1StageDatapath (
     clk,
     rst,
+    // ROM
     pc,
-    instruction
+    instruction,
+    // RAM
+    aluOut,
+    memoryReadEnable,
+    memoryWriteEnable,
+    rs2,
+    memoryOut,
+    // Registers
+    readRegisterDebug,
+    readDataDebug
 );
     input wire clk;
     input wire rst;
+    input wire [4:0] readRegisterDebug;
+    output wire [31:0] readDataDebug;
 
     // MUXs
     wire [31:0] pc_sel_out;
@@ -40,18 +50,18 @@ module RiscV1StageDatapath (
     // 32 bits outputs
     output wire [31:0] pc;
     wire [31:0] pc_4;
-    output wire [31:0] instruction;
+    input wire [31:0] instruction;
     wire [31:0] branch;
     wire [31:0] jump;
     wire [31:0] jalr;
     wire [31:0] rs1;
-    wire [31:0] rs2;
+    output wire [31:0] rs2;
     wire [31:0] iTypeSignExtend;
     wire [31:0] shamtSignExtend;
     wire [31:0] sTypeSignExtend;
     wire [31:0] uTypeImmediate;
-    wire [31:0] aluOut;
-    wire [31:0] memoryOut;
+    output wire [31:0] aluOut;
+    input wire [31:0] memoryOut;
 
     // control signals
     wire is_br_eq;
@@ -61,8 +71,8 @@ module RiscV1StageDatapath (
     wire [2:0] pc_sel;
     wire [1:0] wb_sel;
     wire rf_wen;  // reg file write enable
-    wire memoryWriteEnable;
-    wire memoryReadEnable;
+    output wire memoryWriteEnable;
+    output wire memoryReadEnable;
 
     // begin: MUX for PC input datapath
     Mux8to1_32b pc_selMux_instr(
@@ -90,13 +100,13 @@ module RiscV1StageDatapath (
     assign pc_4 = pc + 4;
     // end: PC datapath
 
-    // begin: ROM datapath
-    Rom32b rom32b_instr(
-        .rst(rst),
-        .readAddress(pc),
-        .data(instruction)
-    );
-    // end: ROM datapath
+    // // begin: ROM datapath
+    // Rom32b rom32b_instr(
+    //     .rst(rst),
+    //     .readAddress(pc),
+    //     .data(instruction)
+    // );
+    // // end: ROM datapath
 
     // begin: target generation datapath
     BranchTargGen branchTargGen_instr(
@@ -159,8 +169,8 @@ module RiscV1StageDatapath (
         .readData2(rs2),
 
         // debug only
-        .readRegisterDebug(),
-        .readDataDebug()
+        .readRegisterDebug(readRegisterDebug),
+        .readDataDebug(readDataDebug)
     );
     // end: RegFile datapath
 
@@ -223,17 +233,17 @@ module RiscV1StageDatapath (
     );
     // end: MUX for RegFile input datapath
 
-    // begin: RAM datapath
-    Ram32b ram32b_instr(
-        .clk(clk),
-        .rst(rst),
-        .address(aluOut),
-        .readEnable(memoryReadEnable),
-        .writeEnable(memoryWriteEnable),
-        .writeData(rs2),
-        .readData(memoryOut)
-    );
-    // end: RAM datapath
+    // // begin: RAM datapath
+    // Ram32b ram32b_instr(
+    //     .clk(clk),
+    //     .rst(rst),
+    //     .address(aluOut),
+    //     .readEnable(memoryReadEnable),
+    //     .writeEnable(memoryWriteEnable),
+    //     .writeData(rs2),
+    //     .readData(memoryOut)
+    // );
+    // // end: RAM datapath
 
 endmodule
 
