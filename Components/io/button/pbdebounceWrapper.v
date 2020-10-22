@@ -1,7 +1,7 @@
 // reduce the bouncing electric signals when pressing a button
 
 `include "./Components/clock/clkdiv.v"
-`include "./Components/button/pbdebounce.v"
+`include "./Components/io/button/pbdebounce.v"
 
 module pbdebounceWrapper(
     input wire clk,

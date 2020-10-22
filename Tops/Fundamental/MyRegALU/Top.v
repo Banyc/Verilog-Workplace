@@ -1,9 +1,9 @@
 
 `include "./Components/register/Register4b.v"
-`include "./Components/button/Load_Gen.v"
+`include "./Components/io/button/Load_Gen.v"
 `include "./Components/clock/clkdiv.v"
 `include "./Components/adder/AddSub4b.v"
-`include "./Components/hexDisplay/DispNum.v"
+`include "./Components/io/hexDisplay/DispNum.v"
 `include "./Components/mux/Mux4to1b4.v"
 `include "./Components/adder/ALU.v"
 

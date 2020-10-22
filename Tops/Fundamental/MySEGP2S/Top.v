@@ -1,5 +1,5 @@
 `include "./Components/register/ShiftReg8b.v"
-`include "./Components/hexDisplay/SEG_DRV.v"
+`include "./Components/io/hexDisplay/SEG_DRV.v"
 
 module Top(
     clk,

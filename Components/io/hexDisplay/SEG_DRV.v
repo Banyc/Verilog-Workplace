@@ -1,4 +1,4 @@
-`include "./Components/hexDisplay/MC14495.v"
+`include "./Components/io/hexDisplay/MC14495.v"
 `include "./Components/register/ShiftReg8b.v"
 
 // drive 8 hexs on motherboard

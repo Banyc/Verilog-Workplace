@@ -1,5 +1,5 @@
 `include "./Components/clock/clkdiv.v"
-`include "./Components/hexDisplay/SEG_DRV.v"
+`include "./Components/io/hexDisplay/SEG_DRV.v"
 
 // Disp8Num d1(clk, 1'b0, num, 8'b0, 8'b0, SEG_CLK, SEG_DT);
 

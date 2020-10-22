@@ -1,9 +1,9 @@
 
 `include "./Components/register/Register4b.v"
-`include "./Components/button/Load_Gen.v"
+`include "./Components/io/button/Load_Gen.v"
 `include "./Components/clock/clkdiv.v"
 `include "./Components/adder/AddSub4b.v"
-`include "./Components/hexDisplay/DispNum.v"
+`include "./Components/io/hexDisplay/DispNum.v"
 
 module Top(
     clk,

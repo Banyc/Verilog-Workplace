@@ -3,7 +3,7 @@
 `ifndef __Load_Gen
 `define __Load_Gen
 
-`include "./Components/button/pbdebounce.v"
+`include "./Components/io/button/pbdebounce.v"
 
 module Load_Gen(
     input wire clk,

@@ -1,10 +1,10 @@
 // MyALU
 
 `include "./Components/clock/clkdiv.v"
-`include "./Components/button/pbdebounce.v"
-`include "./Components/hexDisplay/NumberGenerator.v"
+`include "./Components/io/button/pbdebounce.v"
+`include "./Components/io/hexDisplay/NumberGenerator.v"
 `include "./Components/adder/ALU.v"
-`include "./Components/hexDisplay/DispNum.v"
+`include "./Components/io/hexDisplay/DispNum.v"
 
 module top(
 	input wire clk,

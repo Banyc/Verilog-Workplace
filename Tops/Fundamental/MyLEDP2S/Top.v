@@ -1,9 +1,9 @@
 `include "./Components/clock/clk_1ms.v"
-`include "./Components/hexDisplay/NumberGenerator.v"
-`include "./Components/hexDisplay/DispNum.v"
+`include "./Components/io/hexDisplay/NumberGenerator.v"
+`include "./Components/io/hexDisplay/DispNum.v"
 `include "./Components/register/ShiftReg8b.v"
-`include "./Components/button/pbdebounce.v"
-`include "./Components/LED/LED_DRV.v"
+`include "./Components/io/button/pbdebounce.v"
+`include "./Components/io/LED/LED_DRV.v"
 
 module Top(
     clk,

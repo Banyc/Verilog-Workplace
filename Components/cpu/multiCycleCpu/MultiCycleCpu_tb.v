@@ -1,7 +1,3 @@
-`include "./Components/button/pbdebounceWrapper.v"
-`include "./Components/LED/LedWrapper.v"
-`include "./Components/hexDisplay/DispNum.v"
-`include "./Components/hexDisplay/SegWrapper.v"
 `include "./Components/cpu/multiCycleCpu/MultiCycleCpu.v"
 
 module MultiCycleCpu_tb(

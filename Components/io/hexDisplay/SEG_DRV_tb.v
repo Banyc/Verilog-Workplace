@@ -1,4 +1,4 @@
-`include "./Components/hexDisplay/SEG_DRV.v"
+`include "./Components/io/hexDisplay/SEG_DRV.v"
 
 module SEG_DRV_tb(
     

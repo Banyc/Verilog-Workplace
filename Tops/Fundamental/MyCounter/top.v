@@ -1,7 +1,7 @@
 // MyCounter
 
 `include "./Components/clock/clk_1s.v"
-`include "./Components/hexDisplay/DispNum.v"
+`include "./Components/io/hexDisplay/DispNum.v"
 `include "./Components/counter/Counter4b.v"
 
 module top(

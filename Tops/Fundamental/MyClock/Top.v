@@ -1,7 +1,7 @@
 
 `include "./Components/clock/clk_100ms.v"
 `include "./Components/counter/M_74LS161.v"
-`include "./Components/hexDisplay/Disp8Num.v"
+`include "./Components/io/hexDisplay/Disp8Num.v"
 
 module Top(
     clk, SW, SEG_CLK, SEG_CLR, SEG_DT, SEG_EN

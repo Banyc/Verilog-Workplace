@@ -4,13 +4,13 @@
 `include "./Components/clock/clk_250ms.v"
 `include "./Components/clock/clk_100ms.v"
 // `include "./Components/clock/clk_50mhz.v"
-`include "./Components/VGA/VGA_640x480_60hz_DRV.v"
-`include "./Components/hexDisplay/DispNum.v"
-`include "./Components/hexDisplay/SEG_DRV.v"
+`include "./Components/io/VGA/VGA_640x480_60hz_DRV.v"
+`include "./Components/io/hexDisplay/DispNum.v"
+`include "./Components/io/hexDisplay/SEG_DRV.v"
 `include "./Components/random/Random_generator.v"
-`include "./Components/keyboard/PS2_Transfer.v"
+`include "./Components/io/keyboard/PS2_Transfer.v"
 `include "./Components/BCD/Hex2BCD16b.v"
-`include "./Components/LED/LED_DRV.v"
+`include "./Components/io/LED/LED_DRV.v"
 
 `define OFFSET 50
 

@@ -1,6 +1,6 @@
 `include "./Components/clock/clkdiv.v"
-`include "./Components/hexDisplay/DisplaySyn.v"
-`include "./Components/hexDisplay/MC14495.v"
+`include "./Components/io/hexDisplay/DisplaySyn.v"
+`include "./Components/io/hexDisplay/MC14495.v"
 
 // DispNum m6(clk, 1'b0, num, 4'b0, 4'b0, AN, SEGMENT);
 

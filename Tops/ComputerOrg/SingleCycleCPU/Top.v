@@ -1,7 +1,7 @@
-`include "./Components/button/pbdebounceWrapper.v"
-`include "./Components/LED/LedWrapper.v"
-`include "./Components/hexDisplay/DispNum.v"
-`include "./Components/hexDisplay/SegWrapper.v"
+`include "./Components/io/button/pbdebounceWrapper.v"
+`include "./Components/io/LED/LedWrapper.v"
+`include "./Components/io/hexDisplay/DispNum.v"
+`include "./Components/io/hexDisplay/SegWrapper.v"
 `include "./Components/cpu/singleCycleCpu/SingleCycleCpu.v"
 // `include "./ipcore_dir/Ram32bIp.v"
 

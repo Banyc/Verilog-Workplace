@@ -1,8 +1,8 @@
-`include "./Components/hexDisplay/DispNum.v"
+`include "./Components/io/hexDisplay/DispNum.v"
 `include "./Components/mux/Mux4to1b4.v"
 `include "./Components/mux/Mux4to1b16.v"
 `include "./Components/register/Register4b.v"
-`include "./Components/LED/LED_DRV.v"
+`include "./Components/io/LED/LED_DRV.v"
 `include "./Components/clock/clkdiv.v"
 
 

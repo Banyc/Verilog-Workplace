@@ -1,7 +1,7 @@
 `include "./Components/adder/AddSub4bFlag.v"
-`include "./Components/LED/LED_DRV.v"
+`include "./Components/io/LED/LED_DRV.v"
 `include "./Components/clock/clkdiv.v"
-`include "./Components/hexDisplay/DispNum.v"
+`include "./Components/io/hexDisplay/DispNum.v"
 
 module Top(
     clk,

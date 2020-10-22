@@ -26,10 +26,10 @@
 
 // 考虑2：以显存文本方式显示。
 
-`include "./Components/LED/LED_DRV.v"
+`include "./Components/io/LED/LED_DRV.v"
 `include "./Components/clock/clkdiv.v"
-`include "./Components/hexDisplay/DispNum.v"
-`include "./Components/hexDisplay/SEG_DRV.v"
+`include "./Components/io/hexDisplay/DispNum.v"
+`include "./Components/io/hexDisplay/SEG_DRV.v"
 `include "./Components/memory/Ram16b_ipCores.v"
 
 module Top(

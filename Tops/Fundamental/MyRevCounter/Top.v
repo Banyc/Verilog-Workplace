@@ -1,7 +1,7 @@
 // MyRevCounter
 
 `include "./Components/clock/clk_100ms.v"
-`include "./Components/hexDisplay/DispNum.v"
+`include "./Components/io/hexDisplay/DispNum.v"
 `include "./Components/counter/Counter16bRev.v"
 
 module Top(
