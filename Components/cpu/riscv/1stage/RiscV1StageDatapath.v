@@ -2,7 +2,7 @@
 `ifndef __RiscV1StageDatapath__
 `define __RiscV1StageDatapath__
 
-`include "Components/mux/Mux2to1_32b.v"
+// `include "Components/mux/Mux2to1_32b.v"
 `include "Components/mux/Mux4to1_32b.v"
 `include "Components/mux/Mux8to1_32b.v"
 `include "Components/register/Pc.v"
