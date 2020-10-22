@@ -1,12 +1,12 @@
 `ifndef __RiscV1StageControl__
 `define __RiscV1StageControl__
 
-`include "Components/cpu/riscv/EnumOpcode.v"
-`include "Components/cpu/riscv/EnumFunct3.v"
-`include "Components/cpu/riscv/EnumFunct7.v"
-`include "Components/cpu/riscv/EnumFunct10.v"
-`include "Components/cpu/riscv/EnumInstructionTypes.v"
-`include "Components/adder/Alu32b_extended_enumAluOp.v"
+`include "Components/cpu/riscv/EnumOpcode.vh"
+`include "Components/cpu/riscv/EnumFunct3.vh"
+`include "Components/cpu/riscv/EnumFunct7.vh"
+`include "Components/cpu/riscv/EnumFunct10.vh"
+`include "Components/cpu/riscv/EnumInstructionTypes.vh"
+`include "Components/adder/Alu32b_extended_enumAluOp.vh"
 
 `define riscv32_1stage_pc_sel_pc_4 0
 `define riscv32_1stage_pc_sel_jalr 1

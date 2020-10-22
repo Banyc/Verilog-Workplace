@@ -1,5 +1,5 @@
-`ifndef __EnumFunct10__
-`define __EnumFunct10__
+`ifndef __EnumFunct10_vh__
+`define __EnumFunct10_vh__
 
 // Funct10 = funct7 + funct3
 

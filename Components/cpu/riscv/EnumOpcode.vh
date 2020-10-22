@@ -1,5 +1,5 @@
-`ifndef __EnumOpcode__
-`define __EnumOpcode__
+`ifndef __EnumOpcode_vh__
+`define __EnumOpcode_vh__
 
 // riscv-spec.pdf #130
 

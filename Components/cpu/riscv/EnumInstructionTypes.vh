@@ -1,5 +1,5 @@
-`ifndef __EnumInstructionTypes__
-`define __EnumInstructionTypes__
+`ifndef __EnumInstructionTypes_vh__
+`define __EnumInstructionTypes_vh__
 
 `define riscv_instructionType_R   0
 `define riscv_instructionType_I   1

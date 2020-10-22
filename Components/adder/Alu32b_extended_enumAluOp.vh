@@ -1,5 +1,5 @@
-`ifndef __Alu32b_extended_enumAluOp__
-`define __Alu32b_extended_enumAluOp__
+`ifndef __Alu32b_extended_enumAluOp_vh__
+`define __Alu32b_extended_enumAluOp_vh__
 
 `define Alu32b_extended_aluOp_and  4'b0000
 `define Alu32b_extended_aluOp_or   4'b0001

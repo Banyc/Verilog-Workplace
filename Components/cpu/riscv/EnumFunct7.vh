@@ -1,5 +1,5 @@
-`ifndef __EnumFunct7__
-`define __EnumFunct7__
+`ifndef __EnumFunct7_vh__
+`define __EnumFunct7_vh__
 
 // riscv-spec.pdf #130
 
