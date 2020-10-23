@@ -207,7 +207,7 @@ module RiscV1StageDatapath (
         .S(op1Sel),
         .I0(rs1),
         .I1(uTypeImmediate),
-        .I2(32'h4),
+        .I2(32'b0),
         .I3(32'b0),
         .O(op1Sel_out)
     );
