@@ -32,11 +32,7 @@ module JumpTargGen (
         1'b0
     };
 
-    // TODO: review
-    assign target = {
-        pc[31:21],
-        immediate[20:0]
-    };
+    assign target = pc + immediate;
 
 endmodule
 

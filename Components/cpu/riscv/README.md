@@ -35,15 +35,16 @@
     - SB-type
         - conditional branch
             - beq rs1, rs2, label/offset
+                - pc <- pc + offset
     - U-type
         - Dealing With Large Immediates
         - LUI (load upper immediate)
             - lui rd, imm
                 - rd <- imm
     - UJ-type
-        - jal rd, label/direct_imm
+        - jal rd, label/indirect_imm
             - rd <- pc + 4
-            - pc <- immediate
+            - pc <- pc + indirect_imm
 - ![](img/immediate.png)
 - ![](img/2020-09-29-20-12-04.png)
 
