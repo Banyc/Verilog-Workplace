@@ -220,8 +220,7 @@ module RiscV1StageControl (
                 op2Select = `riscv32_1stage_op2Sel_zero;
             end
             `riscv_instructionType_UJ: begin
-                op1Select = `riscv32_1stage_op1Sel_four;
-                op2Select = `riscv32_1stage_op2Sel_pc;
+                // ALU result not used
             end
             default: begin
                 // exception

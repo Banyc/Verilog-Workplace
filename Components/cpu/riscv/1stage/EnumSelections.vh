@@ -16,7 +16,6 @@
 
 `define riscv32_1stage_op1Sel_rs1 0
 `define riscv32_1stage_op1Sel_uTypeImmediate 1
-`define riscv32_1stage_op1Sel_four 2
 
 `define riscv32_1stage_wb_sel_oo_processor 0
 `define riscv32_1stage_wb_sel_pc_4 1
