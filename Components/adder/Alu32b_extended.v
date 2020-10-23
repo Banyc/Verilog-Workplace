@@ -2,7 +2,7 @@
 `define __Alu32b_extended__
 
 `include "Components/adder/Alu32b_simple.v"
-`include "Components/adder/Alu32b_extended_enumAluOp.v"
+`include "Components/adder/Alu32b_extended_enumAluOp.vh"
 
 module Alu32b_extended (
     aluOp,
