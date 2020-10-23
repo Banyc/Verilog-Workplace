@@ -46,3 +46,20 @@
             - pc <- immediate
 - ![](img/immediate.png)
 - ![](img/2020-09-29-20-12-04.png)
+
+## 1stage
+
+Modifications on the diagram:
+
+- Add component `ShamtSignExtend32b` with output `shamtSignExtend`
+- Add constant `0` to the input of `op2Sel`
+- Add `shamtSignExtend` to the input of `op1Sel`
+
+## 5stage
+
+Modifications on the diagram:
+
+- Remove component `<< 1` next to the Branch & Jump TargGen
+    - since the left shift 1 operation has already been done in `BTypeSignExtend` and `JTypeSignExtend`
+- Remove component `<< 12` next to `Op2Sel`
+    - since the left shift 12 operation has already been done in `ITypeSignExtend`
