@@ -1,7 +1,9 @@
 `ifndef __JumpTargGen__
 `define __JumpTargGen__
 
-// unconditional jump to immediate
+`include "Components/cpu/riscv/shared/immediateExtend/32bits/JTypeSignExtend32b.v"
+
+// unconditional jump to (PC + immediate)
 module JumpTargGen (
     pc,
     instruction,
@@ -12,25 +14,10 @@ module JumpTargGen (
     output wire [31:0] target;
 
     wire [31:0] immediate;
-    assign immediate = {
-        instruction[31],
-        instruction[31],
-        instruction[31],
-        instruction[31],
-        instruction[31],
-        instruction[31],
-        instruction[31],
-        instruction[31],
-        instruction[31],
-        instruction[31],
-        instruction[31],
-        instruction[31],
-        instruction[19:12],
-        instruction[20],
-        instruction[30:25],
-        instruction[24:21],
-        1'b0
-    };
+    JTypeSignExtend32b jTypeSignExtend32b_inst(
+        .instruction(instruction),
+        .signExtended(immediate)
+    );
 
     assign target = pc + immediate;
 

@@ -13,7 +13,7 @@ module BranchTargGen (
     output wire [31:0] target;
 
     wire [31:0] immediate;
-    BTypeSignExtend32b BTypeSignExtend32b_inst(
+    BTypeSignExtend32b bTypeSignExtend32b_inst(
         .instruction(instruction),
         .signExtended(immediate)
     );
