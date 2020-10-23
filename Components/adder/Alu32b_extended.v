@@ -21,7 +21,7 @@ module Alu32b_extended (
 
     assign shiftRightLogically = leftOperand >> rightOperand;
 
-    Alu32b_simple alu32b_simple_instr(
+    Alu32b_simple alu32b_simple_inst(
         .aluOp(aluOp),
         .leftOperand(leftOperand),
         .rightOperand(rightOperand),

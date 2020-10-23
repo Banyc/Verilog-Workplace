@@ -75,7 +75,7 @@ module RiscV1StageDatapath (
     output wire memoryReadEnable;
 
     // begin: MUX for PC input datapath
-    Mux8to1_32b pc_selMux_instr(
+    Mux8to1_32b pc_selMux_inst(
         .S(pc_sel),
         .I0(pc_4),
         .I1(jalr),
@@ -90,7 +90,7 @@ module RiscV1StageDatapath (
     // end: MUX for PC input datapath
 
     // begin: PC datapath
-    Pc pc_instr(
+    Pc pc_inst(
         .clk(clk),
         .rst(rst),
         .enableWrite(1'b1),
@@ -101,7 +101,7 @@ module RiscV1StageDatapath (
     // end: PC datapath
 
     // // begin: ROM datapath
-    // Rom32b rom32b_instr(
+    // Rom32b rom32b_inst(
     //     .rst(rst),
     //     .readAddress(pc),
     //     .data(instruction)
@@ -109,17 +109,17 @@ module RiscV1StageDatapath (
     // // end: ROM datapath
 
     // begin: target generation datapath
-    BranchTargGen branchTargGen_instr(
+    BranchTargGen branchTargGen_inst(
         .pc(pc),
         .instruction(instruction),
         .target(branch)
     );
-    JumpRegTargGen jumpRegTargGen_instr(
+    JumpRegTargGen jumpRegTargGen_inst(
         .iTypeSignExtend(iTypeSignExtend),
         .rs1(rs1),
         .target(jalr)
     );
-    JumpTargGen jumpTargGen_instr(
+    JumpTargGen jumpTargGen_inst(
         .pc(pc),
         .instruction(instruction),
         .target(jump)
@@ -127,26 +127,26 @@ module RiscV1StageDatapath (
     // end: target generation datapath
 
     // begin: immediate extend datapath
-    ITypeSignExtend32b iTypeSignExtend32b_instr(
+    ITypeSignExtend32b iTypeSignExtend32b_inst(
         .instruction(instruction),
         .signExtended(iTypeSignExtend)
     );
-    ShamtSignExtend32b shamtSignExtend32b_instr(
+    ShamtSignExtend32b shamtSignExtend32b_inst(
         .instruction(instruction),
         .signExtended(shamtSignExtend)
     );
-    STypeSignExtend32b sTypeSignExtend32b_instr(
+    STypeSignExtend32b sTypeSignExtend32b_inst(
         .instruction(instruction),
         .signExtended(sTypeSignExtend)
     );
-    UType32b uType32b_instr(
+    UType32b uType32b_inst(
         .instruction(instruction),
         .extended(uTypeImmediate)
     );
     // end: immediate extend datapath 
 
     // begin: condition generation
-    BranchCondGen BranchCondGen_instr(
+    BranchCondGen BranchCondGen_inst(
         .rs1(rs1),
         .rs2(rs2),
         .is_br_eq(is_br_eq),
@@ -156,7 +156,7 @@ module RiscV1StageDatapath (
     // end: condition generation
 
     // begin: RegFile datapath
-    RegFile regFile_instr(
+    RegFile regFile_inst(
         .clk(clk),
         .rst(rst),
         .readRegister1(instruction[19:15]),
@@ -191,7 +191,7 @@ module RiscV1StageDatapath (
     // end: Control datapath
 
     // begin: MUX for ALU input datapath
-    Mux8to1_32b op2SelMux_instr(
+    Mux8to1_32b op2SelMux_inst(
         .S(op2Sel),
         .I0(pc),
         .I1(iTypeSignExtend),
@@ -203,7 +203,7 @@ module RiscV1StageDatapath (
         .I7(32'b0),
         .O(op2Sel_out)
     );
-    Mux4to1_32b op1SelMux_instr(
+    Mux4to1_32b op1SelMux_inst(
         .S(op1Sel),
         .I0(rs1),
         .I1(uTypeImmediate),
@@ -214,7 +214,7 @@ module RiscV1StageDatapath (
     // end: MUX for ALU input datapath
     
     // begin: ALU datapath
-    Alu32b_extended alu32b_instr(
+    Alu32b_extended alu32b_inst(
         .aluOp(aluFunction),
         .leftOperand(op1Sel_out),
         .rightOperand(op2Sel_out),
@@ -223,7 +223,7 @@ module RiscV1StageDatapath (
     // end: ALU datapath
 
     // begin: MUX for RegFile input datapath
-    Mux4to1_32b wb_selMux_instr(
+    Mux4to1_32b wb_selMux_inst(
         .S(wb_sel),
         .I0(32'b0),
         .I1(pc_4),
@@ -234,7 +234,7 @@ module RiscV1StageDatapath (
     // end: MUX for RegFile input datapath
 
     // // begin: RAM datapath
-    // Ram32b ram32b_instr(
+    // Ram32b ram32b_inst(
     //     .clk(clk),
     //     .rst(rst),
     //     .address(aluOut),

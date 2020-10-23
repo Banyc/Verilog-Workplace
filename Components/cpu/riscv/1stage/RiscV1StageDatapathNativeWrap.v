@@ -44,7 +44,7 @@ module RiscV1StageDatapathNativeWrap (
     );
 
     // begin: RAM datapath
-    Ram32b ram32b_instr(
+    Ram32b ram32b_inst(
         .clk(clk),
         .rst(rst),
         .address(aluOut),
@@ -56,7 +56,7 @@ module RiscV1StageDatapathNativeWrap (
     // end: RAM datapath
 
     // begin: ROM datapath
-    Rom32b rom32b_instr(
+    Rom32b rom32b_inst(
         .rst(rst),
         .readAddress(pc),
         .data(instruction)

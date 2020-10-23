@@ -64,7 +64,7 @@ module RiscV1StageDatapathIpCoreWrap (
     );
 
     // begin: RAM datapath
-    // Ram32b ram32b_instr(
+    // Ram32b ram32b_inst(
     //     .clk(clk),
     //     .rst(rst),
     //     .address(aluOut),
@@ -73,7 +73,7 @@ module RiscV1StageDatapathIpCoreWrap (
     //     .writeData(rs2),
     //     .readData(memoryOut)
     // );
-    Ram32bIp ram32b_instr(
+    Ram32bIp ram32b_inst(
         .clka(!clk),
         .wea(memoryWriteEnable),
         .addra(aluOut[11 : 2]),
@@ -84,12 +84,12 @@ module RiscV1StageDatapathIpCoreWrap (
     // end: RAM datapath
 
     // begin: ROM datapath
-    // Rom32b rom32b_instr(
+    // Rom32b rom32b_inst(
     //     .rst(rst),
     //     .readAddress(pc),
     //     .data(instruction)
     // );
-    Rom32bIp rom32b_instr(
+    Rom32bIp rom32b_inst(
         .clka(clk),
         .addra(pc[11 : 2]),
         // .addra(aluOut[9 : 0]),
