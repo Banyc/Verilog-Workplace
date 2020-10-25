@@ -64,3 +64,9 @@ Modifications on the diagram:
     - since the left shift 1 operation has already been done in `BTypeSignExtend` and `JTypeSignExtend`
 - Remove component `<< 12` next to `Op2Sel`
     - since the left shift 12 operation has already been done in `ITypeSignExtend`
+- PC stage register between fetch and decode stages takes `PC` rather than `PC + 4`
+- Add component `ShamtSignExtend32b` with output `shamtSignExtend`
+- Add component `STypeSignExtend32b` with output `sTypeSignExtend`
+- `Branch & Jump TargGen` is wrapped as component `BranchAndJumpTargGen`
+- `JumpRegTargGen` still used in Execute Stage
+- Currently not implementing anything relative to data hazard
