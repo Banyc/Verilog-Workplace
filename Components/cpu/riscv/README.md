@@ -65,6 +65,7 @@ Modifications on the diagram:
 - Remove component `<< 12` next to `Op2Sel`
     - since the left shift 12 operation has already been done in `ITypeSignExtend`
 - PC stage register between fetch and decode stages takes `PC` rather than `PC + 4`
+    - Update: `PC + 4` is implemented
 - Add component `ShamtSignExtend32b` with output `shamtSignExtend`
 - Add component `STypeSignExtend32b` with output `sTypeSignExtend`
 - `Branch & Jump TargGen` is wrapped as component `BranchAndJumpTargGen`

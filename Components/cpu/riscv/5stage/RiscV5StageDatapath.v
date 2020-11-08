@@ -131,10 +131,10 @@ module RiscV5StageDatapath (
     // begin: update pc_sel
     wire [1:0] pc_sel_withBranchConsidered;
     PcSelUpdater pcSelUpdater_inst(
-        .isBne(memSignal_isBne),
-        .isBeq(memSignal_isBeq),
-        .isBranchEqual(memSignal_is_br_eq),
-        .oldPcSel(memSignal_pc_sel),
+        .isBne(decSignal_isBne),
+        .isBeq(decSignal_isBeq),
+        .isBranchEqual(newSignal_is_br_eq),
+        .oldPcSel(decSignal_pc_sel),
         .newPcSel(pc_sel_withBranchConsidered)
     );
     // end: update pc_sel
@@ -174,7 +174,7 @@ module RiscV5StageDatapath (
     Register32b if_pc_inst(
         .clk(clk),
         .enableWrite(1'b1),
-        .d(pc),
+        .d(pc_4),
         .q(if_pc)
     );
     Register32b if_instruction_inst(

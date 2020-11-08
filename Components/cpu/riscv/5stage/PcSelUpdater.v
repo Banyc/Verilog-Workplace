@@ -19,9 +19,9 @@ module PcSelUpdater (
 
     wire shouldBranch;
     ShouldBranch shouldBranch_inst(
-        .isBne(),
-        .isBeq(),
-        .isBranchEqual(),
+        .isBne(isBne),
+        .isBeq(isBeq),
+        .isBranchEqual(isBranchEqual),
         .shouldBranch(shouldBranch)
     );
 
