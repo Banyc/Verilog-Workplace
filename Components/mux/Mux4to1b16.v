@@ -20,6 +20,9 @@ module Mux4to1b16(
                 O = I2;
             2'b11:
                 O = I3;
+            default: begin
+                // exception
+            end
         endcase
     end
 

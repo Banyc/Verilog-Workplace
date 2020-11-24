@@ -49,6 +49,9 @@ module ShiftReg65b (
             `ShiftReg65b_Operation_ShiftLeftCustom: begin
                 q <= {q[63:0], shiftIn};
             end
+            default: begin
+                // exception
+            end
         endcase
     end
 endmodule

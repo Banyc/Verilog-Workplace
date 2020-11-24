@@ -37,6 +37,9 @@ module Alu32b_simple(
                     sum[31]
                 };
             end
+            default: begin
+                // exception
+            end
         endcase
     end
     

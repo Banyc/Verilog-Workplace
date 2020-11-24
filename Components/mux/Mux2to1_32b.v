@@ -14,6 +14,9 @@ module Mux2to1_32b(
                 O <= I0;
             1'b1:
                 O <= I1;
+            default: begin
+                // exception
+            end
         endcase
     end
 

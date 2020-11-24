@@ -29,7 +29,9 @@ module AluControl(
                     `NOR: aluOpOut <= `ALU_nor;
                     `XOR: aluOpOut <= `ALU_xor;
                     `SLT: aluOpOut <= `ALU_slt;
-                    // default: 
+                    default: begin
+                        // exception
+                    end
                 endcase
             end
             `AluOpType_Immediate: begin
@@ -39,9 +41,14 @@ module AluControl(
                     `XORI: aluOpOut <= `ALU_xor;
                     `SLTI: aluOpOut <= `ALU_slt;
                     `LUI: aluOpOut <= `ALU_sll16;
+                    default: begin
+                        // exception
+                    end
                 endcase
             end
-            // default: 
+            default: begin
+                // exception
+            end
         endcase
     end
 endmodule // AluControl

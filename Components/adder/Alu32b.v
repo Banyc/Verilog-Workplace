@@ -85,7 +85,9 @@ module Alu32b(
             `ALU_srl: aluResult <= shiftRightResult;
             `ALU_xor: aluResult <= xorResult;
             `ALU_sll16: aluResult <= shiftLeft16Result;
-            // default: 
+            default: begin
+                // exception
+            end
         endcase
     end
     assign zero = &(~aluResult);

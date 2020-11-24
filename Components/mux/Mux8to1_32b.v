@@ -32,6 +32,9 @@ module Mux8to1_32b(
                 O <= I6;
             7:
                 O <= I7;
+            default: begin
+                // exception
+            end
         endcase
     end
 
