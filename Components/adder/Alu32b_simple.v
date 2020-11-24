@@ -39,6 +39,7 @@ module Alu32b_simple(
             end
             default: begin
                 // exception
+                aluResult <= 0;
             end
         endcase
     end

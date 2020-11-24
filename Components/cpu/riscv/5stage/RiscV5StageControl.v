@@ -104,6 +104,7 @@ module RiscV5StageControl (
                                     end
                                     default: begin
                                         // exception
+                                        aluFunction = 0;
                                     end
                                 endcase
                             end  
@@ -129,6 +130,7 @@ module RiscV5StageControl (
                                     end
                                     default: begin
                                         // exception
+                                        aluFunction = 0;
                                     end
                                 endcase
                             end  
@@ -140,6 +142,7 @@ module RiscV5StageControl (
                             end  
                             default: begin
                                 // exception
+                                aluFunction = 0;
                             end
                         endcase
                         // end arithmatics     
@@ -205,6 +208,7 @@ module RiscV5StageControl (
                 //     pcSelect = `riscv32_5stage_pc_sel_pc_4;
                 // end
                 // do nothing
+                pcSelect = 0;
             end
             `riscv_instructionType_U: begin
                 pcSelect = `riscv32_5stage_pc_sel_pc_4;
@@ -214,6 +218,7 @@ module RiscV5StageControl (
             end
             default: begin
                 // exception
+                pcSelect = 0;
             end
         endcase
     end
@@ -253,11 +258,14 @@ module RiscV5StageControl (
             end
             `riscv_instructionType_UJ: begin
                 // op1Select don't care
+                op1Select = 0;
                 op2Select = `riscv32_5stage_op2Sel_jTypeSignExtend;
                 // ALU result not used
             end
             default: begin
                 // exception
+                op1Select = 0;
+                op2Select = 0;
             end
         endcase
     end
@@ -309,6 +317,7 @@ module RiscV5StageControl (
                     end
                     default: begin
                         // exception
+                        exe_writebackSelect = 0;
                     end
                 endcase
                 regFileWriteEnable = 1;
@@ -349,6 +358,7 @@ module RiscV5StageControl (
                     end
                     default: begin
                         // exception
+                        mem_writebackSelect = 0;
                     end
                 endcase
                 regFileWriteEnable = 1;
@@ -363,6 +373,8 @@ module RiscV5StageControl (
                 regFileWriteEnable = 1;
             end
             default: begin
+                // mem_writebackSelect don't care
+                mem_writebackSelect = 0;
                 regFileWriteEnable = 0;
             end
         endcase

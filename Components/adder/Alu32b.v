@@ -87,6 +87,7 @@ module Alu32b(
             `ALU_sll16: aluResult <= shiftLeft16Result;
             default: begin
                 // exception
+                aluResult <= 0;
             end
         endcase
     end

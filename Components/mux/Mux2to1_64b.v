@@ -16,6 +16,7 @@ module Mux2to1_64b(
                 O <= I1;
             default: begin
                 // exception
+                O <= 0;
             end
         endcase
     end

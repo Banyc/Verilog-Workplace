@@ -51,6 +51,7 @@ module ShiftReg65b (
             end
             default: begin
                 // exception
+                q <= 0;
             end
         endcase
     end

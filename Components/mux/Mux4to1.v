@@ -24,6 +24,7 @@ module Mux4to1(
                 o = I3; 
             default: begin
                 // exception
+                o = 0;
             end
         endcase
     end

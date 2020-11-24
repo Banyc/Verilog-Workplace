@@ -31,6 +31,7 @@ module AluControl(
                     `SLT: aluOpOut <= `ALU_slt;
                     default: begin
                         // exception
+                        aluOpOut <= 0;
                     end
                 endcase
             end
@@ -43,11 +44,13 @@ module AluControl(
                     `LUI: aluOpOut <= `ALU_sll16;
                     default: begin
                         // exception
+                        aluOpOut <= 0;
                     end
                 endcase
             end
             default: begin
                 // exception
+                aluOpOut <= 0;
             end
         endcase
     end

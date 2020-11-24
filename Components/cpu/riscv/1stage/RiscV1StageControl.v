@@ -100,6 +100,7 @@ module RiscV1StageControl (
                                     end
                                     default: begin
                                         // exception
+                                        aluFunction = 0;
                                     end
                                 endcase
                             end  
@@ -125,6 +126,7 @@ module RiscV1StageControl (
                                     end
                                     default: begin
                                         // exception
+                                        aluFunction = 0;
                                     end
                                 endcase
                             end  
@@ -136,6 +138,7 @@ module RiscV1StageControl (
                             end  
                             default: begin
                                 // exception
+                                aluFunction = 0;
                             end
                         endcase
                         // end arithmatics     
@@ -214,6 +217,8 @@ module RiscV1StageControl (
             end
             `riscv_instructionType_SB: begin
                 // ALU result not used
+                op1Select = 0;
+                op2Select = 0;
             end
             `riscv_instructionType_U: begin
                 op1Select = `riscv32_1stage_op1Sel_uTypeImmediate;
@@ -221,9 +226,13 @@ module RiscV1StageControl (
             end
             `riscv_instructionType_UJ: begin
                 // ALU result not used
+                op1Select = 0;
+                op2Select = 0;
             end
             default: begin
                 // exception
+                op1Select = 0;
+                op2Select = 0;
             end
         endcase
     end
@@ -275,6 +284,7 @@ module RiscV1StageControl (
                     end
                     default: begin
                         // exception
+                        writebackSelect = 0;
                     end
                 endcase
                 regFileWriteEnable = 1;
