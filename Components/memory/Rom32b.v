@@ -18,7 +18,7 @@ module Rom32b(
     // replace by ip core wrapper here
     // reg [7:0] memory [32'h0100000: 32'h0101000];
     // reg [7:0] memory [32'h0010000: 32'h0000000];
-    reg [7:0] memory [32'h0001000: 32'h0000000];
+    reg [7:0] memory [32'h00000100: 32'h00000000];
 
     assign data = {
         memory[readAddress],

@@ -25,7 +25,7 @@ module Ram32b(
 
     // replace by ip core wrapper here
     // reg [7:0] memory [32'h0100000: 32'h0101000];
-    reg [7:0] memory [32'h00001000: 32'h00000000];
+    reg [7:0] memory [32'h00000100: 32'h00000000];
     // reg [7:0] memory [32'h40000000: 32'h00000000];
 
     always @(posedge rst) begin
