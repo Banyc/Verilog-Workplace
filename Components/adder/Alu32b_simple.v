@@ -14,8 +14,8 @@ module Alu32b_simple(
 
     wire [31:0] sourceA;
     wire [31:0] sourceB;
-    assign sourceA = aluOp[3] ? ~leftOperand : leftOperand;
-    assign sourceB = aluOp[2] ? ~rightOperand : rightOperand;
+    assign sourceA = aluOp[3] ? -leftOperand : leftOperand;
+    assign sourceB = aluOp[2] ? -rightOperand : rightOperand;
 
     wire [31:0] sum;
     assign sum = sourceA + sourceB;
