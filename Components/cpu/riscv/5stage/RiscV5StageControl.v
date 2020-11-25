@@ -322,6 +322,10 @@ module RiscV5StageControl (
                 endcase
                 regFileWriteEnable = 1;
             end
+            `riscv_instructionType_S: begin
+                exe_writebackSelect = `riscv32_5stage_exe_wb_sel_aluOut;
+                regFileWriteEnable = 0;
+            end
             `riscv_instructionType_U: begin
                 exe_writebackSelect = `riscv32_5stage_exe_wb_sel_aluOut;
                 regFileWriteEnable = 1;
@@ -331,6 +335,8 @@ module RiscV5StageControl (
                 regFileWriteEnable = 1;
             end
             default: begin
+                // exe_writebackSelect don't care
+                exe_writebackSelect = 0;
                 regFileWriteEnable = 0;
             end
         endcase
