@@ -7,6 +7,7 @@
 // RAM
 // - Component Name: Ram32bIp
 // - Memory Type: Single Port RAM
+// - Enable 32-b addressing
 // - Memory Size
 //   - Write Width: 32
 //   - Write Depth: 1024
@@ -63,11 +64,25 @@ module RiscV5StageDatapathIpCoreWrap (
         .regFileReadDataDebug(regFileReadDataDebug)
     );
 
+    // // begin: RAM datapath
+    // Ram32bIp ram32b_inst(
+    //     .clka(!clk),
+    //     .wea(memoryWriteEnable),
+    //     .addra(memoryAddress[11 : 2]),
+    //     .dina(memoryWriteData),
+    //     .douta(memoryReadData)
+    // );
+    // // end: RAM datapath
     // begin: RAM datapath
     Ram32bIp ram32b_inst(
         .clka(!clk),
-        .wea(memoryWriteEnable),
-        .addra(memoryAddress[11 : 2]),
+        .wea({
+            memoryWriteEnable,
+            memoryWriteEnable,
+            memoryWriteEnable,
+            memoryWriteEnable
+        }),
+        .addra(memoryAddress),
         .dina(memoryWriteData),
         .douta(memoryReadData)
     );
