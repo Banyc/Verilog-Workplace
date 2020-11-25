@@ -18,6 +18,7 @@
 `include "Components/cpu/riscv/shared/targetGeneration/BranchAndJumpTargGen.v"
 `include "Components/cpu/riscv/shared/BranchCondGen.v"
 `include "Components/cpu/riscv/5stage/PcSelUpdater.v"
+`include "Components/cpu/riscv/5stage/HazardDetectionUnit.v"
 `include "Components/cpu/riscv/5stage/RiscV5StageControl.v"
 
 
@@ -71,6 +72,10 @@ module RiscV5StageDatapath (
     wire       newSignal_memoryWriteEnable;
     wire       newSignal_memoryReadEnable;
     wire [4:0] newSignal_rd;
+    // from HazardDetectionUnit
+    wire       newSignal_if_kill;
+    wire       newSignal_dec_kill;
+    wire       newSignal_pcWriteEnable;
 
     wire       decSignal_isBne;
     wire       decSignal_isBeq;
@@ -124,6 +129,22 @@ module RiscV5StageDatapath (
     output wire [31:0] memoryAddress;
     output wire [31:0] memoryWriteData;
 
+    // ::::: Global ::::: //
+    HazardDetectionUnit hazardDetectionUnit_inst(
+        .pcWriteEnable(newSignal_pcWriteEnable),
+        .if_kill(newSignal_if_kill),
+        .dec_kill(newSignal_dec_kill),
+        .dec_rs1Address(instruction[19:15]),
+        .dec_rs2Address(instruction[24:20]),
+        .exe_regFileWriteAddress(decSignal_rd),
+        .exe_regFileWriteEnable(decSignal_regFileWriteEnable),
+        .mem_regFileWriteAddress(exeSignal_rd),
+        .mem_regFileWriteEnable(exeSignal_regFileWriteEnable),
+        .wb_regFileWriteAddress(memSignal_rd),
+        .wb_regFileWriteEnable(memSignal_regFileWriteEnable),
+        .exe_isBranch(pc_sel_withBranchConsidered == `riscv32_5stage_pc_sel_jumpOrBranch)
+    );
+
     // ::::: PC Modification Stage (writeback stage?) ::::: //
     wire [31:0] branchOrJump;
     wire [31:0] jalr;
@@ -155,7 +176,7 @@ module RiscV5StageDatapath (
     RegisterResettable32b pc_inst(
         .clk(clk),
         .rst(rst),
-        .enableWrite(1'b1),
+        .enableWrite(newSignal_pcWriteEnable),
         .d(pc_sel_out),
         .q(pc)
     );
@@ -168,19 +189,30 @@ module RiscV5StageDatapath (
     // the only input is `pc`
     // end: instruction memory datapath
 
+    // begin: if_kill_mux
+    wire [31:0] if_kill_out;
+    Mux2to1_32b if_kill_mux_inst(
+        .S(newSignal_if_kill),
+        .I0(instruction),
+        .I1(32'h13),  // nop
+        .O(if_kill_out)
+    );
+    // end: if_kill_mux
+
     // begin: Stage registers
     wire [31:0] if_pc;
     wire [31:0] if_instruction;
     Register32b if_pc_inst(
         .clk(clk),
         .enableWrite(1'b1),
+        // .d(pc),
         .d(pc_4),
         .q(if_pc)
     );
     Register32b if_instruction_inst(
         .clk(clk),
         .enableWrite(1'b1),
-        .d(instruction),
+        .d(if_kill_out),
         .q(if_instruction)
     );
     // end: Stage registers
@@ -286,6 +318,31 @@ module RiscV5StageDatapath (
     );
     // end: Control datapath
 
+    // begin: dec_kill_mux
+    wire [31:0] dec_kill_out;
+    Mux2to1_32b dec_kill_mux_inst(
+        .S(newSignal_dec_kill),
+        .I0({
+            7'b0,
+            newSignal_isBne,
+            newSignal_isBeq,
+            1'b0,
+            newSignal_aluFunction,
+            newSignal_op1Sel,
+            newSignal_op2Sel,
+            newSignal_pc_sel,
+            newSignal_mem_wb_sel,
+            newSignal_exe_wb_sel,
+            newSignal_regFileWriteEnable,
+            newSignal_memoryWriteEnable,
+            newSignal_memoryReadEnable,
+            newSignal_rd
+        }),
+        .I1(32'h0),
+        .O(dec_kill_out)
+    );
+    // end: dec_kill_mux
+
     // begin: Stage registers
     wire [31:0] dec_pc;
     wire [31:0] dec_op1;
@@ -320,22 +377,7 @@ module RiscV5StageDatapath (
         .clk(clk),
         .rst(rst),
         .enableWrite(1'b1),
-        .d({
-            7'b0,
-            newSignal_isBne,
-            newSignal_isBeq,
-            1'b0,
-            newSignal_aluFunction,
-            newSignal_op1Sel,
-            newSignal_op2Sel,
-            newSignal_pc_sel,
-            newSignal_mem_wb_sel,
-            newSignal_exe_wb_sel,
-            newSignal_regFileWriteEnable,
-            newSignal_memoryWriteEnable,
-            newSignal_memoryReadEnable,
-            newSignal_rd
-        }),
+        .d(dec_kill_out),
         .q({
             dummyOutput7b_dec_controlSignals,
             decSignal_isBne,
