@@ -11,7 +11,7 @@
 `include "./Components/mux/Mux2to1_32b.v"
 `include "./Components/mux/Mux4to1_32b.v"
 `include "./Components/memory/Ram32b.v"
-`include "./Components/adder/Alu32b.v"
+`include "./Components/adder/MipsAlu32b.v"
 `include "./Components/cpu/mips/multiCycleCpu/MultiCycleControl.v"
 `include "./Components/cpu/mips/AluControl.v"
 

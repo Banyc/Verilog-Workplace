@@ -10,7 +10,7 @@
 `include "./Components/mux/Mux2to1_32b.v"
 `include "./Components/memory/Rom32b.v"
 `include "./Components/memory/Ram32b.v"
-`include "./Components/adder/Alu32b.v"
+`include "./Components/adder/MipsAlu32b.v"
 `include "./Components/adder/AddSub32bFlag.v"
 `include "./Components/cpu/mips/singleCycleCpu/OpcodeControl.v"
 `include "./Components/cpu/mips/AluControl.v"

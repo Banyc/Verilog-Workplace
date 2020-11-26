@@ -1,5 +1,5 @@
-`ifndef __Alu32b__
-`define __Alu32b__
+`ifndef __MipsAlu32b__
+`define __MipsAlu32b__
 
 `include "./Components/adder/AddSub32bFlag.v"
 `include "./Components/adder/Or32b.v"
@@ -10,7 +10,7 @@
 `include "./Components/shift/ShiftRightN.v"
 `include "./Components/cpu/mips/OpcodeEnum.v"
 
-module Alu32b(
+module MipsAlu32b(
     aluOp,
     leftOperand,
     rightOperand,
@@ -93,6 +93,6 @@ module Alu32b(
     end
     assign zero = &(~aluResult);
 
-endmodule // Alu32b
+endmodule // MipsAlu32b
 
 `endif
