@@ -182,7 +182,7 @@ module MultiCycleCpuWithMem(
         .aluOp(aluOp),
         .aluOpOut(aluOpOut)
     );
-    Alu32b alu(
+    MipsAlu32b alu(
         .aluOp(aluOpOut),
         .leftOperand(aluSourceAOperand),
         .rightOperand(aluSourceBOperand),

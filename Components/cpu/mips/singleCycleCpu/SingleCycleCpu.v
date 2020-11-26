@@ -186,7 +186,7 @@ module SingleCycleCpu(
         .aluOp(aluOp),
         .aluOpOut(aluOpOut)
     );
-    Alu32b alu(
+    MipsAlu32b alu(
         .aluOp(aluOpOut),
         .leftOperand(aluSourceA),
         .rightOperand(aluSourceB),
