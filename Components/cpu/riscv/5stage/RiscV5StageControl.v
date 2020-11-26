@@ -94,13 +94,29 @@ module RiscV5StageControl (
                     default: begin
                         // start arithmatics
                         case (funct3)
+                            // add, sub, addi
                             `riscv32_funct3_ADD_SUB: begin
-                                case (funct7)
-                                    `riscv32_funct7_ADD: begin
-                                        aluFunction = `Alu32b_extended_aluOp_add;
+                                case (instructionType)
+                                    // add, sub
+                                    `riscv_instructionType_R: begin
+                                        case (funct7)
+                                            // add
+                                            `riscv32_funct7_ADD: begin
+                                                aluFunction = `Alu32b_extended_aluOp_add;
+                                            end
+                                            // sub
+                                            `riscv32_funct7_SUB: begin
+                                                aluFunction = `Alu32b_extended_aluOp_sub;
+                                            end
+                                            default: begin
+                                                // exception
+                                                aluFunction = 0;
+                                            end
+                                        endcase
                                     end
-                                    `riscv32_funct7_SUB: begin
-                                        aluFunction = `Alu32b_extended_aluOp_sub;
+                                    // addi
+                                    `riscv_instructionType_I: begin
+                                        aluFunction = `Alu32b_extended_aluOp_add;
                                     end
                                     default: begin
                                         // exception
