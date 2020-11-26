@@ -2,6 +2,8 @@
 
 ## Single-Cycle
 
+![SingleCycleCPU.png](singleCycleCpu/SingleCycleCPU.png)
+
 ### Supported Instructions
 
 - R-Type
@@ -31,6 +33,8 @@
     - Jal*
 
 ## Multi-Cycle
+
+![MultiCycleCPU.png](multiCycleCpu/MultiCycleCPU.png)
 
 ### Supported Instructions
 

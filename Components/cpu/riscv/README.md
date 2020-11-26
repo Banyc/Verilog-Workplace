@@ -50,6 +50,8 @@
 
 ## 1stage
 
+![sodor-spinal_a_RISC_V_core.png](1stage/sodor-spinal_a_RISC_V_core.png)
+
 Modifications on the diagram:
 
 - Add component `ShamtSignExtend32b` with output `shamtSignExtend`
@@ -57,6 +59,8 @@ Modifications on the diagram:
 - Add `shamtSignExtend` to the input of `op1Sel`
 
 ## 5stage
+
+![rv32_5stage_block_diagram.png](5stage/rv32_5stage_block_diagram.png)
 
 Modifications on the diagram:
 
