@@ -8,7 +8,7 @@
 `include "./Components/adder/And32b.v"
 `include "./Components/shift/ShiftLeftN.v"
 `include "./Components/shift/ShiftRightN.v"
-`include "./Components/cpu/OpcodeEnum.v"
+`include "./Components/cpu/mips/OpcodeEnum.v"
 
 module Alu32b(
     aluOp,

@@ -1,7 +1,7 @@
 `ifndef __MultiCycleControl__
 `define __MultiCycleControl__
 
-`include "./Components/cpu/OpcodeEnum.v"
+`include "./Components/cpu/mips/OpcodeEnum.v"
 
 `define RESET 4'b1111
 // instruction fetch

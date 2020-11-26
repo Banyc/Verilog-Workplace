@@ -13,7 +13,7 @@
 `include "./Components/memory/Ram32b.v"
 `include "./Components/adder/Alu32b.v"
 `include "./Components/cpu/mips/multiCycleCpu/MultiCycleControl.v"
-`include "./Components/cpu/AluControl.v"
+`include "./Components/cpu/mips/AluControl.v"
 
 module MultiCycleCpuWithMem(
     clk,

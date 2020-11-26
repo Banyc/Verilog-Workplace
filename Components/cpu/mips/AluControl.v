@@ -1,7 +1,7 @@
 `ifndef __AluControl__
 `define __AluControl__
 
-`include "./Components/cpu/OpcodeEnum.v"
+`include "./Components/cpu/mips/OpcodeEnum.v"
 
 module AluControl(
     opcode,

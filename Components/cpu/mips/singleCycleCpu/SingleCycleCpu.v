@@ -13,7 +13,7 @@
 `include "./Components/adder/Alu32b.v"
 `include "./Components/adder/AddSub32bFlag.v"
 `include "./Components/cpu/mips/singleCycleCpu/OpcodeControl.v"
-`include "./Components/cpu/AluControl.v"
+`include "./Components/cpu/mips/AluControl.v"
 
 module SingleCycleCpu(
     clk,
