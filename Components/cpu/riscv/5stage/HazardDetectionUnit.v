@@ -17,7 +17,7 @@ module HazardDetectionUnit (
     mem_regFileWriteEnable,
     wb_regFileWriteAddress,
     wb_regFileWriteEnable,
-    exe_isBranchOrJump
+    exe_isBranchOrJumpTaken
 );
     output reg pcWriteEnable;
     output reg if_kill;
@@ -33,11 +33,11 @@ module HazardDetectionUnit (
     input wire       mem_regFileWriteEnable;
     input wire [4:0] wb_regFileWriteAddress;
     input wire       wb_regFileWriteEnable;
-    input wire       exe_isBranchOrJump;
+    input wire       exe_isBranchOrJumpTaken;
 
     
     always @(*) begin
-        if (exe_isBranchOrJump == 1) begin
+        if (exe_isBranchOrJumpTaken == 1) begin
             pcWriteEnable <= 1;
             if_kill <= 1;
             dec_kill <= 1;

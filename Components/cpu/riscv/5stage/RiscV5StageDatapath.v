@@ -144,7 +144,7 @@ module RiscV5StageDatapath (
         .mem_regFileWriteEnable(exeSignal_regFileWriteEnable),
         .wb_regFileWriteAddress(memSignal_rd),
         .wb_regFileWriteEnable(memSignal_regFileWriteEnable),
-        .exe_isBranchOrJump(pc_sel_withBranchConsidered == `riscv32_5stage_pc_sel_jumpOrBranch)
+        .exe_isBranchOrJumpTaken(pc_sel_withBranchConsidered == `riscv32_5stage_pc_sel_jumpOrBranch)
     );
 
     // ::::: PC Modification Stage ::::: //
