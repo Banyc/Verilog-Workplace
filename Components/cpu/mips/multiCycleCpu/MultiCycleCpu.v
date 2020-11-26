@@ -12,7 +12,7 @@
 `include "./Components/mux/Mux4to1_32b.v"
 `include "./Components/memory/Ram32b.v"
 `include "./Components/adder/Alu32b.v"
-`include "./Components/cpu/multiCycleCpu/MultiCycleControl.v"
+`include "./Components/cpu/mips/multiCycleCpu/MultiCycleControl.v"
 `include "./Components/cpu/AluControl.v"
 
 module MultiCycleCpu(

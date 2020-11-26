@@ -1,4 +1,4 @@
-`include "./Components/cpu/multiCycleCpu/MultiCycleCpu.v"
+`include "./Components/cpu/mips/multiCycleCpu/MultiCycleCpu.v"
 
 module MultiCycleCpu_tb(
 
