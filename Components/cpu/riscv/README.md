@@ -102,5 +102,6 @@ Modifications on the diagram:
 - Add component `STypeSignExtend32b` with output `sTypeSignExtend`
 - `Branch & Jump TargGen` is wrapped as component `BranchAndJumpTargGen`
 - `JumpRegTargGen` still used in Execute Stage
+- Add a component `pcSelUpdater_inst` with output `pc_sel_withBranchConsidered`
 - Currently not implementing anything relative to forwarding
 - Add a signal `pcWriteEnable` to control `pc_inst`

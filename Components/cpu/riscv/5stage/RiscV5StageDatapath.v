@@ -147,7 +147,7 @@ module RiscV5StageDatapath (
         .exe_isBranchOrJump(pc_sel_withBranchConsidered == `riscv32_5stage_pc_sel_jumpOrBranch)
     );
 
-    // ::::: PC Modification Stage (writeback stage?) ::::: //
+    // ::::: PC Modification Stage ::::: //
     wire [31:0] branchOrJump;
     wire [31:0] jalr;
 
