@@ -42,6 +42,9 @@ module Alu32b_extended (
             `Alu32b_extended_aluOp_xor: begin
                 aluResult = leftOperand ^ rightOperand;
             end
+            `Alu32b_extended_aluOp_sltu: begin
+                aluResult = leftOperand < rightOperand;
+            end
             default: begin
                 aluResult = aluSimpleResult;
             end
