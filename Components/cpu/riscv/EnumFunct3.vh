@@ -11,6 +11,8 @@
 `define riscv32_funct3_LW    3'b010
 `define riscv32_funct3_LBU   3'b100
 `define riscv32_funct3_LHU   3'b101
+`define riscv32_funct3_SB    3'b000
+`define riscv32_funct3_SH    3'b001
 `define riscv32_funct3_SW    3'b010
 `define riscv32_funct3_ADDI  3'b000
 `define riscv32_funct3_SLTI  3'b010
