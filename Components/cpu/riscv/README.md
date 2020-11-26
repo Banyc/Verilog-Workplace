@@ -1,5 +1,34 @@
 # RISC V
 
+## Supported Instructions
+
+- lui
+- jal
+- jalr
+- beq
+- bne
+- lw
+- sw
+- addi
+- slti
+- sltiu
+- xori
+- ori
+- andi
+- slli
+- srli
+- srai
+- add
+- sub
+- sll
+- slt
+- sltu
+- xor
+- srl
+- sra
+- or
+- and
+
 ## Sodor
 
 - <https://docs.google.com/document/d/1WPQblOoKIODLrIacFSumXR6_uC9zquyixNFN8ABVQxY/edit>
