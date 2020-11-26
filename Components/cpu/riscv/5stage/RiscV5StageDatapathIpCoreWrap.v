@@ -90,7 +90,7 @@ module RiscV5StageDatapathIpCoreWrap (
 
     // begin: ROM datapath
     Rom32bIp rom32b_inst(
-        .clka(clk),
+        .clka(!clk),
         .addra(pc[11 : 2]),
         .douta(instruction)
     );

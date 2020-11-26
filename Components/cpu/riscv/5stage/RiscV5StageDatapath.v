@@ -134,8 +134,10 @@ module RiscV5StageDatapath (
         .pcWriteEnable(newSignal_pcWriteEnable),
         .if_kill(newSignal_if_kill),
         .dec_kill(newSignal_dec_kill),
-        .dec_rs1Address(instruction[19:15]),
-        .dec_rs2Address(instruction[24:20]),
+        .if_rs1Address(instruction[19:15]),
+        .if_rs2Address(instruction[24:20]),
+        .dec_regFileWriteAddress(newSignal_rd),
+        .dec_regFileWriteEnable(newSignal_regFileWriteEnable),
         .exe_regFileWriteAddress(decSignal_rd),
         .exe_regFileWriteEnable(decSignal_regFileWriteEnable),
         .mem_regFileWriteAddress(exeSignal_rd),
@@ -205,8 +207,7 @@ module RiscV5StageDatapath (
     Register32b if_pc_inst(
         .clk(clk),
         .enableWrite(1'b1),
-        // .d(pc),
-        .d(pc_4),
+        .d(pc),
         .q(if_pc)
     );
     Register32b if_instruction_inst(
@@ -231,8 +232,8 @@ module RiscV5StageDatapath (
     RegFile regFile_inst(
         .clk(clk),
         .rst(rst),
-        .readRegister1(instruction[19:15]),
-        .readRegister2(instruction[24:20]),
+        .readRegister1(if_instruction[19:15]),
+        .readRegister2(if_instruction[24:20]),
         .writeRegister(memSignal_rd),
         .writeData(regFileWriteData),
         .writeEnable(memSignal_regFileWriteEnable),
@@ -246,31 +247,31 @@ module RiscV5StageDatapath (
     );
     // end: RegFile datapath
 
-    assign newSignal_rd = instruction[11:7];
+    assign newSignal_rd = if_instruction[11:7];
 
     // begin: immediate extend datapath
     BTypeSignExtend32b bTypeSignExtend32b_inst(
-        .instruction(instruction),
+        .instruction(if_instruction),
         .signExtended(bTypeSignExtend)
     );
     ITypeSignExtend32b iTypeSignExtend32b_inst(
-        .instruction(instruction),
+        .instruction(if_instruction),
         .signExtended(iTypeSignExtend)
     );
     UType32b uType32b_inst(
-        .instruction(instruction),
+        .instruction(if_instruction),
         .extended(uTypeImmediate)
     );
     JTypeSignExtend32b jTypeSignExtend32b_inst(
-        .instruction(instruction),
+        .instruction(if_instruction),
         .signExtended(jTypeSignExtend)
     );
     STypeSignExtend32b sTypeSignExtend32b_inst(
-        .instruction(instruction),
+        .instruction(if_instruction),
         .signExtended(sTypeSignExtend)
     );
     ShamtSignExtend32b shamtSignExtend32b_inst(
-        .instruction(instruction),
+        .instruction(if_instruction),
         .signExtended(shamtSignExtend)
     );
     // end: immediate extend datapath 
@@ -302,7 +303,7 @@ module RiscV5StageDatapath (
 
     // begin: Control datapath
     RiscV5StageControl decoder_inst(
-        .instruction(instruction),
+        .instruction(if_instruction),
 
         .pcSelect(newSignal_pc_sel),
         .op2Select(newSignal_op2Sel),
@@ -436,7 +437,7 @@ module RiscV5StageDatapath (
     wire [31:0] exe_wb_sel_out;
     Mux2to1_32b exe_wb_sel_mux_inst(
         .S(decSignal_exe_wb_sel),
-        .I0(if_pc + 4),
+        .I0(dec_pc + 4),
         .I1(aluOut),
         .O(exe_wb_sel_out)
     );
