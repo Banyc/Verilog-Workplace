@@ -34,7 +34,7 @@
 
 ## Multi-Cycle
 
-![MultiCycleCPU.png](multiCycleCpu/MultiCycleCPU.png)
+![MultiCycleCpu.png](multiCycleCpu/MultiCycleCpu.png)
 
 ### Supported Instructions
 
