@@ -1,4 +1,4 @@
-# CPU
+# MIPS CPU
 
 ## Single-Cycle
 
