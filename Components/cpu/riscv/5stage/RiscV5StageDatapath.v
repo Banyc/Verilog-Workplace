@@ -51,7 +51,6 @@ module RiscV5StageDatapath (
     wire [31:0] if_pc;
     output wire [31:0] pc;
     assign pc = if_pc;
-    wire [31:0] if_pc_4;
     input wire [31:0] instruction;
     wire [31:0] if_instruction = instruction;
     input wire [31:0] memoryReadData;
@@ -170,6 +169,7 @@ module RiscV5StageDatapath (
     // end: RegFile datapath
 
     // ::::: PC Modification Stage ::::: //
+    wire [31:0] if_pc_4;
     wire [31:0] exe_branchOrJump;
     wire [31:0] exe_jalr;
 
