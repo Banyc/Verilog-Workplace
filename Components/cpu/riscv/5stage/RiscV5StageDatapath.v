@@ -79,8 +79,8 @@ module RiscV5StageDatapath (
     wire [1:0] dec_signal_forwardingOp2Sel;  // WORDAROUND
     wire [1:0] dec_signal_forwardingRs2Sel;  // WORDAROUND
     // from HazardDetectionUnit
-    wire       global_signal_if_kill;
-    wire       global_signal_dec_kill;
+    wire       if_signal_if_kill;
+    wire       dec_signal_dec_kill;
     wire       global_signal_pcWriteEnable;
 
     wire       exe_signal_isBne;
@@ -139,8 +139,8 @@ module RiscV5StageDatapath (
     HazardDetectionUnit global_hazardDetectionUnit_inst(
         // stalling
         .pcWriteEnable(global_signal_pcWriteEnable),
-        .if_kill(global_signal_if_kill),
-        .dec_kill(global_signal_dec_kill),
+        .if_kill(if_signal_if_kill),
+        .dec_kill(dec_signal_dec_kill),
         // forwarding
         .dec_forwardingOp1Sel(dec_signal_forwardingOp1Sel),
         .dec_forwardingOp2Sel(dec_signal_forwardingOp2Sel),
@@ -150,10 +150,13 @@ module RiscV5StageDatapath (
         .if_rs2Address(if_instruction[24:20]),
         .dec_regFileWriteAddress(dec_signal_rd),
         .dec_regFileWriteEnable(dec_signal_regFileWriteEnable),
+        .dec_signal_mem_wb_sel(dec_signal_mem_wb_sel),
         .exe_regFileWriteAddress(exe_signal_rd),
         .exe_regFileWriteEnable(exe_signal_regFileWriteEnable),
+        .exe_signal_mem_wb_sel(exe_signal_mem_wb_sel),
         .mem_regFileWriteAddress(mem_signal_rd),
         .mem_regFileWriteEnable(mem_signal_regFileWriteEnable),
+        .mem_signal_mem_wb_sel(mem_signal_mem_wb_sel),
         .wb_regFileWriteAddress(wb_signal_rd),
         .wb_regFileWriteEnable(wb_signal_regFileWriteEnable),
         .exe_isBranchOrJumpTaken(exe_pc_sel_withBranchConsidered == `riscv32_5stage_pc_sel_jumpOrBranch)
@@ -226,7 +229,7 @@ module RiscV5StageDatapath (
     // begin: if_kill_mux
     wire [31:0] if_kill_out;
     Mux2to1_32b if_kill_mux_inst(
-        .S(global_signal_if_kill),
+        .S(if_signal_if_kill),
         .I0(if_instruction),
         .I1(32'h13),  // nop
         .O(if_kill_out)
@@ -335,7 +338,7 @@ module RiscV5StageDatapath (
     // begin: dec_kill_mux
     wire [31:0] dec_kill_out;
     Mux2to1_32b dec_kill_mux_inst(
-        .S(global_signal_dec_kill),
+        .S(dec_signal_dec_kill),
         .I0({
             7'b0,
             dec_signal_isBne,

@@ -18,10 +18,13 @@ module HazardDetectionUnit (
     if_rs2Address,
     dec_regFileWriteAddress,
     dec_regFileWriteEnable,
+    dec_signal_mem_wb_sel,
     exe_regFileWriteAddress,
     exe_regFileWriteEnable,
+    exe_signal_mem_wb_sel,
     mem_regFileWriteAddress,
     mem_regFileWriteEnable,
+    mem_signal_mem_wb_sel,
     wb_regFileWriteAddress,
     wb_regFileWriteEnable,
     exe_isBranchOrJumpTaken
@@ -38,10 +41,13 @@ module HazardDetectionUnit (
     input wire [4:0] if_rs2Address;
     input wire [4:0] dec_regFileWriteAddress;
     input wire       dec_regFileWriteEnable;
+    input wire [1:0] dec_signal_mem_wb_sel;
     input wire [4:0] exe_regFileWriteAddress;
     input wire       exe_regFileWriteEnable;
+    input wire [1:0] exe_signal_mem_wb_sel;
     input wire [4:0] mem_regFileWriteAddress;
     input wire       mem_regFileWriteEnable;
+    input wire [1:0] mem_signal_mem_wb_sel;
     input wire [4:0] wb_regFileWriteAddress;
     input wire       wb_regFileWriteEnable;
     input wire       exe_isBranchOrJumpTaken;
