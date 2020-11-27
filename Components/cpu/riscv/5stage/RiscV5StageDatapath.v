@@ -74,6 +74,10 @@ module RiscV5StageDatapath (
     wire       dec_signal_memoryWriteEnable;
     wire       dec_signal_memoryReadEnable;
     wire [4:0] dec_signal_rd;
+    // forwarding
+    wire [1:0] dec_signal_forwardingOp1Sel;  // WORDAROUND
+    wire [1:0] dec_signal_forwardingOp2Sel;  // WORDAROUND
+    wire [1:0] dec_signal_forwardingRs2Sel;  // WORDAROUND
     // from HazardDetectionUnit
     wire       global_signal_if_kill;
     wire       global_signal_dec_kill;
@@ -133,9 +137,15 @@ module RiscV5StageDatapath (
 
     // ::::: Global ::::: //
     HazardDetectionUnit global_hazardDetectionUnit_inst(
+        // stalling
         .pcWriteEnable(global_signal_pcWriteEnable),
         .if_kill(global_signal_if_kill),
         .dec_kill(global_signal_dec_kill),
+        // forwarding
+        .dec_forwardingOp1Sel(dec_signal_forwardingOp1Sel),
+        .dec_forwardingOp2Sel(dec_signal_forwardingOp2Sel),
+        .dec_forwardingRs2Sel(dec_signal_forwardingRs2Sel),
+        // inputs
         .if_rs1Address(if_instruction[19:15]),
         .if_rs2Address(if_instruction[24:20]),
         .dec_regFileWriteAddress(dec_signal_rd),
@@ -349,7 +359,6 @@ module RiscV5StageDatapath (
 
     // begin: MUX for forwarding
     wire [31:0] dec_forwardingOp1Sel_mux_out;
-    wire [1:0] dec_signal_forwardingOp1Sel = 3;  // WORDAROUND
     Mux4to1_32b dec_forwardingOp1Sel_mux_inst(
         .S(dec_signal_forwardingOp1Sel),
         .I0(exe_aluOut),
@@ -359,7 +368,6 @@ module RiscV5StageDatapath (
         .O(dec_forwardingOp1Sel_mux_out)
     );
     wire [31:0] dec_forwardingOp2Sel_mux_out;
-    wire [1:0] dec_signal_forwardingOp2Sel = 3;  // WORDAROUND
     Mux4to1_32b dec_forwardingOp2Sel_mux_inst(
         .S(dec_signal_forwardingOp2Sel),
         .I0(exe_aluOut),
@@ -369,7 +377,6 @@ module RiscV5StageDatapath (
         .O(dec_forwardingOp2Sel_mux_out)
     );
     wire [31:0] dec_forwardingRs2Sel_mux_out;
-    wire [1:0] dec_signal_forwardingRs2Sel = 3;  // WORDAROUND
     Mux4to1_32b dec_forwardingRs2Sel_mux_inst(
         .S(dec_signal_forwardingRs2Sel),
         .I0(exe_aluOut),

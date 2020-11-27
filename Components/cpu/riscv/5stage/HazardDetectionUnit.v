@@ -2,11 +2,18 @@
 `ifndef __HazardDetectionUnit_v__
 `define __HazardDetectionUnit_v__
 
+`include "Components/cpu/riscv/5stage/EnumSelections.vh"
 
 module HazardDetectionUnit (
+    // stalling
     pcWriteEnable,
     if_kill,
     dec_kill,
+    // forwarding
+    dec_forwardingOp1Sel,
+    dec_forwardingOp2Sel,
+    dec_forwardingRs2Sel,
+    // inputs
     if_rs1Address,
     if_rs2Address,
     dec_regFileWriteAddress,
@@ -22,6 +29,10 @@ module HazardDetectionUnit (
     output reg pcWriteEnable;
     output reg if_kill;
     output reg dec_kill;
+
+    output reg [1:0] dec_forwardingOp1Sel = `riscv32_5stage_dec_forwarding_none;  // WORKAROUND
+    output reg [1:0] dec_forwardingOp2Sel = `riscv32_5stage_dec_forwarding_none;  // WORKAROUND
+    output reg [1:0] dec_forwardingRs2Sel = `riscv32_5stage_dec_forwarding_none;  // WORKAROUND
     
     input wire [4:0] if_rs1Address;
     input wire [4:0] if_rs2Address;
@@ -35,7 +46,7 @@ module HazardDetectionUnit (
     input wire       wb_regFileWriteEnable;
     input wire       exe_isBranchOrJumpTaken;
 
-    
+    // stalling
     always @(*) begin
         if (exe_isBranchOrJumpTaken == 1) begin
             pcWriteEnable <= 1;
@@ -119,7 +130,6 @@ module HazardDetectionUnit (
             dec_kill <= 0;
         end
     end
-
 
 endmodule
 
