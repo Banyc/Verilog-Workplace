@@ -347,6 +347,39 @@ module RiscV5StageDatapath (
     );
     // end: dec_kill_mux
 
+    // begin: MUX for forwarding
+    wire [31:0] dec_forwardingOp1Sel_mux_out;
+    wire [1:0] dec_signal_forwardingOp1Sel = 3;  // WORDAROUND
+    Mux4to1_32b dec_forwardingOp1Sel_mux_inst(
+        .S(dec_signal_forwardingOp1Sel),
+        .I0(exe_aluOut),
+        .I1(mem_wb_sel_out),
+        .I2(wb_wbData),
+        .I3(dec_op1Sel_out),
+        .O(dec_forwardingOp1Sel_mux_out)
+    );
+    wire [31:0] dec_forwardingOp2Sel_mux_out;
+    wire [1:0] dec_signal_forwardingOp2Sel = 3;  // WORDAROUND
+    Mux4to1_32b dec_forwardingOp2Sel_mux_inst(
+        .S(dec_signal_forwardingOp2Sel),
+        .I0(exe_aluOut),
+        .I1(mem_wb_sel_out),
+        .I2(wb_wbData),
+        .I3(dec_op2Sel_out),
+        .O(dec_forwardingOp2Sel_mux_out)
+    );
+    wire [31:0] dec_forwardingRs2Sel_mux_out;
+    wire [1:0] dec_signal_forwardingRs2Sel = 3;  // WORDAROUND
+    Mux4to1_32b dec_forwardingRs2Sel_mux_inst(
+        .S(dec_signal_forwardingRs2Sel),
+        .I0(exe_aluOut),
+        .I1(mem_wb_sel_out),
+        .I2(wb_wbData),
+        .I3(dec_rs2),
+        .O(dec_forwardingRs2Sel_mux_out)
+    );
+    // end: MUX for forwarding
+
     // begin: Stage registers
     wire [31:0] exe_pc;
     wire [31:0] exe_op1;
@@ -361,19 +394,19 @@ module RiscV5StageDatapath (
     Register32b dec_exe_op1_inst(
         .clk(clk),
         .enableWrite(1'b1),
-        .d(dec_op1Sel_out),
+        .d(dec_forwardingOp1Sel_mux_out),
         .q(exe_op1)
     );
     Register32b dec_exe_op2_inst(
         .clk(clk),
         .enableWrite(1'b1),
-        .d(dec_op2Sel_out),
+        .d(dec_forwardingOp2Sel_mux_out),
         .q(exe_op2)
     );
     Register32b dec_exe_rs2_inst(
         .clk(clk),
         .enableWrite(1'b1),
-        .d(dec_rs2),
+        .d(dec_forwardingRs2Sel_mux_out),
         .q(exe_rs2)
     );
     // control signals

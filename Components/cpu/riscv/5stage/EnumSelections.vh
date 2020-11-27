@@ -24,4 +24,9 @@
 `define riscv32_5stage_mem_wb_sel_aluOut 1
 `define riscv32_5stage_mem_wb_sel_memoryReadData 2
 
+`define riscv32_5stage_dec_forwarding_exe_aluOut 0
+`define riscv32_5stage_dec_forwarding_mem_wb_sel_out 1
+`define riscv32_5stage_dec_forwarding_wb_wbData 2
+`define riscv32_5stage_dec_forwarding_none 3
+
 `endif
