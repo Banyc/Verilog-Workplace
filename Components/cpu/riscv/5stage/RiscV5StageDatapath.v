@@ -156,8 +156,8 @@ module RiscV5StageDatapath (
         .writeData(regFileWriteData),
         .writeEnable(wb_signal_regFileWriteEnable),
 
-        .readData1(rs1),
-        .readData2(rs2),
+        .readData1(dec_rs1),
+        .readData2(dec_rs2),
 
         // debug only
         .readRegisterDebug(regFileReadRegisterDebug),
@@ -237,66 +237,66 @@ module RiscV5StageDatapath (
     // end: Stage registers
 
     // ::::: Decode Stage ::::: //
-    wire [31:0] rs1;
-    wire [31:0] rs2;
-    wire [31:0] bTypeSignExtend;
-    wire [31:0] iTypeSignExtend;
-    wire [31:0] shamtSignExtend;
-    wire [31:0] sTypeSignExtend;
-    wire [31:0] jTypeSignExtend;
-    wire [31:0] uTypeImmediate;
+    wire [31:0] dec_rs1;
+    wire [31:0] dec_rs2;
+    wire [31:0] dec_bTypeSignExtend;
+    wire [31:0] dec_iTypeSignExtend;
+    wire [31:0] dec_shamtSignExtend;
+    wire [31:0] dec_sTypeSignExtend;
+    wire [31:0] dec_jTypeSignExtend;
+    wire [31:0] dec_uTypeImmediate;
 
     assign dec_signal_rd = dec_instruction[11:7];
 
     // begin: immediate extend datapath
     BTypeSignExtend32b dec_bTypeSignExtend32b_inst(
         .instruction(dec_instruction),
-        .signExtended(bTypeSignExtend)
+        .signExtended(dec_bTypeSignExtend)
     );
     ITypeSignExtend32b dec_iTypeSignExtend32b_inst(
         .instruction(dec_instruction),
-        .signExtended(iTypeSignExtend)
+        .signExtended(dec_iTypeSignExtend)
     );
     UType32b dec_uType32b_inst(
         .instruction(dec_instruction),
-        .extended(uTypeImmediate)
+        .extended(dec_uTypeImmediate)
     );
     JTypeSignExtend32b dec_jTypeSignExtend32b_inst(
         .instruction(dec_instruction),
-        .signExtended(jTypeSignExtend)
+        .signExtended(dec_jTypeSignExtend)
     );
     STypeSignExtend32b dec_sTypeSignExtend32b_inst(
         .instruction(dec_instruction),
-        .signExtended(sTypeSignExtend)
+        .signExtended(dec_sTypeSignExtend)
     );
     ShamtSignExtend32b dec_shamtSignExtend32b_inst(
         .instruction(dec_instruction),
-        .signExtended(shamtSignExtend)
+        .signExtended(dec_shamtSignExtend)
     );
     // end: immediate extend datapath 
 
     // begin: MUX for ALU input datapath
-    wire [31:0] op2Sel_out;
+    wire [31:0] dec_op2Sel_out;
     Mux8to1_32b dec_op2Sel_mux_inst(
         .S(dec_signal_op2Sel),
-        .I0(rs2),
-        .I1(bTypeSignExtend),
-        .I2(iTypeSignExtend),
-        .I3(uTypeImmediate),
-        .I4(jTypeSignExtend),
-        .I5(sTypeSignExtend),
-        .I6(shamtSignExtend),
+        .I0(dec_rs2),
+        .I1(dec_bTypeSignExtend),
+        .I2(dec_iTypeSignExtend),
+        .I3(dec_uTypeImmediate),
+        .I4(dec_jTypeSignExtend),
+        .I5(dec_sTypeSignExtend),
+        .I6(dec_shamtSignExtend),
         .I7(32'b0),
-        .O(op2Sel_out)
+        .O(dec_op2Sel_out)
     );
-    wire [31:0] op1Sel_out;
+    wire [31:0] dec_op1Sel_out;
     Mux4to1_32b dec_op1Sel_mux_inst(
         .S(dec_signal_op1Sel),
         .I0(dec_pc),
-        .I1(rs1),
+        .I1(dec_rs1),
         .I2(32'b0),
         .I3(32'b0),
-        .O(op1Sel_out)
+        .O(dec_op1Sel_out)
     );
     // end: MUX for ALU input datapath
 
@@ -357,19 +357,19 @@ module RiscV5StageDatapath (
     Register32b dec_exe_op1_inst(
         .clk(clk),
         .enableWrite(1'b1),
-        .d(op1Sel_out),
+        .d(dec_op1Sel_out),
         .q(exe_op1)
     );
     Register32b dec_exe_op2_inst(
         .clk(clk),
         .enableWrite(1'b1),
-        .d(op2Sel_out),
+        .d(dec_op2Sel_out),
         .q(exe_op2)
     );
     Register32b dec_exe_rs2_inst(
         .clk(clk),
         .enableWrite(1'b1),
-        .d(rs2),
+        .d(dec_rs2),
         .q(exe_rs2)
     );
     // control signals
