@@ -217,7 +217,7 @@ module RiscV5StageDatapath (
     wire [31:0] if_kill_out;
     Mux2to1_32b if_kill_mux_inst(
         .S(global_signal_if_kill),
-        .I0(instruction),
+        .I0(if_instruction),
         .I1(32'h13),  // nop
         .O(if_kill_out)
     );
