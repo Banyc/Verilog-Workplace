@@ -146,6 +146,25 @@ module RiscV5StageDatapath (
         .wb_regFileWriteEnable(memSignal_regFileWriteEnable),
         .exe_isBranchOrJumpTaken(pc_sel_withBranchConsidered == `riscv32_5stage_pc_sel_jumpOrBranch)
     );
+    
+    // begin: RegFile datapath
+    RegFile regFile_inst(
+        .clk(clk),
+        .rst(rst),
+        .readRegister1(if_instruction[19:15]),
+        .readRegister2(if_instruction[24:20]),
+        .writeRegister(memSignal_rd),
+        .writeData(regFileWriteData),
+        .writeEnable(memSignal_regFileWriteEnable),
+
+        .readData1(rs1),
+        .readData2(rs2),
+
+        // debug only
+        .readRegisterDebug(regFileReadRegisterDebug),
+        .readDataDebug(regFileReadDataDebug)
+    );
+    // end: RegFile datapath
 
     // ::::: PC Modification Stage ::::: //
     wire [31:0] branchOrJump;
@@ -204,13 +223,13 @@ module RiscV5StageDatapath (
     // begin: Stage registers
     wire [31:0] if_pc;
     wire [31:0] if_instruction;
-    Register32b if_pc_inst(
+    Register32b if_dec_pc_inst(
         .clk(clk),
         .enableWrite(1'b1),
         .d(pc),
         .q(if_pc)
     );
-    Register32b if_instruction_inst(
+    Register32b if_dec_instruction_inst(
         .clk(clk),
         .enableWrite(1'b1),
         .d(if_kill_out),
@@ -228,49 +247,30 @@ module RiscV5StageDatapath (
     wire [31:0] jTypeSignExtend;
     wire [31:0] uTypeImmediate;
 
-    // begin: RegFile datapath
-    RegFile regFile_inst(
-        .clk(clk),
-        .rst(rst),
-        .readRegister1(if_instruction[19:15]),
-        .readRegister2(if_instruction[24:20]),
-        .writeRegister(memSignal_rd),
-        .writeData(regFileWriteData),
-        .writeEnable(memSignal_regFileWriteEnable),
-
-        .readData1(rs1),
-        .readData2(rs2),
-
-        // debug only
-        .readRegisterDebug(regFileReadRegisterDebug),
-        .readDataDebug(regFileReadDataDebug)
-    );
-    // end: RegFile datapath
-
     assign newSignal_rd = if_instruction[11:7];
 
     // begin: immediate extend datapath
-    BTypeSignExtend32b bTypeSignExtend32b_inst(
+    BTypeSignExtend32b dec_bTypeSignExtend32b_inst(
         .instruction(if_instruction),
         .signExtended(bTypeSignExtend)
     );
-    ITypeSignExtend32b iTypeSignExtend32b_inst(
+    ITypeSignExtend32b dec_iTypeSignExtend32b_inst(
         .instruction(if_instruction),
         .signExtended(iTypeSignExtend)
     );
-    UType32b uType32b_inst(
+    UType32b dec_uType32b_inst(
         .instruction(if_instruction),
         .extended(uTypeImmediate)
     );
-    JTypeSignExtend32b jTypeSignExtend32b_inst(
+    JTypeSignExtend32b dec_jTypeSignExtend32b_inst(
         .instruction(if_instruction),
         .signExtended(jTypeSignExtend)
     );
-    STypeSignExtend32b sTypeSignExtend32b_inst(
+    STypeSignExtend32b dec_sTypeSignExtend32b_inst(
         .instruction(if_instruction),
         .signExtended(sTypeSignExtend)
     );
-    ShamtSignExtend32b shamtSignExtend32b_inst(
+    ShamtSignExtend32b dec_shamtSignExtend32b_inst(
         .instruction(if_instruction),
         .signExtended(shamtSignExtend)
     );
@@ -278,7 +278,7 @@ module RiscV5StageDatapath (
 
     // begin: MUX for ALU input datapath
     wire [31:0] op2Sel_out;
-    Mux8to1_32b op2Sel_mux_inst(
+    Mux8to1_32b dec_op2Sel_mux_inst(
         .S(newSignal_op2Sel),
         .I0(rs2),
         .I1(bTypeSignExtend),
@@ -291,7 +291,7 @@ module RiscV5StageDatapath (
         .O(op2Sel_out)
     );
     wire [31:0] op1Sel_out;
-    Mux4to1_32b op1Sel_mux_inst(
+    Mux4to1_32b dec_op1Sel_mux_inst(
         .S(newSignal_op1Sel),
         .I0(if_pc),
         .I1(rs1),
@@ -302,7 +302,7 @@ module RiscV5StageDatapath (
     // end: MUX for ALU input datapath
 
     // begin: Control datapath
-    RiscV5StageControl decoder_inst(
+    RiscV5StageControl dec_decoder_inst(
         .instruction(if_instruction),
 
         .pcSelect(newSignal_pc_sel),
@@ -349,32 +349,32 @@ module RiscV5StageDatapath (
     wire [31:0] dec_op1;
     wire [31:0] dec_op2;
     wire [31:0] dec_rs2;
-    Register32b dec_pc_inst(
+    Register32b dec_exe_pc_inst(
         .clk(clk),
         .enableWrite(1'b1),
         .d(if_pc),
         .q(dec_pc)
     );
-    Register32b dec_op1_inst(
+    Register32b dec_exe_op1_inst(
         .clk(clk),
         .enableWrite(1'b1),
         .d(op1Sel_out),
         .q(dec_op1)
     );
-    Register32b dec_op2_inst(
+    Register32b dec_exe_op2_inst(
         .clk(clk),
         .enableWrite(1'b1),
         .d(op2Sel_out),
         .q(dec_op2)
     );
-    Register32b dec_rs2_inst(
+    Register32b dec_exe_rs2_inst(
         .clk(clk),
         .enableWrite(1'b1),
         .d(rs2),
         .q(dec_rs2)
     );
     // control signals
-    RegisterResettable32b dec_controlSignals_inst(
+    RegisterResettable32b dec_exe_controlSignals_inst(
         .clk(clk),
         .rst(rst),
         .enableWrite(1'b1),
@@ -402,7 +402,7 @@ module RiscV5StageDatapath (
     wire [31:0] aluOut;
 
     // begin: condition generation
-    BranchCondGen BranchCondGen_inst(
+    BranchCondGen exe_branchCondGen_inst(
         .rs1(dec_op1),
         .rs2(dec_rs2),
         .is_br_eq(newSignal_is_br_eq),
@@ -412,12 +412,12 @@ module RiscV5StageDatapath (
     // end: condition generation
 
     // begin: target generation datapath
-    BranchAndJumpTargGen branchAndJumpTargGen_inst(
+    BranchAndJumpTargGen exe_branchAndJumpTargGen_inst(
         .pc(dec_pc),
         .immediate(dec_op2),
         .target(branchOrJump)
     );
-    JumpRegTargGen jumpRegTargGen_inst(
+    JumpRegTargGen exe_jumpRegTargGen_inst(
         .iTypeSignExtend(dec_op2),
         .rs1(dec_op1),
         .target(jalr)
@@ -425,7 +425,7 @@ module RiscV5StageDatapath (
     // end: target generation datapath
 
     // begin: ALU datapath
-    Alu32b_extended alu32b_inst(
+    Alu32b_extended exe_alu32b_inst(
         .aluOp(decSignal_aluFunction),
         .leftOperand(dec_op1),
         .rightOperand(dec_op2),
@@ -466,7 +466,7 @@ module RiscV5StageDatapath (
         .q(exe_rs1)
     );
     // control signals
-    RegisterResettable32b exe_controlSignals_inst(
+    RegisterResettable32b exe_mem_controlSignals_inst(
         .clk(clk),
         .rst(rst),
         .enableWrite(1'b1),
@@ -536,7 +536,7 @@ module RiscV5StageDatapath (
     );
     // WORKAROUND: ignore "to host" register
     // control signals
-    RegisterResettable32b mem_controlSignals_inst(
+    RegisterResettable32b mem_wb_controlSignals_inst(
         .clk(clk),
         .rst(rst),
         .enableWrite(1'b1),
