@@ -48,10 +48,14 @@ module RiscV5StageDatapath (
     wire [6:0] wb_dummyOutput7b_controlSignals;
 
     // 32 bits outputs
+    wire [31:0] if_pc;
     output wire [31:0] pc;
-    wire [31:0] pc_4;
+    assign pc = if_pc;
+    wire [31:0] if_pc_4;
     input wire [31:0] instruction;
+    wire [31:0] if_instruction = instruction;
     input wire [31:0] memoryReadData;
+    wire [31:0] mem_memoryReadData = memoryReadData;
 
     // control signals
     output wire memoryWriteEnable;
@@ -133,8 +137,8 @@ module RiscV5StageDatapath (
         .pcWriteEnable(global_signal_pcWriteEnable),
         .if_kill(global_signal_if_kill),
         .dec_kill(global_signal_dec_kill),
-        .if_rs1Address(instruction[19:15]),
-        .if_rs2Address(instruction[24:20]),
+        .if_rs1Address(if_instruction[19:15]),
+        .if_rs2Address(if_instruction[24:20]),
         .dec_regFileWriteAddress(dec_signal_rd),
         .dec_regFileWriteEnable(dec_signal_regFileWriteEnable),
         .exe_regFileWriteAddress(exe_signal_rd),
@@ -184,7 +188,7 @@ module RiscV5StageDatapath (
     wire [31:0] pc_sel_out;
     Mux4to1_32b pc_sel_mux_inst(
         .S(pc_sel_withBranchConsidered),
-        .I0(pc_4),
+        .I0(if_pc_4),
         .I1(branchOrJump),
         .I2(jalr),
         .I3(32'b0),
@@ -198,12 +202,12 @@ module RiscV5StageDatapath (
         .rst(rst),
         .enableWrite(global_signal_pcWriteEnable),
         .d(pc_sel_out),
-        .q(pc)
+        .q(if_pc)
     );
     // end: PC datapath
 
     // ::::: Fetch Stage ::::: //
-    assign pc_4 = pc + 4;
+    assign if_pc_4 = if_pc + 4;
 
     // begin: instruction memory datapath
     // the only input is `pc`
@@ -225,7 +229,7 @@ module RiscV5StageDatapath (
     Register32b if_dec_pc_inst(
         .clk(clk),
         .enableWrite(1'b1),
-        .d(pc),
+        .d(if_pc),
         .q(dec_pc)
     );
     Register32b if_dec_instruction_inst(
@@ -519,7 +523,7 @@ module RiscV5StageDatapath (
         .S(mem_signal_mem_wb_sel),
         .I0(32'b0),
         .I1(mem_aluOut),
-        .I2(memoryReadData),
+        .I2(mem_memoryReadData),
         .I3(32'b0),
         .O(mem_wb_sel_out)
     );
