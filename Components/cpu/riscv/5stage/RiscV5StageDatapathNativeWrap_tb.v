@@ -1,6 +1,6 @@
-`include "./Components/cpu/riscv/5stage/RiscV5StageDatapathIpCoreWrap.v"
+`include "./Components/cpu/riscv/5stage/RiscV5StageDatapathNativeWrap.v"
 
-module RiscV5StageDatapathIpCoreWrap_tb(
+module RiscV5StageDatapathNativeWrap_tb(
 
 );
     reg clk;
@@ -14,7 +14,7 @@ module RiscV5StageDatapathIpCoreWrap_tb(
 
     // __subject__
     // CPU
-    RiscV5StageDatapathIpCoreWrap cpuWrap(
+    RiscV5StageDatapathNativeWrap cpuWrap(
         .clk(cpuClk),
         .rst(rst),
         // debug
@@ -33,7 +33,7 @@ module RiscV5StageDatapathIpCoreWrap_tb(
 
     // integer idx;
     initial begin
-        $dumpfile("RiscV5StageDatapathIpCoreWrap_tb.vcd"); $dumpvars(0, RiscV5StageDatapathIpCoreWrap_tb);
+        $dumpfile("RiscV5StageDatapathNativeWrap_tb.vcd"); $dumpvars(0, RiscV5StageDatapathNativeWrap_tb);
         $dumpvars(0, cpuWrap.cpu.global_regFile_inst.memory[1]);
         $dumpvars(0, cpuWrap.cpu.global_regFile_inst.memory[2]);
         $dumpvars(0, cpuWrap.cpu.global_regFile_inst.memory[3]);
@@ -68,9 +68,15 @@ module RiscV5StageDatapathIpCoreWrap_tb(
 
         // $monitor("instruction: %b, clock:%b\n", instruction, clk);
         $monitor("instruction: %b, PC: %d", instruction, pcHuman);
-        readRegisterDebug = 1;
+        readRegisterDebug = 7;
+        // rst = 0;
+        // # 12;
+        // rst = 1;
+        // # 10;
+        // rst = 0;
+
         rst = 0;
-        # 12;
+        # 10;
         rst = 1;
         # 10;
         rst = 0;
@@ -81,7 +87,7 @@ module RiscV5StageDatapathIpCoreWrap_tb(
         # 10;
 
         // #10000; $finish;
-        #1900; $finish;
+        #2900; $finish;
     end
 
     always begin

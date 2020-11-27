@@ -42,10 +42,10 @@ module RiscV5StageDatapath (
     input wire rst;
 
     // dummy outputs
-    wire        dummyOutput1b_dec_controlSignals;
-    wire [6:0] dummyOutput7b_dec_controlSignals;
-    wire [6:0] dummyOutput7b_exe_controlSignals;
-    wire [6:0] dummyOutput7b_mem_controlSignals;
+    wire        exe_dummyOutput1b_controlSignals;
+    wire [6:0] exe_dummyOutput7b_dec_controlSignals;
+    wire [6:0] mem_dummyOutput7b_controlSignals;
+    wire [6:0] wb_dummyOutput7b_controlSignals;
 
     // 32 bits outputs
     output wire [31:0] pc;
@@ -58,66 +58,65 @@ module RiscV5StageDatapath (
     output wire memoryReadEnable;
 
     // begin: control signals
-    // naming convention: fromWhere_detail
-    wire       newSignal_isBne;
-    wire       newSignal_isBeq;
-    wire       newSignal_is_br_eq;
-    wire [3:0] newSignal_aluFunction;
-    wire [1:0] newSignal_op1Sel;
-    wire [2:0] newSignal_op2Sel;
-    wire [1:0] newSignal_pc_sel;
-    wire [1:0] newSignal_mem_wb_sel;
-    wire       newSignal_exe_wb_sel;
-    wire       newSignal_regFileWriteEnable;
-    wire       newSignal_memoryWriteEnable;
-    wire       newSignal_memoryReadEnable;
-    wire [4:0] newSignal_rd;
+    // naming convention: inWhere_detail
+    wire       dec_signal_isBne;
+    wire       dec_signal_isBeq;
+    wire [3:0] dec_signal_aluFunction;
+    wire [1:0] dec_signal_op1Sel;
+    wire [2:0] dec_signal_op2Sel;
+    wire [1:0] dec_signal_pc_sel;
+    wire [1:0] dec_signal_mem_wb_sel;
+    wire       dec_signal_exe_wb_sel;
+    wire       dec_signal_regFileWriteEnable;
+    wire       dec_signal_memoryWriteEnable;
+    wire       dec_signal_memoryReadEnable;
+    wire [4:0] dec_signal_rd;
     // from HazardDetectionUnit
-    wire       newSignal_if_kill;
-    wire       newSignal_dec_kill;
-    wire       newSignal_pcWriteEnable;
+    wire       global_signal_if_kill;
+    wire       global_signal_dec_kill;
+    wire       global_signal_pcWriteEnable;
 
-    wire       decSignal_isBne;
-    wire       decSignal_isBeq;
-    // wire       decSignal_is_br_eq;
-    wire [3:0] decSignal_aluFunction;
-    wire [1:0] decSignal_op1Sel;
-    wire [2:0] decSignal_op2Sel;
-    wire [1:0] decSignal_pc_sel;
-    wire [1:0] decSignal_mem_wb_sel;
-    wire       decSignal_exe_wb_sel;
-    wire       decSignal_regFileWriteEnable;
-    wire       decSignal_memoryWriteEnable;
-    wire       decSignal_memoryReadEnable;
-    wire [4:0] decSignal_rd;
+    wire       exe_signal_isBne;
+    wire       exe_signal_isBeq;
+    wire       exe_signal_is_br_eq;
+    wire [3:0] exe_signal_aluFunction;
+    wire [1:0] exe_signal_op1Sel;
+    wire [2:0] exe_signal_op2Sel;
+    wire [1:0] exe_signal_pc_sel;
+    wire [1:0] exe_signal_mem_wb_sel;
+    wire       exe_signal_exe_wb_sel;
+    wire       exe_signal_regFileWriteEnable;
+    wire       exe_signal_memoryWriteEnable;
+    wire       exe_signal_memoryReadEnable;
+    wire [4:0] exe_signal_rd;
 
-    wire       exeSignal_isBne;
-    wire       exeSignal_isBeq;
-    wire       exeSignal_is_br_eq;
-    wire [3:0] exeSignal_aluFunction;
-    wire [1:0] exeSignal_op1Sel;
-    wire [2:0] exeSignal_op2Sel;
-    wire [1:0] exeSignal_pc_sel;
-    wire [1:0] exeSignal_mem_wb_sel;
-    wire       exeSignal_exe_wb_sel;
-    wire       exeSignal_regFileWriteEnable;
-    wire       exeSignal_memoryWriteEnable;
-    wire       exeSignal_memoryReadEnable;
-    wire [4:0] exeSignal_rd;
+    wire       mem_signal_isBne;
+    wire       mem_signal_isBeq;
+    wire       mem_signal_is_br_eq;
+    wire [3:0] mem_signal_aluFunction;
+    wire [1:0] mem_signal_op1Sel;
+    wire [2:0] mem_signal_op2Sel;
+    wire [1:0] mem_signal_pc_sel;
+    wire [1:0] mem_signal_mem_wb_sel;
+    wire       mem_signal_exe_wb_sel;
+    wire       mem_signal_regFileWriteEnable;
+    wire       mem_signal_memoryWriteEnable;
+    wire       mem_signal_memoryReadEnable;
+    wire [4:0] mem_signal_rd;
 
-    wire       memSignal_isBne;
-    wire       memSignal_isBeq;
-    wire       memSignal_is_br_eq;
-    wire [3:0] memSignal_aluFunction;
-    wire [1:0] memSignal_op1Sel;
-    wire [2:0] memSignal_op2Sel;
-    wire [1:0] memSignal_pc_sel;
-    wire [1:0] memSignal_mem_wb_sel;
-    wire       memSignal_exe_wb_sel;
-    wire       memSignal_regFileWriteEnable;
-    wire       memSignal_memoryWriteEnable;
-    wire       memSignal_memoryReadEnable;
-    wire [4:0] memSignal_rd;
+    wire       wb_signal_isBne;
+    wire       wb_signal_isBeq;
+    wire       wb_signal_is_br_eq;
+    wire [3:0] wb_signal_aluFunction;
+    wire [1:0] wb_signal_op1Sel;
+    wire [2:0] wb_signal_op2Sel;
+    wire [1:0] wb_signal_pc_sel;
+    wire [1:0] wb_signal_mem_wb_sel;
+    wire       wb_signal_exe_wb_sel;
+    wire       wb_signal_regFileWriteEnable;
+    wire       wb_signal_memoryWriteEnable;
+    wire       wb_signal_memoryReadEnable;
+    wire [4:0] wb_signal_rd;
     // end: control signals
 
     // reg file
@@ -130,32 +129,32 @@ module RiscV5StageDatapath (
     output wire [31:0] memoryWriteData;
 
     // ::::: Global ::::: //
-    HazardDetectionUnit hazardDetectionUnit_inst(
-        .pcWriteEnable(newSignal_pcWriteEnable),
-        .if_kill(newSignal_if_kill),
-        .dec_kill(newSignal_dec_kill),
+    HazardDetectionUnit global_hazardDetectionUnit_inst(
+        .pcWriteEnable(global_signal_pcWriteEnable),
+        .if_kill(global_signal_if_kill),
+        .dec_kill(global_signal_dec_kill),
         .if_rs1Address(instruction[19:15]),
         .if_rs2Address(instruction[24:20]),
-        .dec_regFileWriteAddress(newSignal_rd),
-        .dec_regFileWriteEnable(newSignal_regFileWriteEnable),
-        .exe_regFileWriteAddress(decSignal_rd),
-        .exe_regFileWriteEnable(decSignal_regFileWriteEnable),
-        .mem_regFileWriteAddress(exeSignal_rd),
-        .mem_regFileWriteEnable(exeSignal_regFileWriteEnable),
-        .wb_regFileWriteAddress(memSignal_rd),
-        .wb_regFileWriteEnable(memSignal_regFileWriteEnable),
+        .dec_regFileWriteAddress(dec_signal_rd),
+        .dec_regFileWriteEnable(dec_signal_regFileWriteEnable),
+        .exe_regFileWriteAddress(exe_signal_rd),
+        .exe_regFileWriteEnable(exe_signal_regFileWriteEnable),
+        .mem_regFileWriteAddress(mem_signal_rd),
+        .mem_regFileWriteEnable(mem_signal_regFileWriteEnable),
+        .wb_regFileWriteAddress(wb_signal_rd),
+        .wb_regFileWriteEnable(wb_signal_regFileWriteEnable),
         .exe_isBranchOrJumpTaken(pc_sel_withBranchConsidered == `riscv32_5stage_pc_sel_jumpOrBranch)
     );
     
     // begin: RegFile datapath
-    RegFile regFile_inst(
+    RegFile global_regFile_inst(
         .clk(clk),
         .rst(rst),
-        .readRegister1(if_instruction[19:15]),
-        .readRegister2(if_instruction[24:20]),
-        .writeRegister(memSignal_rd),
+        .readRegister1(dec_instruction[19:15]),
+        .readRegister2(dec_instruction[24:20]),
+        .writeRegister(wb_signal_rd),
         .writeData(regFileWriteData),
-        .writeEnable(memSignal_regFileWriteEnable),
+        .writeEnable(wb_signal_regFileWriteEnable),
 
         .readData1(rs1),
         .readData2(rs2),
@@ -173,10 +172,10 @@ module RiscV5StageDatapath (
     // begin: update pc_sel
     wire [1:0] pc_sel_withBranchConsidered;
     PcSelUpdater pcSelUpdater_inst(
-        .isBne(decSignal_isBne),
-        .isBeq(decSignal_isBeq),
-        .isBranchEqual(newSignal_is_br_eq),
-        .oldPcSel(decSignal_pc_sel),
+        .isBne(exe_signal_isBne),
+        .isBeq(exe_signal_isBeq),
+        .isBranchEqual(exe_signal_is_br_eq),
+        .oldPcSel(exe_signal_pc_sel),
         .newPcSel(pc_sel_withBranchConsidered)
     );
     // end: update pc_sel
@@ -197,7 +196,7 @@ module RiscV5StageDatapath (
     RegisterResettable32b pc_inst(
         .clk(clk),
         .rst(rst),
-        .enableWrite(newSignal_pcWriteEnable),
+        .enableWrite(global_signal_pcWriteEnable),
         .d(pc_sel_out),
         .q(pc)
     );
@@ -213,7 +212,7 @@ module RiscV5StageDatapath (
     // begin: if_kill_mux
     wire [31:0] if_kill_out;
     Mux2to1_32b if_kill_mux_inst(
-        .S(newSignal_if_kill),
+        .S(global_signal_if_kill),
         .I0(instruction),
         .I1(32'h13),  // nop
         .O(if_kill_out)
@@ -222,7 +221,7 @@ module RiscV5StageDatapath (
 
     // begin: Stage registers
     wire [31:0] if_pc;
-    wire [31:0] if_instruction;
+    wire [31:0] dec_instruction;
     Register32b if_dec_pc_inst(
         .clk(clk),
         .enableWrite(1'b1),
@@ -233,7 +232,7 @@ module RiscV5StageDatapath (
         .clk(clk),
         .enableWrite(1'b1),
         .d(if_kill_out),
-        .q(if_instruction)
+        .q(dec_instruction)
     );
     // end: Stage registers
 
@@ -247,31 +246,31 @@ module RiscV5StageDatapath (
     wire [31:0] jTypeSignExtend;
     wire [31:0] uTypeImmediate;
 
-    assign newSignal_rd = if_instruction[11:7];
+    assign dec_signal_rd = dec_instruction[11:7];
 
     // begin: immediate extend datapath
     BTypeSignExtend32b dec_bTypeSignExtend32b_inst(
-        .instruction(if_instruction),
+        .instruction(dec_instruction),
         .signExtended(bTypeSignExtend)
     );
     ITypeSignExtend32b dec_iTypeSignExtend32b_inst(
-        .instruction(if_instruction),
+        .instruction(dec_instruction),
         .signExtended(iTypeSignExtend)
     );
     UType32b dec_uType32b_inst(
-        .instruction(if_instruction),
+        .instruction(dec_instruction),
         .extended(uTypeImmediate)
     );
     JTypeSignExtend32b dec_jTypeSignExtend32b_inst(
-        .instruction(if_instruction),
+        .instruction(dec_instruction),
         .signExtended(jTypeSignExtend)
     );
     STypeSignExtend32b dec_sTypeSignExtend32b_inst(
-        .instruction(if_instruction),
+        .instruction(dec_instruction),
         .signExtended(sTypeSignExtend)
     );
     ShamtSignExtend32b dec_shamtSignExtend32b_inst(
-        .instruction(if_instruction),
+        .instruction(dec_instruction),
         .signExtended(shamtSignExtend)
     );
     // end: immediate extend datapath 
@@ -279,7 +278,7 @@ module RiscV5StageDatapath (
     // begin: MUX for ALU input datapath
     wire [31:0] op2Sel_out;
     Mux8to1_32b dec_op2Sel_mux_inst(
-        .S(newSignal_op2Sel),
+        .S(dec_signal_op2Sel),
         .I0(rs2),
         .I1(bTypeSignExtend),
         .I2(iTypeSignExtend),
@@ -292,7 +291,7 @@ module RiscV5StageDatapath (
     );
     wire [31:0] op1Sel_out;
     Mux4to1_32b dec_op1Sel_mux_inst(
-        .S(newSignal_op1Sel),
+        .S(dec_signal_op1Sel),
         .I0(if_pc),
         .I1(rs1),
         .I2(32'b0),
@@ -303,41 +302,41 @@ module RiscV5StageDatapath (
 
     // begin: Control datapath
     RiscV5StageControl dec_decoder_inst(
-        .instruction(if_instruction),
+        .instruction(dec_instruction),
 
-        .pcSelect(newSignal_pc_sel),
-        .op2Select(newSignal_op2Sel),
-        .op1Select(newSignal_op1Sel),
-        .aluFunction(newSignal_aluFunction),
-        .mem_writebackSelect(newSignal_mem_wb_sel),
-        .exe_writebackSelect(newSignal_exe_wb_sel),
-        .regFileWriteEnable(newSignal_regFileWriteEnable),
-        .memoryReadEnable(newSignal_memoryReadEnable),
-        .memoryWriteEnable(newSignal_memoryWriteEnable),
-        .isBne(newSignal_isBne),
-        .isBeq(newSignal_isBeq)
+        .pcSelect(dec_signal_pc_sel),
+        .op2Select(dec_signal_op2Sel),
+        .op1Select(dec_signal_op1Sel),
+        .aluFunction(dec_signal_aluFunction),
+        .mem_writebackSelect(dec_signal_mem_wb_sel),
+        .exe_writebackSelect(dec_signal_exe_wb_sel),
+        .regFileWriteEnable(dec_signal_regFileWriteEnable),
+        .memoryReadEnable(dec_signal_memoryReadEnable),
+        .memoryWriteEnable(dec_signal_memoryWriteEnable),
+        .isBne(dec_signal_isBne),
+        .isBeq(dec_signal_isBeq)
     );
     // end: Control datapath
 
     // begin: dec_kill_mux
     wire [31:0] dec_kill_out;
     Mux2to1_32b dec_kill_mux_inst(
-        .S(newSignal_dec_kill),
+        .S(global_signal_dec_kill),
         .I0({
             7'b0,
-            newSignal_isBne,
-            newSignal_isBeq,
+            dec_signal_isBne,
+            dec_signal_isBeq,
             1'b0,
-            newSignal_aluFunction,
-            newSignal_op1Sel,
-            newSignal_op2Sel,
-            newSignal_pc_sel,
-            newSignal_mem_wb_sel,
-            newSignal_exe_wb_sel,
-            newSignal_regFileWriteEnable,
-            newSignal_memoryWriteEnable,
-            newSignal_memoryReadEnable,
-            newSignal_rd
+            dec_signal_aluFunction,
+            dec_signal_op1Sel,
+            dec_signal_op2Sel,
+            dec_signal_pc_sel,
+            dec_signal_mem_wb_sel,
+            dec_signal_exe_wb_sel,
+            dec_signal_regFileWriteEnable,
+            dec_signal_memoryWriteEnable,
+            dec_signal_memoryReadEnable,
+            dec_signal_rd
         }),
         .I1(32'h0),
         .O(dec_kill_out)
@@ -380,20 +379,20 @@ module RiscV5StageDatapath (
         .enableWrite(1'b1),
         .d(dec_kill_out),
         .q({
-            dummyOutput7b_dec_controlSignals,
-            decSignal_isBne,
-            decSignal_isBeq,
-            dummyOutput1b_dec_controlSignals,
-            decSignal_aluFunction,
-            decSignal_op1Sel,
-            decSignal_op2Sel,
-            decSignal_pc_sel,
-            decSignal_mem_wb_sel,
-            decSignal_exe_wb_sel,
-            decSignal_regFileWriteEnable,
-            decSignal_memoryWriteEnable,
-            decSignal_memoryReadEnable,
-            decSignal_rd
+            exe_dummyOutput7b_dec_controlSignals,
+            exe_signal_isBne,
+            exe_signal_isBeq,
+            exe_dummyOutput1b_controlSignals,
+            exe_signal_aluFunction,
+            exe_signal_op1Sel,
+            exe_signal_op2Sel,
+            exe_signal_pc_sel,
+            exe_signal_mem_wb_sel,
+            exe_signal_exe_wb_sel,
+            exe_signal_regFileWriteEnable,
+            exe_signal_memoryWriteEnable,
+            exe_signal_memoryReadEnable,
+            exe_signal_rd
         })
     );
     // end: Stage registers
@@ -405,7 +404,7 @@ module RiscV5StageDatapath (
     BranchCondGen exe_branchCondGen_inst(
         .rs1(dec_op1),
         .rs2(dec_rs2),
-        .is_br_eq(newSignal_is_br_eq),
+        .is_br_eq(exe_signal_is_br_eq),
         .is_br_lt(),
         .is_br_ltu()
     );
@@ -426,7 +425,7 @@ module RiscV5StageDatapath (
 
     // begin: ALU datapath
     Alu32b_extended exe_alu32b_inst(
-        .aluOp(decSignal_aluFunction),
+        .aluOp(exe_signal_aluFunction),
         .leftOperand(dec_op1),
         .rightOperand(dec_op2),
         .aluResult(aluOut)
@@ -436,7 +435,7 @@ module RiscV5StageDatapath (
     // begin: MUX for writeback address to RAM or data to regFile
     wire [31:0] exe_wb_sel_out;
     Mux2to1_32b exe_wb_sel_mux_inst(
-        .S(decSignal_exe_wb_sel),
+        .S(exe_signal_exe_wb_sel),
         .I0(dec_pc + 4),
         .I1(aluOut),
         .O(exe_wb_sel_out)
@@ -472,35 +471,35 @@ module RiscV5StageDatapath (
         .enableWrite(1'b1),
         .d({
             7'b0,
-            decSignal_isBne,
-            decSignal_isBeq,
-            newSignal_is_br_eq,
-            decSignal_aluFunction,
-            decSignal_op1Sel,
-            decSignal_op2Sel,
-            decSignal_pc_sel,
-            decSignal_mem_wb_sel,
-            decSignal_exe_wb_sel,
-            decSignal_regFileWriteEnable,
-            decSignal_memoryWriteEnable,
-            decSignal_memoryReadEnable,
-            decSignal_rd
+            exe_signal_isBne,
+            exe_signal_isBeq,
+            exe_signal_is_br_eq,
+            exe_signal_aluFunction,
+            exe_signal_op1Sel,
+            exe_signal_op2Sel,
+            exe_signal_pc_sel,
+            exe_signal_mem_wb_sel,
+            exe_signal_exe_wb_sel,
+            exe_signal_regFileWriteEnable,
+            exe_signal_memoryWriteEnable,
+            exe_signal_memoryReadEnable,
+            exe_signal_rd
         }),
         .q({
-            dummyOutput7b_exe_controlSignals,
-            exeSignal_isBne,
-            exeSignal_isBeq,
-            exeSignal_is_br_eq,
-            exeSignal_aluFunction,
-            exeSignal_op1Sel,
-            exeSignal_op2Sel,
-            exeSignal_pc_sel,
-            exeSignal_mem_wb_sel,
-            exeSignal_exe_wb_sel,
-            exeSignal_regFileWriteEnable,
-            exeSignal_memoryWriteEnable,
-            exeSignal_memoryReadEnable,
-            exeSignal_rd
+            mem_dummyOutput7b_controlSignals,
+            mem_signal_isBne,
+            mem_signal_isBeq,
+            mem_signal_is_br_eq,
+            mem_signal_aluFunction,
+            mem_signal_op1Sel,
+            mem_signal_op2Sel,
+            mem_signal_pc_sel,
+            mem_signal_mem_wb_sel,
+            mem_signal_exe_wb_sel,
+            mem_signal_regFileWriteEnable,
+            mem_signal_memoryWriteEnable,
+            mem_signal_memoryReadEnable,
+            mem_signal_rd
         })
     );
     // end: Stage registers
@@ -510,14 +509,14 @@ module RiscV5StageDatapath (
     // begin: input ports of RAM
     assign memoryAddress = exe_aluOut;
     assign memoryWriteData = exe_rs2;
-    assign memoryReadEnable = exeSignal_memoryReadEnable;
-    assign memoryWriteEnable = exeSignal_memoryWriteEnable;
+    assign memoryReadEnable = mem_signal_memoryReadEnable;
+    assign memoryWriteEnable = mem_signal_memoryWriteEnable;
     // end: input ports of RAM
 
     // begin: MUX for data to regFile
     wire [31:0] mem_wb_sel_out;
     Mux4to1_32b mem_wb_sel_mux_inst(
-        .S(exeSignal_mem_wb_sel),
+        .S(mem_signal_mem_wb_sel),
         .I0(32'b0),
         .I1(exe_aluOut),
         .I2(memoryReadData),
@@ -542,35 +541,35 @@ module RiscV5StageDatapath (
         .enableWrite(1'b1),
         .d({
             7'b0,
-            exeSignal_isBne,
-            exeSignal_isBeq,
-            exeSignal_is_br_eq,
-            exeSignal_aluFunction,
-            exeSignal_op1Sel,
-            exeSignal_op2Sel,
-            exeSignal_pc_sel,
-            exeSignal_mem_wb_sel,
-            exeSignal_exe_wb_sel,
-            exeSignal_regFileWriteEnable,
-            exeSignal_memoryWriteEnable,
-            exeSignal_memoryReadEnable,
-            exeSignal_rd
+            mem_signal_isBne,
+            mem_signal_isBeq,
+            mem_signal_is_br_eq,
+            mem_signal_aluFunction,
+            mem_signal_op1Sel,
+            mem_signal_op2Sel,
+            mem_signal_pc_sel,
+            mem_signal_mem_wb_sel,
+            mem_signal_exe_wb_sel,
+            mem_signal_regFileWriteEnable,
+            mem_signal_memoryWriteEnable,
+            mem_signal_memoryReadEnable,
+            mem_signal_rd
         }),
         .q({
-            dummyOutput7b_mem_controlSignals,
-            memSignal_isBne,
-            memSignal_isBeq,
-            memSignal_is_br_eq,
-            memSignal_aluFunction,
-            memSignal_op1Sel,
-            memSignal_op2Sel,
-            memSignal_pc_sel,
-            memSignal_mem_wb_sel,
-            memSignal_exe_wb_sel,
-            memSignal_regFileWriteEnable,
-            memSignal_memoryWriteEnable,
-            memSignal_memoryReadEnable,
-            memSignal_rd
+            wb_dummyOutput7b_controlSignals,
+            wb_signal_isBne,
+            wb_signal_isBeq,
+            wb_signal_is_br_eq,
+            wb_signal_aluFunction,
+            wb_signal_op1Sel,
+            wb_signal_op2Sel,
+            wb_signal_pc_sel,
+            wb_signal_mem_wb_sel,
+            wb_signal_exe_wb_sel,
+            wb_signal_regFileWriteEnable,
+            wb_signal_memoryWriteEnable,
+            wb_signal_memoryReadEnable,
+            wb_signal_rd
         })
     );
     // end: Stage registers
