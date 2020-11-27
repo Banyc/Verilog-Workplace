@@ -148,9 +148,12 @@ module RiscV5StageDatapath (
         // inputs
         .if_rs1Address(if_instruction[19:15]),
         .if_rs2Address(if_instruction[24:20]),
+        .dec_rs1Address(dec_instruction[19:15]),
+        .dec_rs2Address(dec_instruction[24:20]),
         .dec_regFileWriteAddress(dec_signal_rd),
         .dec_regFileWriteEnable(dec_signal_regFileWriteEnable),
         .dec_signal_mem_wb_sel(dec_signal_mem_wb_sel),
+        .dec_signal_op2Sel(dec_signal_op2Sel),
         .exe_regFileWriteAddress(exe_signal_rd),
         .exe_regFileWriteEnable(exe_signal_regFileWriteEnable),
         .exe_signal_mem_wb_sel(exe_signal_mem_wb_sel),
@@ -159,6 +162,7 @@ module RiscV5StageDatapath (
         .mem_signal_mem_wb_sel(mem_signal_mem_wb_sel),
         .wb_regFileWriteAddress(wb_signal_rd),
         .wb_regFileWriteEnable(wb_signal_regFileWriteEnable),
+        .wb_signal_mem_wb_sel(wb_signal_mem_wb_sel),
         .exe_isBranchOrJumpTaken(exe_pc_sel_withBranchConsidered == `riscv32_5stage_pc_sel_jumpOrBranch)
     );
     

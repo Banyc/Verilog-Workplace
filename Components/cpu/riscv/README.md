@@ -103,5 +103,7 @@ Modifications on the diagram:
 - `Branch & Jump TargGen` is wrapped as component `BranchAndJumpTargGen`
 - `JumpRegTargGen` still used in Execute Stage
 - Add a component `pcSelUpdater_inst` with output `pc_sel_withBranchConsidered`
-- Currently not implementing anything relative to forwarding
 - Add a signal `pcWriteEnable` to control `pc_inst`
+- The MUX before `dec_exe_op1_inst` is split into `dec_op1Sel_mux_inst` and `dec_forwardingOp1Sel_mux_inst`.
+- The MUX before `dec_exe_op2_inst` is named `dec_forwardingOp2Sel_mux_inst` 
+- The MUX before `dec_exe_rs2_inst` is named `dec_forwardingRs2Sel_mux_inst` 
