@@ -147,7 +147,7 @@ module RiscV5StageDatapath (
         .mem_regFileWriteEnable(mem_signal_regFileWriteEnable),
         .wb_regFileWriteAddress(wb_signal_rd),
         .wb_regFileWriteEnable(wb_signal_regFileWriteEnable),
-        .exe_isBranchOrJumpTaken(pc_sel_withBranchConsidered == `riscv32_5stage_pc_sel_jumpOrBranch)
+        .exe_isBranchOrJumpTaken(exe_pc_sel_withBranchConsidered == `riscv32_5stage_pc_sel_jumpOrBranch)
     );
     
     // begin: RegFile datapath
@@ -170,27 +170,27 @@ module RiscV5StageDatapath (
     // end: RegFile datapath
 
     // ::::: PC Modification Stage ::::: //
-    wire [31:0] branchOrJump;
-    wire [31:0] jalr;
+    wire [31:0] exe_branchOrJump;
+    wire [31:0] exe_jalr;
 
     // begin: update pc_sel
-    wire [1:0] pc_sel_withBranchConsidered;
-    PcSelUpdater pcSelUpdater_inst(
+    wire [1:0] exe_pc_sel_withBranchConsidered;
+    PcSelUpdater exe_pcSelUpdater_inst(
         .isBne(exe_signal_isBne),
         .isBeq(exe_signal_isBeq),
         .isBranchEqual(exe_signal_is_br_eq),
         .oldPcSel(exe_signal_pc_sel),
-        .newPcSel(pc_sel_withBranchConsidered)
+        .newPcSel(exe_pc_sel_withBranchConsidered)
     );
     // end: update pc_sel
     
     // begin: MUX for PC input datapath
     wire [31:0] pc_sel_out;
     Mux4to1_32b pc_sel_mux_inst(
-        .S(pc_sel_withBranchConsidered),
+        .S(exe_pc_sel_withBranchConsidered),
         .I0(if_pc_4),
-        .I1(branchOrJump),
-        .I2(jalr),
+        .I1(exe_branchOrJump),
+        .I2(exe_jalr),
         .I3(32'b0),
         .O(pc_sel_out)
     );
@@ -418,12 +418,12 @@ module RiscV5StageDatapath (
     BranchAndJumpTargGen exe_branchAndJumpTargGen_inst(
         .pc(exe_pc),
         .immediate(exe_op2),
-        .target(branchOrJump)
+        .target(exe_branchOrJump)
     );
     JumpRegTargGen exe_jumpRegTargGen_inst(
         .iTypeSignExtend(exe_op2),
         .rs1(exe_op1),
-        .target(jalr)
+        .target(exe_jalr)
     );
     // end: target generation datapath
 
