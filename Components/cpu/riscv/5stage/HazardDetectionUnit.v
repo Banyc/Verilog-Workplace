@@ -37,11 +37,8 @@ module HazardDetectionUnit (
     output reg if_kill;
     output reg dec_kill;
 
-    // output reg [1:0] dec_forwardingOp1Sel = `riscv32_5stage_dec_forwarding_none;  // WORKAROUND
     output reg [1:0] dec_forwardingOp1Sel;
-    // output reg [1:0] dec_forwardingOp2Sel = `riscv32_5stage_dec_forwarding_none;
     output reg [1:0] dec_forwardingOp2Sel;
-    // output reg [1:0] dec_forwardingRs2Sel = `riscv32_5stage_dec_forwarding_none;  // WORKAROUND
     output reg [1:0] dec_forwardingRs2Sel;
     
     input wire [4:0] if_rs1Address;
@@ -63,26 +60,26 @@ module HazardDetectionUnit (
     input wire [1:0] wb_signal_mem_wb_sel;
     input wire       exe_isBranchOrJumpTaken;
 
-    wire isDecLoad = dec_signal_mem_wb_sel ==
+    wire dec_isLoad = dec_signal_mem_wb_sel ==
         `riscv32_5stage_mem_wb_sel_memoryReadData &&
         dec_regFileWriteEnable == 1;
-    wire isExeLoad = exe_signal_mem_wb_sel ==
+    wire exe_isLoad = exe_signal_mem_wb_sel ==
         `riscv32_5stage_mem_wb_sel_memoryReadData &&
         exe_regFileWriteEnable == 1;
-    wire isMemLoad = mem_signal_mem_wb_sel ==
+    wire mem_isLoad = mem_signal_mem_wb_sel ==
         `riscv32_5stage_mem_wb_sel_memoryReadData &&
         mem_regFileWriteEnable == 1;
-    wire isWbLoad = wb_signal_mem_wb_sel ==
+    wire wb_isLoad = wb_signal_mem_wb_sel ==
         `riscv32_5stage_mem_wb_sel_memoryReadData &&
         wb_regFileWriteEnable == 1;
 
-    wire isExeArithmetic = exe_signal_mem_wb_sel ==
+    wire exe_isArithmetic = exe_signal_mem_wb_sel ==
         `riscv32_5stage_mem_wb_sel_aluOut &&
         exe_regFileWriteEnable == 1;
-    wire isMemArithmetic = mem_signal_mem_wb_sel ==
+    wire mem_isArithmetic = mem_signal_mem_wb_sel ==
         `riscv32_5stage_mem_wb_sel_aluOut &&
         mem_regFileWriteEnable == 1;
-    wire isWbArithmetic = wb_signal_mem_wb_sel ==
+    wire wb_isArithmetic = wb_signal_mem_wb_sel ==
         `riscv32_5stage_mem_wb_sel_aluOut &&
         wb_regFileWriteEnable == 1;
 
@@ -100,7 +97,7 @@ module HazardDetectionUnit (
             dec_kill <= 1;
         end else if (
             (
-                isDecLoad
+                dec_isLoad
                 &&
                 dec_regFileWriteAddress != 0
                 &&
@@ -133,7 +130,7 @@ module HazardDetectionUnit (
     always @(*) begin
         // exe.arithmatic
         if (
-            isExeArithmetic == 1
+            exe_isArithmetic
             &&
             exe_regFileWriteAddress != 0
             &&
@@ -143,7 +140,7 @@ module HazardDetectionUnit (
         end
         // mem.load || mem.arithmatic
         else if (
-            (isMemLoad || isMemArithmetic)
+            (mem_isLoad || mem_isArithmetic)
             &&
             mem_regFileWriteAddress != 0
             &&
@@ -153,7 +150,7 @@ module HazardDetectionUnit (
         end
         // wb.load || wb.arithmetic
         else if (
-            (isWbLoad || isWbArithmetic)
+            (wb_isLoad || wb_isArithmetic)
             &&
             wb_regFileWriteAddress != 0
             &&
@@ -174,7 +171,7 @@ module HazardDetectionUnit (
         if (
             dec_hasRs2
             &&
-            isExeArithmetic
+            exe_isArithmetic
             &&
             exe_regFileWriteAddress != 0
             &&
@@ -188,7 +185,7 @@ module HazardDetectionUnit (
         else if (
             (dec_hasRs2 || dec_isStore)
             &&
-            (isMemLoad || isMemArithmetic)
+            (mem_isLoad || mem_isArithmetic)
             &&
             mem_regFileWriteAddress != 0
             &&
@@ -209,7 +206,7 @@ module HazardDetectionUnit (
         else if (
             (dec_hasRs2 || dec_isStore)
             &&
-            (isWbLoad || isWbArithmetic)
+            (wb_isLoad || wb_isArithmetic)
             &&
             wb_regFileWriteAddress != 0
             &&
