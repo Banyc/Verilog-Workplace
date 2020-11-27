@@ -42,8 +42,8 @@ module RiscV5StageDatapath (
     input wire rst;
 
     // dummy outputs
-    wire        exe_dummyOutput1b_controlSignals;
-    wire [6:0] exe_dummyOutput7b_dec_controlSignals;
+    wire       exe_dummyOutput1b_controlSignals;
+    wire [6:0] exe_dummyOutput7b_controlSignals;
     wire [6:0] mem_dummyOutput7b_controlSignals;
     wire [6:0] wb_dummyOutput7b_controlSignals;
 
@@ -379,7 +379,7 @@ module RiscV5StageDatapath (
         .enableWrite(1'b1),
         .d(dec_kill_out),
         .q({
-            exe_dummyOutput7b_dec_controlSignals,
+            exe_dummyOutput7b_controlSignals,
             exe_signal_isBne,
             exe_signal_isBeq,
             exe_dummyOutput1b_controlSignals,
