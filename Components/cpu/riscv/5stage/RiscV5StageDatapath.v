@@ -220,13 +220,13 @@ module RiscV5StageDatapath (
     // end: if_kill_mux
 
     // begin: Stage registers
-    wire [31:0] if_pc;
+    wire [31:0] dec_pc;
     wire [31:0] dec_instruction;
     Register32b if_dec_pc_inst(
         .clk(clk),
         .enableWrite(1'b1),
         .d(pc),
-        .q(if_pc)
+        .q(dec_pc)
     );
     Register32b if_dec_instruction_inst(
         .clk(clk),
@@ -292,7 +292,7 @@ module RiscV5StageDatapath (
     wire [31:0] op1Sel_out;
     Mux4to1_32b dec_op1Sel_mux_inst(
         .S(dec_signal_op1Sel),
-        .I0(if_pc),
+        .I0(dec_pc),
         .I1(rs1),
         .I2(32'b0),
         .I3(32'b0),
@@ -344,33 +344,33 @@ module RiscV5StageDatapath (
     // end: dec_kill_mux
 
     // begin: Stage registers
-    wire [31:0] dec_pc;
-    wire [31:0] dec_op1;
-    wire [31:0] dec_op2;
-    wire [31:0] dec_rs2;
+    wire [31:0] exe_pc;
+    wire [31:0] exe_op1;
+    wire [31:0] exe_op2;
+    wire [31:0] exe_rs2;
     Register32b dec_exe_pc_inst(
         .clk(clk),
         .enableWrite(1'b1),
-        .d(if_pc),
-        .q(dec_pc)
+        .d(dec_pc),
+        .q(exe_pc)
     );
     Register32b dec_exe_op1_inst(
         .clk(clk),
         .enableWrite(1'b1),
         .d(op1Sel_out),
-        .q(dec_op1)
+        .q(exe_op1)
     );
     Register32b dec_exe_op2_inst(
         .clk(clk),
         .enableWrite(1'b1),
         .d(op2Sel_out),
-        .q(dec_op2)
+        .q(exe_op2)
     );
     Register32b dec_exe_rs2_inst(
         .clk(clk),
         .enableWrite(1'b1),
         .d(rs2),
-        .q(dec_rs2)
+        .q(exe_rs2)
     );
     // control signals
     RegisterResettable32b dec_exe_controlSignals_inst(
@@ -398,12 +398,12 @@ module RiscV5StageDatapath (
     // end: Stage registers
 
     // ::::: Execute Stage ::::: //
-    wire [31:0] aluOut;
+    wire [31:0] exe_aluOut;
 
     // begin: condition generation
     BranchCondGen exe_branchCondGen_inst(
-        .rs1(dec_op1),
-        .rs2(dec_rs2),
+        .rs1(exe_op1),
+        .rs2(exe_rs2),
         .is_br_eq(exe_signal_is_br_eq),
         .is_br_lt(),
         .is_br_ltu()
@@ -412,13 +412,13 @@ module RiscV5StageDatapath (
 
     // begin: target generation datapath
     BranchAndJumpTargGen exe_branchAndJumpTargGen_inst(
-        .pc(dec_pc),
-        .immediate(dec_op2),
+        .pc(exe_pc),
+        .immediate(exe_op2),
         .target(branchOrJump)
     );
     JumpRegTargGen exe_jumpRegTargGen_inst(
-        .iTypeSignExtend(dec_op2),
-        .rs1(dec_op1),
+        .iTypeSignExtend(exe_op2),
+        .rs1(exe_op1),
         .target(jalr)
     );
     // end: target generation datapath
@@ -426,9 +426,9 @@ module RiscV5StageDatapath (
     // begin: ALU datapath
     Alu32b_extended exe_alu32b_inst(
         .aluOp(exe_signal_aluFunction),
-        .leftOperand(dec_op1),
-        .rightOperand(dec_op2),
-        .aluResult(aluOut)
+        .leftOperand(exe_op1),
+        .rightOperand(exe_op2),
+        .aluResult(exe_aluOut)
     );
     // end: ALU datapath
 
@@ -436,33 +436,33 @@ module RiscV5StageDatapath (
     wire [31:0] exe_wb_sel_out;
     Mux2to1_32b exe_wb_sel_mux_inst(
         .S(exe_signal_exe_wb_sel),
-        .I0(dec_pc + 4),
-        .I1(aluOut),
+        .I0(exe_pc + 4),
+        .I1(exe_aluOut),
         .O(exe_wb_sel_out)
     );
     // end: MUX for writeback address to RAM or data to regFile
 
     // begin: Stage registers
-    wire [31:0] exe_aluOut;
-    wire [31:0] exe_rs2;
-    wire [31:0] exe_rs1;
-    Register32b exe_aluOut_inst(
+    wire [31:0] mem_aluOut;
+    wire [31:0] mem_rs2;
+    wire [31:0] mem_rs1;
+    Register32b exe_mem_aluOut_inst(
         .clk(clk),
         .enableWrite(1'b1),
         .d(exe_wb_sel_out),
-        .q(exe_aluOut)
+        .q(mem_aluOut)
     );
-    Register32b exe_rs2_inst(
+    Register32b exe_mem_rs2_inst(
         .clk(clk),
         .enableWrite(1'b1),
-        .d(dec_rs2),
-        .q(exe_rs2)
+        .d(exe_rs2),
+        .q(mem_rs2)
     );
-    Register32b exe_rs1_inst(
+    Register32b exe_mem_rs1_inst(
         .clk(clk),
         .enableWrite(1'b1),
-        .d(dec_op1),
-        .q(exe_rs1)
+        .d(exe_op1),
+        .q(mem_rs1)
     );
     // control signals
     RegisterResettable32b exe_mem_controlSignals_inst(
@@ -507,8 +507,8 @@ module RiscV5StageDatapath (
     // ::::: Memory Stage ::::: //
 
     // begin: input ports of RAM
-    assign memoryAddress = exe_aluOut;
-    assign memoryWriteData = exe_rs2;
+    assign memoryAddress = mem_aluOut;
+    assign memoryWriteData = mem_rs2;
     assign memoryReadEnable = mem_signal_memoryReadEnable;
     assign memoryWriteEnable = mem_signal_memoryWriteEnable;
     // end: input ports of RAM
@@ -518,7 +518,7 @@ module RiscV5StageDatapath (
     Mux4to1_32b mem_wb_sel_mux_inst(
         .S(mem_signal_mem_wb_sel),
         .I0(32'b0),
-        .I1(exe_aluOut),
+        .I1(mem_aluOut),
         .I2(memoryReadData),
         .I3(32'b0),
         .O(mem_wb_sel_out)
@@ -526,12 +526,12 @@ module RiscV5StageDatapath (
     // end: MUX for data to regFile
 
     // begin: Stage registers
-    wire [31:0] mem_wbData;
-    Register32b mem_wbData_inst(
+    wire [31:0] wb_wbData;
+    Register32b mem_wb_wbData_inst(
         .clk(clk),
         .enableWrite(1'b1),
         .d(mem_wb_sel_out),
-        .q(mem_wbData)
+        .q(wb_wbData)
     );
     // WORKAROUND: ignore "to host" register
     // control signals
@@ -576,7 +576,7 @@ module RiscV5StageDatapath (
 
     // ::::: Writeback Stage ::::: //
     // begin: input ports of RegFile
-    assign regFileWriteData = mem_wbData;
+    assign regFileWriteData = wb_wbData;
     // end: input ports of RegFile
     
 endmodule
