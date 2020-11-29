@@ -136,7 +136,7 @@ module RiscV5StageDatapath (
     output wire [31:0] memoryAddress;
     output wire [31:0] memoryWriteData;
 
-    // ::::: Global ::::: //
+    // @follow-up ::::: Global ::::: //
     HazardDetectionUnit global_hazardDetectionUnit_inst(
         // stalling
         .pcWriteEnable(global_signal_pcWriteEnable),
@@ -186,7 +186,7 @@ module RiscV5StageDatapath (
     );
     // end: RegFile datapath
 
-    // ::::: PC Modification Stage ::::: //
+    // @follow-up ::::: PC Modification Stage ::::: //
     wire [31:0] if_pc_4;
     wire [31:0] exe_branchOrJump;
     wire [31:0] exe_jalr;
@@ -224,7 +224,7 @@ module RiscV5StageDatapath (
     );
     // end: PC datapath
 
-    // ::::: Fetch Stage ::::: //
+    // @follow-up ::::: Fetch Stage ::::: //
     assign if_pc_4 = if_pc + 4;
 
     // begin: instruction memory datapath
@@ -258,7 +258,7 @@ module RiscV5StageDatapath (
     );
     // end: Stage registers
 
-    // ::::: Decode Stage ::::: //
+    // @follow-up ::::: Decode Stage ::::: //
     wire [31:0] dec_rs1;
     wire [31:0] dec_rs2;
     wire [31:0] dec_bTypeSignExtend;
@@ -449,7 +449,7 @@ module RiscV5StageDatapath (
     );
     // end: Stage registers
 
-    // ::::: Execute Stage ::::: //
+    // @follow-up ::::: Execute Stage ::::: //
     wire [31:0] exe_aluOut;
 
     // begin: condition generation
@@ -556,7 +556,7 @@ module RiscV5StageDatapath (
     );
     // end: Stage registers
 
-    // ::::: Memory Stage ::::: //
+    // @follow-up ::::: Memory Stage ::::: //
 
     // begin: input ports of RAM
     assign memoryAddress = mem_aluOut;
@@ -626,7 +626,7 @@ module RiscV5StageDatapath (
     );
     // end: Stage registers
 
-    // ::::: Writeback Stage ::::: //
+    // @follow-up ::::: Writeback Stage ::::: //
     // begin: input ports of RegFile
     assign regFileWriteData = wb_wbData;
     // end: input ports of RegFile
