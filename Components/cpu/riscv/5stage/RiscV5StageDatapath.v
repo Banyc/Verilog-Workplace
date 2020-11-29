@@ -1,6 +1,7 @@
 `ifndef __RiscV5StageDatapath__
 `define __RiscV5StageDatapath__
 
+`include "Components/cpu/riscv/5stage/EnumSelections.vh"
 `include "Components/mux/Mux2to1_32b.v"
 `include "Components/mux/Mux4to1_32b.v"
 `include "Components/mux/Mux8to1_32b.v"
