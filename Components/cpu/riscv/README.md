@@ -46,6 +46,9 @@
         -   Arithmetic
             -   addi rd, rs1, imm
                 -   rd <- rs1 <?> imm
+        -   Shift
+            -   sll rd, rs1, shamt
+                -   rd <- rs1 << shamt
         -   load
             -   lw rd, imm(rs1)
                 -   rd <- mem[rs1 + imm]
