@@ -10,18 +10,7 @@ module JTypeSignExtend32b (
 
     assign signExtended = 
     {
-        instruction[31],
-        instruction[31],
-        instruction[31],
-        instruction[31],
-        instruction[31],
-        instruction[31],
-        instruction[31],
-        instruction[31],
-        instruction[31],
-        instruction[31],
-        instruction[31],
-        instruction[31],
+        {12 {instruction[31]}},
         instruction[19:12],
         instruction[20],
         instruction[30:25],

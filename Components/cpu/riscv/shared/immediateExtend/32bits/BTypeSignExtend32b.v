@@ -10,26 +10,7 @@ module BTypeSignExtend32b (
 
     assign signExtended = 
     {
-        instruction[31],  // imm[12] (the extended sign)
-        instruction[31],  // imm[12] (the extended sign)
-        instruction[31],  // imm[12] (the extended sign)
-        instruction[31],  // imm[12] (the extended sign)
-        instruction[31],  // imm[12] (the extended sign)
-        instruction[31],  // imm[12] (the extended sign)
-        instruction[31],  // imm[12] (the extended sign)
-        instruction[31],  // imm[12] (the extended sign)
-        instruction[31],  // imm[12] (the extended sign)
-        instruction[31],  // imm[12] (the extended sign)
-        instruction[31],  // imm[12] (the extended sign)
-        instruction[31],  // imm[12] (the extended sign)
-        instruction[31],  // imm[12] (the extended sign)
-        instruction[31],  // imm[12] (the extended sign)
-        instruction[31],  // imm[12] (the extended sign)
-        instruction[31],  // imm[12] (the extended sign)
-        instruction[31],  // imm[12] (the extended sign)
-        instruction[31],  // imm[12] (the extended sign)
-        instruction[31],  // imm[12] (the extended sign)
-        instruction[31],  // imm[12]
+        {20 {instruction[31]}},  // imm[12]
         instruction[7],  // imm[11]
         instruction[30:25],  // imm[10:5]
         instruction[11:8],  // imm[4:1]

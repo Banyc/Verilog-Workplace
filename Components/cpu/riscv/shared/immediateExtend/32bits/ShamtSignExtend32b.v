@@ -9,33 +9,7 @@ module ShamtSignExtend32b (
     output wire [31:0] signExtended;
 
     assign signExtended = {
-        instruction[24],
-        instruction[24],
-        instruction[24],
-        instruction[24],
-        instruction[24],
-        instruction[24],
-        instruction[24],
-        instruction[24],
-        instruction[24],
-        instruction[24],
-        instruction[24],
-        instruction[24],
-        instruction[24],
-        instruction[24],
-        instruction[24],
-        instruction[24],
-        instruction[24],
-        instruction[24],
-        instruction[24],
-        instruction[24],
-        instruction[24],
-        instruction[24],
-        instruction[24],
-        instruction[24],
-        instruction[24],
-        instruction[24],
-        instruction[24],
+        {27 {instruction[24]}},
         instruction[24:20]
     };
 
