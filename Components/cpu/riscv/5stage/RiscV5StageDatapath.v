@@ -65,6 +65,12 @@ module RiscV5StageDatapath (
 
     // begin: control signals
     // naming convention: inWhere_detail
+
+    // stall from HazardDetectionUnit
+    wire       if_signal_if_kill;
+    wire       dec_signal_dec_kill;
+    wire       global_signal_pcWriteEnable;
+
     wire       dec_signal_isBne;
     wire       dec_signal_isBeq;
     wire [3:0] dec_signal_aluFunction;
@@ -77,14 +83,10 @@ module RiscV5StageDatapath (
     wire       dec_signal_memoryWriteEnable;
     wire       dec_signal_memoryReadEnable;
     wire [4:0] dec_signal_rd;
-    // forwarding
+    // forwarding from HazardDetectionUnit
     wire [1:0] dec_signal_forwardingOp1Sel;
     wire [1:0] dec_signal_forwardingOp2Sel;
     wire [1:0] dec_signal_forwardingRs2Sel;
-    // from HazardDetectionUnit
-    wire       if_signal_if_kill;
-    wire       dec_signal_dec_kill;
-    wire       global_signal_pcWriteEnable;
 
     wire       exe_signal_isBne;
     wire       exe_signal_isBeq;
