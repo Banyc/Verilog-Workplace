@@ -48,18 +48,20 @@ module RiscV5StageDatapath (
     wire [6:0] mem_dummyOutput7b_controlSignals;
     wire [6:0] wb_dummyOutput7b_controlSignals;
 
-    // 32 bits outputs
-    wire [31:0] if_pc;
+    // instruction ROM
     output wire [31:0] pc;
-    assign pc = if_pc;
-    input wire [31:0] instruction;
-    wire [31:0] if_instruction = instruction;
-    input wire [31:0] memoryReadData;
-    wire [31:0] mem_memoryReadData = memoryReadData;
+    input wire  [31:0] instruction;
 
-    // control signals
+    // memory RAM
     output wire memoryWriteEnable;
     output wire memoryReadEnable;
+    input  wire [31:0] memoryReadData;
+    output wire [31:0] memoryAddress;
+    output wire [31:0] memoryWriteData;
+
+    // reg file
+    input wire [4:0] regFileReadRegisterDebug;
+    output wire [31:0] regFileReadDataDebug;
 
     // begin: control signals
     // naming convention: inWhere_detail
@@ -76,9 +78,9 @@ module RiscV5StageDatapath (
     wire       dec_signal_memoryReadEnable;
     wire [4:0] dec_signal_rd;
     // forwarding
-    wire [1:0] dec_signal_forwardingOp1Sel;  // WORDAROUND
-    wire [1:0] dec_signal_forwardingOp2Sel;  // WORDAROUND
-    wire [1:0] dec_signal_forwardingRs2Sel;  // WORDAROUND
+    wire [1:0] dec_signal_forwardingOp1Sel;
+    wire [1:0] dec_signal_forwardingOp2Sel;
+    wire [1:0] dec_signal_forwardingRs2Sel;
     // from HazardDetectionUnit
     wire       if_signal_if_kill;
     wire       dec_signal_dec_kill;
@@ -127,15 +129,6 @@ module RiscV5StageDatapath (
     wire [4:0] wb_signal_rd;
     // end: control signals
 
-    // reg file
-    wire [31:0] regFileWriteData;
-    input wire [4:0] regFileReadRegisterDebug;
-    output wire [31:0] regFileReadDataDebug;
-
-    // memory
-    output wire [31:0] memoryAddress;
-    output wire [31:0] memoryWriteData;
-
     // @follow-up ::::: Global ::::: //
     HazardDetectionUnit global_hazardDetectionUnit_inst(
         // stalling
@@ -174,7 +167,7 @@ module RiscV5StageDatapath (
         .readRegister1(dec_instruction[19:15]),
         .readRegister2(dec_instruction[24:20]),
         .writeRegister(wb_signal_rd),
-        .writeData(regFileWriteData),
+        .writeData(wb_wbData),
         .writeEnable(wb_signal_regFileWriteEnable),
 
         .readData1(dec_rs1),
@@ -225,11 +218,16 @@ module RiscV5StageDatapath (
     // end: PC datapath
 
     // @follow-up ::::: Fetch Stage ::::: //
+    wire [31:0] if_pc;
     assign if_pc_4 = if_pc + 4;
 
-    // begin: instruction memory datapath
-    // the only input is `pc`
-    // end: instruction memory datapath
+    // begin: input ports of instruction ROM
+    assign pc = if_pc;
+    // end: input ports of instruction ROM
+
+    // begin: output ports of instruction ROM
+    wire [31:0] if_instruction = instruction;
+    // end: output ports of instruction ROM
 
     // begin: if_kill_mux
     wire [31:0] if_kill_out;
@@ -565,6 +563,10 @@ module RiscV5StageDatapath (
     assign memoryWriteEnable = mem_signal_memoryWriteEnable;
     // end: input ports of RAM
 
+    // begin: output ports of RAM
+    wire [31:0] mem_memoryReadData = memoryReadData;
+    // end: output ports of RAM
+
     // begin: MUX for data to regFile
     wire [31:0] mem_wb_sel_out;
     Mux4to1_32b mem_wb_sel_mux_inst(
@@ -627,9 +629,6 @@ module RiscV5StageDatapath (
     // end: Stage registers
 
     // @follow-up ::::: Writeback Stage ::::: //
-    // begin: input ports of RegFile
-    assign regFileWriteData = wb_wbData;
-    // end: input ports of RegFile
     
 endmodule
 
