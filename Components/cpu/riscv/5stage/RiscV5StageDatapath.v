@@ -132,6 +132,14 @@ module RiscV5StageDatapath (
     // end: control signals
 
     // @follow-up ::::: Global ::::: //
+    // begin: data to forward
+    wire [31:0] exe_aluOut;
+    wire [31:0] mem_wb_sel_out;
+    wire [31:0] wb_wbData;
+    // end: data to forward
+
+    // begin: controller for stall and forwarding
+    wire [1:0] exe_pc_sel_withBranchConsidered;
     HazardDetectionUnit global_hazardDetectionUnit_inst(
         // stalling
         .pcWriteEnable(global_signal_pcWriteEnable),
@@ -161,8 +169,11 @@ module RiscV5StageDatapath (
         .wb_signal_mem_wb_sel(wb_signal_mem_wb_sel),
         .exe_isBranchOrJumpTaken(exe_pc_sel_withBranchConsidered == `riscv32_5stage_pc_sel_jumpOrBranch)
     );
+    // end: controller for stall and forwarding
     
     // begin: RegFile datapath
+    wire [31:0] dec_rs1;
+    wire [31:0] dec_rs2;
     RegFile global_regFile_inst(
         .clk(clk),
         .rst(rst),
@@ -187,7 +198,6 @@ module RiscV5StageDatapath (
     wire [31:0] exe_jalr;
 
     // begin: update pc_sel
-    wire [1:0] exe_pc_sel_withBranchConsidered;
     PcSelUpdater exe_pcSelUpdater_inst(
         .isBne(exe_signal_isBne),
         .isBeq(exe_signal_isBeq),
@@ -210,6 +220,7 @@ module RiscV5StageDatapath (
     // end: MUX for PC input datapath
 
     // begin: PC datapath
+    wire [31:0] if_pc;
     RegisterResettable32b pc_inst(
         .clk(clk),
         .rst(rst),
@@ -220,7 +231,6 @@ module RiscV5StageDatapath (
     // end: PC datapath
 
     // @follow-up ::::: Fetch Stage ::::: //
-    wire [31:0] if_pc;
     assign if_pc_4 = if_pc + 4;
 
     // begin: input ports of instruction ROM
@@ -259,8 +269,6 @@ module RiscV5StageDatapath (
     // end: Stage registers
 
     // @follow-up ::::: Decode Stage ::::: //
-    wire [31:0] dec_rs1;
-    wire [31:0] dec_rs2;
     wire [31:0] dec_bTypeSignExtend;
     wire [31:0] dec_iTypeSignExtend;
     wire [31:0] dec_shamtSignExtend;
@@ -450,7 +458,6 @@ module RiscV5StageDatapath (
     // end: Stage registers
 
     // @follow-up ::::: Execute Stage ::::: //
-    wire [31:0] exe_aluOut;
 
     // begin: condition generation
     BranchCondGen exe_branchCondGen_inst(
@@ -570,7 +577,6 @@ module RiscV5StageDatapath (
     // end: output ports of RAM
 
     // begin: MUX for data to regFile
-    wire [31:0] mem_wb_sel_out;
     Mux4to1_32b mem_wb_sel_mux_inst(
         .S(mem_signal_mem_wb_sel),
         .I0(32'b0),
@@ -582,7 +588,6 @@ module RiscV5StageDatapath (
     // end: MUX for data to regFile
 
     // begin: Stage registers
-    wire [31:0] wb_wbData;
     Register32b mem_wb_wbData_inst(
         .clk(clk),
         .enableWrite(1'b1),
