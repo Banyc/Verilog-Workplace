@@ -16,7 +16,7 @@ module BranchCondGen (
 
     wire [31:0] difference;
     assign difference = rs1 - rs2;
-    assign is_br_eq = difference == 0 ? 1 : 0;
+    assign is_br_eq = difference == 0 ? 1'b1 : 1'b0;
     // TODO
     // assign is_br_lt
     // assign is_br_ltu
