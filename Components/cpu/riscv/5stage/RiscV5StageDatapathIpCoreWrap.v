@@ -7,7 +7,8 @@
 // RAM
 // - Component Name: Ram32bIp
 // - Memory Type: Single Port RAM
-// - Enable 32-b addressing
+// - Addressing Options
+//   - Enable 32-bit Address: true
 // - Memory Size
 //   - Write Width: 32
 //   - Write Depth: 1024
