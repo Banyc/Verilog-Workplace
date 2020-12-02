@@ -5,6 +5,7 @@
 
 // Ip Core:
 // RAM
+// - Block Memory
 // - Component Name: Ram32bIp
 // - Memory Type: Single Port RAM
 // - Addressing Options
@@ -18,11 +19,12 @@
 //   - Coe File: !!!
 
 // ROM
+// - Distributed Memory
 // - Component Name: Rom32bIp
-// - Memory Type: Single Port ROM
-// - Memory Size
-//   - Read Width: 32
-//   - Read Depth: 1024
+// - Options
+//   - Depth: 1024
+//   - Data Width: 32
+// - Memory Type: ROM
 // - Memory Initialization
 //   - Load Init File: true
 //   - Coe File: !!!
@@ -91,9 +93,8 @@ module RiscV5StageDatapathIpCoreWrap (
 
     // begin: ROM datapath
     Rom32bIp rom32b_inst(
-        .clka(!clk),
-        .addra(pc[11 : 2]),
-        .douta(instruction)
+        .a(pc[11 : 2]),
+        .spo(instruction)
     );
     // end: ROM datapath
     
