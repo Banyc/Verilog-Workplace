@@ -34,6 +34,16 @@ EVERYTHING UNDER THE SAME DIRECTORY IS OWNED BY 3170106317 AND IS PRIVATE, AND S
 
 ## Notes
 
+
+<details>
+    <summary> Remove Latches </summary>
+
+### Remove Latches
+
+Make sure all cases are implemented with default cases, all `if` statements with `else` statements.
+
+</details>
+
 <details>
     <summary> Outdated read problem </summary>
 
