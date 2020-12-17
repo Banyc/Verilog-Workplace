@@ -1,6 +1,8 @@
 `ifndef _Cache_512bytes_4bytes_v_
 `define _Cache_512bytes_4bytes_v_
 
+`include "Components/memory/cache/directMapping/writeBack/CacheControl.v"
+
 // write-back
 // direct mapping
 // capacity: 512 bytes
@@ -65,11 +67,19 @@ module Cache_512bytes_4bytes (
                     addressTagField == tagField &
                     validBit;
 
+    assign mem_req_data = dataField;
+
     wire isWriteDataStorage =
         cache_req_wen & 
         cache_req_valid &
         isHit;
 
+    wire isAllocateFinish;
+
+    // read
+    assign cache_res_data = dataStorage[addressIndexField][56:25];
+
+    // write
     integer i;
     always @(posedge clk or rst) begin
         if (rst) begin
@@ -83,10 +93,53 @@ module Cache_512bytes_4bytes (
                     cache_req_data;
             end else begin
                 dataStorage[addressIndexField][56:25] = 
-                    dataStorage[addressIndexField][57:26];
+                    dataStorage[addressIndexField][56:25];
             end
         end
     end
+
+    always @(posedge isAllocateFinish) begin
+    // dirty bit
+        // if (cache_req_valid) begin
+            if (cache_req_wen) begin
+                dataStorage[addressIndexField][0] = 1;
+            end else begin
+                if (isHit) begin
+                    dataStorage[addressIndexField][0] = dataStorage[addressIndexField][0];
+                end else begin
+                    dataStorage[addressIndexField][0] = 0;
+                end
+            end
+        // end else begin
+        //     dataStorage[addressIndexField][0] = dataStorage[addressIndexField][0];
+        // end
+
+    // valid bit
+    // this change must be after that to dirty bit
+        // if (cache_req_valid) begin
+            dataStorage[addressIndexField][1] = 1;
+        // end else begin
+        //     dataStorage[addressIndexField][1] = dataStorage[addressIndexField][0];
+        // end
+
+    // data field
+        dataStorage[addressIndexField][56:25] = mem_res_data;
+    end
+
+    CacheControl cacheControl_inst(
+        .clk(clk),
+        .rst(rst),
+        .isDirty(dirtyBit),
+        .isHit(isHit),
+        .cache_req_valid(cache_req_valid),  // is write/read request to cache valid
+        .mem_res_valid(mem_res_valid),  // read data from memory to cache
+        .mem_req_valid(mem_req_valid),  // is write/read request to memory valid
+        .mem_req_wen(mem_req_wen),  // if memory write enable
+        .cache_res_stall(cache_res_stall),  // should pipeline stall
+        .isFinish(isAllocateFinish)
+    );
+
+
 
 endmodule
 

@@ -10,7 +10,8 @@ module CacheControl (
     mem_res_valid,  // read data from memory to cache
     mem_req_valid,  // is write/read request to memory valid
     mem_req_wen,  // if memory write enable
-    cache_res_stall  // should pipeline stall
+    cache_res_stall,  // should pipeline stall
+    isFinish
 );
     input wire  clk;
     input wire  rst;
@@ -21,6 +22,7 @@ module CacheControl (
     output reg  mem_req_valid;
     output reg  mem_req_wen;
     output reg  cache_res_stall;
+    output reg  isFinish;
     
     reg [2:0] state;
     reg [2:0] nextState;
@@ -49,6 +51,7 @@ module CacheControl (
         mem_req_valid = 0;
         mem_req_wen = 0;
         cache_res_stall = 0;
+        isFinish = 0;
         case (state)
             S_IDLE: begin
                 if (cache_req_valid & !isHit) begin
@@ -92,6 +95,7 @@ module CacheControl (
                     nextState = S_IDLE;
                 end else begin
                     cache_res_stall = 1;
+                    isFinish = 1;
                     nextState = S_FILL_WAIT;
                 end
             end
