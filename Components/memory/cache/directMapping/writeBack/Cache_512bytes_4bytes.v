@@ -20,7 +20,7 @@ module Cache_512bytes_4bytes (
     mem_req_wen,  // if memory write enable
     mem_req_valid,  // is write/read request to memory valid
     mem_res_data,  // read data from memory to cache
-    mem_res_valid  // is task that read data from memory done
+    mem_res_valid  // is task that write/read data from memory done
 );
     input  wire        clk;
     input  wire        rst;
@@ -87,8 +87,6 @@ module Cache_512bytes_4bytes (
             end
         end
     end
-
-
 
 endmodule
 
