@@ -81,28 +81,15 @@ module Cache_512bytes_4bytes (
 
     // write
     integer i;
-    always @(posedge clk or rst) begin
-        if (rst) begin
-            // clean dataStorage valid bits
-            for (i = 0; i < 128; i = i + 1) begin
-                dataStorage[i] = 57'b0;
-            end
-        end else begin
-            if (isWriteDataStorage) begin
-                dataStorage[addressIndexField][56:25] = 
-                    cache_req_data;
-            end else begin
-                dataStorage[addressIndexField][56:25] = 
-                    dataStorage[addressIndexField][56:25];
-            end
-        end
-    end
+    always @(posedge isAllocateFinish or posedge clk or rst) begin
+        if (isAllocateFinish) begin
+            // data field
+            dataStorage[addressIndexField][56:25] = mem_res_data;
 
-    always @(posedge isAllocateFinish) begin
-    // dirty bit
-        // if (cache_req_valid) begin
+            // dirty bit
             if (cache_req_wen) begin
                 dataStorage[addressIndexField][0] = 1;
+                dataStorage[addressIndexField][56:25] = cache_req_data;
             end else begin
                 if (isHit) begin
                     dataStorage[addressIndexField][0] = dataStorage[addressIndexField][0];
@@ -110,20 +97,27 @@ module Cache_512bytes_4bytes (
                     dataStorage[addressIndexField][0] = 0;
                 end
             end
-        // end else begin
-        //     dataStorage[addressIndexField][0] = dataStorage[addressIndexField][0];
-        // end
 
-    // valid bit
-    // this change must be after that to dirty bit
-        // if (cache_req_valid) begin
+            // valid bit
+            // this change must be after that to dirty bit
             dataStorage[addressIndexField][1] = 1;
-        // end else begin
-        //     dataStorage[addressIndexField][1] = dataStorage[addressIndexField][0];
-        // end
-
-    // data field
-        dataStorage[addressIndexField][56:25] = mem_res_data;
+        
+        end else begin
+            if (rst) begin
+                // clean dataStorage valid bits
+                for (i = 0; i < 128; i = i + 1) begin
+                    dataStorage[i] = 57'b0;
+                end
+            end else begin
+                if (isWriteDataStorage) begin
+                    dataStorage[addressIndexField][56:25] = 
+                        cache_req_data;
+                end else begin
+                    dataStorage[addressIndexField][56:25] = 
+                        dataStorage[addressIndexField][56:25];
+                end
+            end
+        end
     end
 
     CacheControl cacheControl_inst(
