@@ -61,11 +61,14 @@ module Cache_512bytes_4bytes (
     wire        dirtyBit = dataStorageRowSelected[0];
     wire [22:0] tagField = dataStorageRowSelected[24:2];
     wire [31:0] dataField = dataStorageRowSelected[56:25];
+    wire        isHit = 
+                    addressTagField == tagField &
+                    validBit;
 
-    wire isWriteDataStorage = cache_req_wen & 
-                   cache_req_valid &
-                   addressTagField == tagField &
-                   validBit;
+    wire isWriteDataStorage =
+        cache_req_wen & 
+        cache_req_valid &
+        isHit;
 
     integer i;
     always @(posedge clk or rst) begin
@@ -76,12 +79,16 @@ module Cache_512bytes_4bytes (
             end
         end else begin
             if (isWriteDataStorage) begin
-                dataStorage[addressIndexField][56:25] = cache_req_data;
+                dataStorage[addressIndexField][56:25] = 
+                    cache_req_data;
             end else begin
-                dataStorage[addressIndexField][56:25] = dataStorage[addressIndexField][57:26];
+                dataStorage[addressIndexField][56:25] = 
+                    dataStorage[addressIndexField][57:26];
             end
         end
     end
+
+
 
 endmodule
 
