@@ -22,20 +22,22 @@ module Cache_512bytes_4bytes (
     mem_res_data,  // read data from memory to cache
     mem_res_valid  // is task that read data from memory done
 );
-    input         clk;
-    input         rst;
-    input  [31:0] cache_req_addr;
-    input  [31:0] cache_req_data;
-    input         cache_req_wen;
-    input         cache_req_valid;
-    output [31:0] cache_res_data;
-    output        cache_res_stall;
-    output [31:0] mem_req_addr;
-    output [31:0] mem_req_data;
-    output        mem_req_wen;
-    output        mem_req_valid;
-    input  [31:0] mem_res_data;
-    input         mem_res_valid;
+    input  wire        clk;
+    input  wire        rst;
+    input  wire [31:0] cache_req_addr;
+    input  wire [31:0] cache_req_data;
+    input  wire        cache_req_wen;
+    input  wire        cache_req_valid;
+    output wire [31:0] cache_res_data;
+    output wire        cache_res_stall;
+    output wire [31:0] mem_req_addr;
+    output wire [31:0] mem_req_data;
+    output wire        mem_req_wen;
+    output wire        mem_req_valid;
+    input  wire [31:0] mem_res_data;
+    input  wire        mem_res_valid;
+
+    assign mem_req_addr = cache_req_addr;
     
     // data storage
     // fields:
@@ -57,22 +59,26 @@ module Cache_512bytes_4bytes (
     wire [56:0] dataStorageRowSelected = dataStorage[addressIndexField];
     wire        validBit = dataStorageRowSelected[1];
     wire        dirtyBit = dataStorageRowSelected[0];
-    wire [22:0] tagField = dataStorageRowSelected[25:2];
-    wire [31:0] dataField = dataStorageRowSelected[57:26];
+    wire [22:0] tagField = dataStorageRowSelected[24:2];
+    wire [31:0] dataField = dataStorageRowSelected[56:25];
 
     wire isWriteDataStorage = cache_req_wen & 
                    cache_req_valid &
                    addressTagField == tagField &
                    validBit;
 
+    integer i;
     always @(posedge clk or rst) begin
         if (rst) begin
-            
+            // clean dataStorage valid bits
+            for (i = 0; i < 128; i = i + 1) begin
+                dataStorage[i] = 57'b0;
+            end
         end else begin
             if (isWriteDataStorage) begin
-                dataStorage[addressIndexField][57:26] = cache_req_data;
+                dataStorage[addressIndexField][56:25] = cache_req_data;
             end else begin
-                dataStorage[addressIndexField][57:26] = dataStorage[addressIndexField][57:26];
+                dataStorage[addressIndexField][56:25] = dataStorage[addressIndexField][57:26];
             end
         end
     end
