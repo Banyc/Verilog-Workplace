@@ -28,22 +28,25 @@ module CacheControl (
     reg [2:0] nextState;
 
     // Cache 正常读写,即 Load/Store 命中或者未使用 Cache。
-    parameter S_IDLE = 0;
+    parameter S_IDLE = 3'h0;
     // 发生 Cache Miss,且被替换块中存在脏数,此时需要对脏数据先进行写回
     // write back dirty page to memory
-    parameter S_BACK = 1;
+    parameter S_BACK = 3'h1;
     // 写回等待阶段,完成后自动跳转至 S_FILL 状态。
-    parameter S_BACK_WAIT = 2;
+    parameter S_BACK_WAIT = 3'h2;
     // 发生 Cache Miss 或者写回已经完成,目标位置上不存在脏数据,可以直接从 Memory 中取回数据进行替换。
-    parameter S_FILL = 3;
+    parameter S_FILL = 3'h3;
     // 填充等待阶段,完成后表示目标数据已经加载到 Cache 中,自动跳转至 S_IDLE 状态。
-    parameter S_FILL_WAIT = 4;
+    parameter S_FILL_WAIT = 3'h4;
 
-    always @(posedge clk or rst) begin
+    integer testIter = 0;
+
+    always @(posedge clk or posedge rst) begin
         if (rst) begin
-            state = S_IDLE;
+            state <= S_IDLE;
         end else begin
-            state = nextState;
+            state <= nextState;
+            testIter = testIter + 1;
         end
     end
 
@@ -52,6 +55,7 @@ module CacheControl (
         mem_req_wen = 0;
         cache_res_stall = 0;
         isFinish = 0;
+        // nextState = 0;
         case (state)
             S_IDLE: begin
                 if (cache_req_valid & !isHit) begin
@@ -89,13 +93,13 @@ module CacheControl (
             end
             S_FILL_WAIT: begin
                 if (mem_res_valid) begin
+                    cache_res_stall = 1;
+                    isFinish = 1;
+                    nextState = S_IDLE;
+                end else begin
                     mem_req_valid = 1;
                     mem_req_wen = 0;
                     cache_res_stall = 1;
-                    nextState = S_IDLE;
-                end else begin
-                    cache_res_stall = 1;
-                    isFinish = 1;
                     nextState = S_FILL_WAIT;
                 end
             end
