@@ -28,20 +28,22 @@ assign clk_latency = clkdiv[3];
 // limits the positive time of `isFinish` to only one `clk` circle.
 reg shouldDeactivateFinish;
 
+wire hasTaskTriggered =  we && clk_latency || !we && !clk_latency;
+
 always @(posedge clk or posedge rst) begin
     if (rst) begin
         isFinish = 0;
         shouldDeactivateFinish = 1;
     end else begin
-        if (en & clk_latency & !shouldDeactivateFinish) begin
+        if (en & hasTaskTriggered && !shouldDeactivateFinish) begin
             isFinish = 1;
             shouldDeactivateFinish = 0;
         end else begin
             isFinish = 0;
-            if (clk_latency) begin
+            if (hasTaskTriggered) begin
                 shouldDeactivateFinish = 1;
             end else begin
-                // prepare for the next `posedge clk_latency`
+                // prepare for the next `posedge hasTaskTriggered`
                 shouldDeactivateFinish = 0;
             end
         end
@@ -52,8 +54,8 @@ Ram32b ram(
     .clk(clk_latency),
     .rst(rst),
     .address(addr[31:0]),
-    .readEnable(en & !we),
-    .writeEnable(en & we),
+    .readEnable(en && !we),
+    .writeEnable(en && we),
     .writeData(data_in[31:0]),
     .readData(data_out[31:0])
 );

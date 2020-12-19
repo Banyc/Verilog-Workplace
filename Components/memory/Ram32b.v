@@ -2,6 +2,7 @@
 `define __Ram32b__
 
 
+// posedge write; negedge read
 // word size := 32 bits
 // address size := 32 bits
 // 最小寻址单位
