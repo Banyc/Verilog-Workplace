@@ -76,11 +76,11 @@ module CacheControl (
             end
             S_BACK_WAIT: begin
                 if (mem_res_valid) begin
-                    mem_req_valid = 1;
-                    mem_req_wen = 1;
                     cache_res_stall = 1;
                     nextState = S_FILL;
                 end else begin
+                    mem_req_valid = 1;
+                    mem_req_wen = 1;
                     cache_res_stall = 1;
                     nextState = S_BACK_WAIT;
                 end

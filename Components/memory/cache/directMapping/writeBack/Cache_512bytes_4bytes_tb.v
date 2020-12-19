@@ -24,7 +24,7 @@ module Cache_512bytes_4bytes_tb (
     wire        mem_res_valid;
 
 
-    Cache_512bytes_4bytes testSubject(
+    Cache_512bytes_4bytes cache(
         clk,
         rst,
         cache_req_addr,  // write/read address from pipeline
@@ -64,28 +64,65 @@ module Cache_512bytes_4bytes_tb (
 
     initial begin
         $dumpfile("Cache_512bytes_4bytes_tb.vcd"); $dumpvars(0, Cache_512bytes_4bytes_tb);
-        clk = 0;
+        clk = 1;
         rst = 1;
         # 10;
         rst = 0;
 
         # 10;
+        # 1;
         // write 0xbeef to 0x4
         cache_req_addr = 32'h4;
         cache_req_data = 32'hbeef;
         cache_req_wen = 1;
         cache_req_valid = 1;
-        # 1;
         # 10;
         cache_req_valid = 0;
         cache_req_wen = 0;
+        # 150;
         // read 0x4
+        cache_req_addr = 32'h4;
+        cache_req_wen = 0;
+        cache_req_valid = 1;
+        # 10;
+        cache_req_valid = 0;
+        # 150;
+        // read 0x8
+        cache_req_addr = 32'h8;
+        cache_req_wen = 0;
+        cache_req_valid = 1;
+        # 10;
+        cache_req_valid = 0;
+        # 150;
+        // write 0xdead to 0x4 + (128 << 2)
+        cache_req_addr = (32'd128 << 2) + 32'h4;
+        cache_req_data = 32'hdead;
+        cache_req_wen = 1;
+        cache_req_valid = 1;
+        # 10;
+        cache_req_valid = 0;
+        # 150;
+        // write 0xf00d to 0x8 + (128 << 2)
+        cache_req_addr = (32'd128 << 2) + 32'h8;
+        cache_req_data = 32'hf00d;
+        cache_req_wen = 1;
+        cache_req_valid = 1;
+        # 10;
+        cache_req_valid = 0;
+        # 150;
+        // read 0x4
+        cache_req_addr = 32'h4;
+        cache_req_wen = 0;
+        cache_req_valid = 1;
+        # 10;
+        cache_req_valid = 0;
+        # 150;
         
         #2900; $finish;
     end
 
     always begin
-        # 10;
+        # 5;
         clk = !clk;
     end
 

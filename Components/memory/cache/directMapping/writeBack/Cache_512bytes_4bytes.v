@@ -55,8 +55,8 @@ module Cache_512bytes_4bytes (
     //   - column length: 128
     reg [56:0] dataStorage [127:0];
 
-    wire addressTagField = cache_req_addr[31:9];
-    wire addressIndexField = cache_req_addr[8:2];
+    wire [22:0] addressTagField = cache_req_addr[31:9];
+    wire [6:0] addressIndexField = cache_req_addr[8:2];
 
     wire [56:0] dataStorageRowSelected = dataStorage[addressIndexField];
     wire        validBit = dataStorageRowSelected[1];
@@ -64,27 +64,38 @@ module Cache_512bytes_4bytes (
     wire [22:0] tagField = dataStorageRowSelected[24:2];
     wire [31:0] dataField = dataStorageRowSelected[56:25];
     wire        isHit = 
-                    addressTagField == tagField &
+                    addressTagField == tagField &&
                     validBit;
 
     assign mem_req_data = dataField;
 
     wire isWriteDataStorage =
-        cache_req_wen & 
-        cache_req_valid &
-        isHit;
+        // !validBit ||
+        (
+            cache_req_wen &&
+            cache_req_valid &&
+            isHit
+        );
 
     wire isAllocateFinish;
 
     // read
     assign cache_res_data = dataStorage[addressIndexField][56:25];
 
+    // debug counters
+    integer updateCount_simpleWrite = 0;
+    integer updateCount_allocate = 0;
+
     // write
     integer i;
-    always @(posedge isAllocateFinish or posedge clk or posedge rst) begin
+    always @(posedge clk or posedge rst) begin
         if (isAllocateFinish) begin
             // data field
             dataStorage[addressIndexField][56:25] = mem_res_data;
+            // tag field
+            dataStorage[addressIndexField][24:2] =
+                addressTagField;
+            updateCount_allocate = updateCount_allocate + 1;
         
         end else begin
             if (rst) begin
@@ -94,11 +105,18 @@ module Cache_512bytes_4bytes (
                 end
             end else begin
                 if (isWriteDataStorage) begin
+                    // data field
                     dataStorage[addressIndexField][56:25] = 
                         cache_req_data;
+                    // tag field
+                    dataStorage[addressIndexField][24:2] =
+                        addressTagField;
+                    updateCount_simpleWrite = updateCount_simpleWrite + 1;
                 end else begin
                     dataStorage[addressIndexField][56:25] = 
                         dataStorage[addressIndexField][56:25];
+                    dataStorage[addressIndexField][24:2] =
+                        dataStorage[addressIndexField][24:2];
                 end
 
                 // why change dirty/valid bit before allocating?
@@ -106,7 +124,7 @@ module Cache_512bytes_4bytes (
                 // dirty bit
                 if (cache_req_wen) begin
                     dataStorage[addressIndexField][0] = 1;
-                    dataStorage[addressIndexField][56:25] = cache_req_data;
+                    // dataStorage[addressIndexField][56:25] = cache_req_data;
                 end else begin
                     if (isHit) begin
                         dataStorage[addressIndexField][0] = dataStorage[addressIndexField][0];
