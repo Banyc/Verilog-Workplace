@@ -25,14 +25,25 @@ end
 wire clk_latency;
 assign clk_latency = clkdiv[3];
 
-always @(posedge clk_latency or posedge rst) begin
+// limits the positive time of `isFinish` to only one `clk` circle.
+reg shouldDeactivateFinish;
+
+always @(posedge clk or posedge rst) begin
     if (rst) begin
         isFinish = 0;
+        shouldDeactivateFinish = 1;
     end else begin
-        if (en) begin
+        if (en & clk_latency & !shouldDeactivateFinish) begin
             isFinish = 1;
+            shouldDeactivateFinish = 0;
         end else begin
             isFinish = 0;
+            if (clk_latency) begin
+                shouldDeactivateFinish = 1;
+            end else begin
+                // prepare for the next `posedge clk_latency`
+                shouldDeactivateFinish = 0;
+            end
         end
     end
 end
