@@ -86,8 +86,7 @@ module RiscV5StageDatapathCacheNativeWrap_tb(
         
         # 10;
 
-        // #10000; $finish;
-        #2900; $finish;
+        #20000; $finish;
     end
 
     always begin

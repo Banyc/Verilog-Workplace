@@ -3,8 +3,8 @@
 
 `include "Components/cpu/riscv/5stage/RiscV5StageDatapath.v"
 `include "Components/memory/LatencyRam.v"
+`include "Components/memory/LatencyRom.v"
 `include "Components/memory/cache/directMapping/writeBack/Cache_512bytes_4bytes.v"
-`include "Components/memory/Rom32b.v"
 
 module RiscV5StageDatapathCacheNativeWrap (
     clk,
@@ -26,14 +26,15 @@ module RiscV5StageDatapathCacheNativeWrap (
     input wire [4:0] regFileReadRegisterDebug;
     output wire [31:0] regFileReadDataDebug;
 
-    wire isStallAll;
+    wire ram_isStallAll;
+    wire rom_isStallAll;
 
     // CPU
     RiscV5StageDatapath cpu(
         .clk(clk),
         .rst(rst),
         // external control
-        .isStallAll(isStallAll),
+        .isStallAll(ram_isStallAll || rom_isStallAll),
         // ROM
         .instruction(instruction),
         .pc(pc),
@@ -63,7 +64,7 @@ module RiscV5StageDatapathCacheNativeWrap (
         .cache_req_wen(memoryWriteEnable),  // if cache write enable
         .cache_req_valid(memoryReadEnable || memoryWriteEnable),  // is write/read request to cache valid
         .cache_res_data(memoryReadData),  // read data from cache to pipeline
-        .cache_res_stall(isStallAll),  // should pipeline stall
+        .cache_res_stall(ram_isStallAll),  // should pipeline stall
         .mem_req_addr(ram_mem_req_addr),  // write/read address to memory
         .mem_req_data(ram_mem_req_data),  // data to write to memory
         .mem_req_wen(ram_mem_req_wen),  // if memory write enable
@@ -84,10 +85,33 @@ module RiscV5StageDatapathCacheNativeWrap (
     // end: RAM datapath
 
     // begin: ROM datapath
-    Rom32b rom32b_inst(
+    wire [31:0] rom_mem_req_addr; 
+    wire        rom_mem_req_valid;
+    wire [31:0] rom_mem_res_data; 
+    wire        rom_mem_res_valid;
+    Cache_512bytes_4bytes rom_cache_inst(
+        .clk(!clk),
         .rst(rst),
-        .readAddress(pc),
-        .data(instruction)
+        .cache_req_addr(pc),  // write/read address from pipeline
+        .cache_req_data(32'b0),  // data to write to cache, which is required from pipeline
+        .cache_req_wen(1'b0),  // if cache write enable
+        .cache_req_valid(1'b1),  // is write/read request to cache valid
+        .cache_res_data(instruction),  // read data from cache to pipeline
+        .cache_res_stall(rom_isStallAll),  // should pipeline stall
+        .mem_req_addr(rom_mem_req_addr),  // write/read address to memory
+        .mem_req_data(),  // data to write to memory
+        .mem_req_wen(),  // if memory write enable
+        .mem_req_valid(rom_mem_req_valid),  // is write/read request to memory valid
+        .mem_res_data(rom_mem_res_data),  // read data from memory to cache
+        .mem_res_valid(rom_mem_res_valid)  // is task that write/read data from memory done
+    );
+    LatencyRom rom_inst(
+        .clk(!clk),
+        .rst(rst),
+        .en(rom_mem_req_valid),
+        .addr(rom_mem_req_addr),
+        .data_out(rom_mem_res_data),
+        .hasFinished(rom_mem_res_valid)
     );
     // end: ROM datapath
     
