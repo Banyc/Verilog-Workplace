@@ -19,3 +19,8 @@ w%:
 g%:
 	yosys -p "read_verilog $*.v; synth; show; write_verilog $*.opt.v"
 	dot -Tpng show.dot > show.png
+
+.PHONY: clean
+clean:
+	del *.vcd
+	del *.vvp
