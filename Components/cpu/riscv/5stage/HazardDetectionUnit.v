@@ -83,11 +83,14 @@ module HazardDetectionUnit (
         `riscv32_5stage_mem_wb_sel_aluOut &&
         wb_regFileWriteEnable == 1;
 
-    // not include store instruction
-    wire dec_hasRs2 = dec_signal_op2Sel == `riscv32_5stage_op2Sel_rs2;
+    // not include store/branch instruction
+    wire dec_hasRs2AsOp2 = dec_signal_op2Sel == `riscv32_5stage_op2Sel_rs2;
 
     wire dec_isStore = dec_signal_op2Sel == `riscv32_5stage_op2Sel_sTypeSignExtend;
 
+    wire dec_isBranch = dec_signal_op2Sel == `riscv32_5stage_op2Sel_bTypeSignExtend;
+
+    wire dec_hasRs2 = dec_hasRs2AsOp2 || dec_isStore || dec_isBranch;
 
     // stalling
     always @(*) begin
@@ -177,13 +180,21 @@ module HazardDetectionUnit (
             &&
             exe_regFileWriteAddress == dec_rs2Address
         ) begin
-            dec_forwardingOp2Sel <= `riscv32_5stage_dec_forwarding_exe_aluOut;
-            // dec_forwardingRs2Sel don't care
-            dec_forwardingRs2Sel <= `riscv32_5stage_dec_forwarding_none;
+            if (dec_isStore || dec_isBranch) begin
+                // dec_forwardingOp2Sel = dec_sTypeSignExtend
+                //   or dec_forwardingOp2Sel = dec_bTypeSignExtend
+                dec_forwardingOp2Sel <= `riscv32_5stage_dec_forwarding_none;
+                dec_forwardingRs2Sel <= `riscv32_5stage_dec_forwarding_exe_aluOut;
+            end
+            else begin
+                dec_forwardingOp2Sel <= `riscv32_5stage_dec_forwarding_exe_aluOut;
+                // dec_forwardingRs2Sel don't care
+                dec_forwardingRs2Sel <= `riscv32_5stage_dec_forwarding_none;
+            end
         end
         // mem.load || mem.arithmatic
         else if (
-            (dec_hasRs2 || dec_isStore)
+            dec_hasRs2
             &&
             (mem_isLoad || mem_isArithmetic)
             &&
@@ -191,8 +202,9 @@ module HazardDetectionUnit (
             &&
             mem_regFileWriteAddress == dec_rs2Address
         ) begin
-            if (dec_isStore) begin
+            if (dec_isStore || dec_isBranch) begin
                 // dec_forwardingOp2Sel = dec_sTypeSignExtend
+                //   or dec_forwardingOp2Sel = dec_bTypeSignExtend
                 dec_forwardingOp2Sel <= `riscv32_5stage_dec_forwarding_none;
                 dec_forwardingRs2Sel <= `riscv32_5stage_dec_forwarding_mem_wb_sel_out;
             end
@@ -204,7 +216,7 @@ module HazardDetectionUnit (
         end
         // wb.load || wb.arithmetic
         else if (
-            (dec_hasRs2 || dec_isStore)
+            dec_hasRs2
             &&
             (wb_isLoad || wb_isArithmetic)
             &&
@@ -212,8 +224,9 @@ module HazardDetectionUnit (
             &&
             wb_regFileWriteAddress == dec_rs2Address
         ) begin
-            if (dec_isStore) begin
+            if (dec_isStore || dec_isBranch) begin
                 // dec_forwardingOp2Sel = dec_sTypeSignExtend
+                //   or dec_forwardingOp2Sel = dec_bTypeSignExtend
                 dec_forwardingOp2Sel <= `riscv32_5stage_dec_forwarding_none;
                 dec_forwardingRs2Sel <= `riscv32_5stage_dec_forwarding_wb_wbData;
             end
