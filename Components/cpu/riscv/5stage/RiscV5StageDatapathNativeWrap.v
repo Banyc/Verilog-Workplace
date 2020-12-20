@@ -29,6 +29,8 @@ module RiscV5StageDatapathNativeWrap (
     RiscV5StageDatapath cpu(
         .clk(clk),
         .rst(rst),
+        // external control
+        .isStallAll(1'b0),
         // ROM
         .instruction(instruction),
         .pc(pc),

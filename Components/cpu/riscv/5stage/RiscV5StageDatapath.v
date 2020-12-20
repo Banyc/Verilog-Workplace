@@ -26,6 +26,8 @@
 module RiscV5StageDatapath (
     clk,
     rst,
+    // external control
+    isStallAll,
     // ROM
     pc,
     instruction,
@@ -41,6 +43,7 @@ module RiscV5StageDatapath (
 );
     input wire clk;
     input wire rst;
+    input wire isStallAll;
 
     // dummy outputs
     wire       exe_dummyOutput1b_controlSignals;
@@ -224,7 +227,7 @@ module RiscV5StageDatapath (
     RegisterResettable32b pc_inst(
         .clk(clk),
         .rst(rst),
-        .enableWrite(global_signal_pcWriteEnable),
+        .enableWrite(global_signal_pcWriteEnable & !isStallAll),
         .d(pc_sel_out),
         .q(if_pc)
     );
@@ -256,13 +259,13 @@ module RiscV5StageDatapath (
     wire [31:0] dec_instruction;
     Register32b if_dec_pc_inst(
         .clk(clk),
-        .enableWrite(1'b1),
+        .enableWrite(!isStallAll),
         .d(if_pc),
         .q(dec_pc)
     );
     Register32b if_dec_instruction_inst(
         .clk(clk),
-        .enableWrite(1'b1),
+        .enableWrite(!isStallAll),
         .d(if_kill_out),
         .q(dec_instruction)
     );
@@ -410,25 +413,25 @@ module RiscV5StageDatapath (
     wire [31:0] exe_rs2;
     Register32b dec_exe_pc_inst(
         .clk(clk),
-        .enableWrite(1'b1),
+        .enableWrite(!isStallAll),
         .d(dec_pc),
         .q(exe_pc)
     );
     Register32b dec_exe_op1_inst(
         .clk(clk),
-        .enableWrite(1'b1),
+        .enableWrite(!isStallAll),
         .d(dec_forwardingOp1Sel_mux_out),
         .q(exe_op1)
     );
     Register32b dec_exe_op2_inst(
         .clk(clk),
-        .enableWrite(1'b1),
+        .enableWrite(!isStallAll),
         .d(dec_forwardingOp2Sel_mux_out),
         .q(exe_op2)
     );
     Register32b dec_exe_rs2_inst(
         .clk(clk),
-        .enableWrite(1'b1),
+        .enableWrite(!isStallAll),
         .d(dec_forwardingRs2Sel_mux_out),
         .q(exe_rs2)
     );
@@ -436,7 +439,7 @@ module RiscV5StageDatapath (
     RegisterResettable32b dec_exe_controlSignals_inst(
         .clk(clk),
         .rst(rst),
-        .enableWrite(1'b1),
+        .enableWrite(!isStallAll),
         .d(dec_kill_out),
         .q({
             exe_dummyOutput7b_controlSignals,
@@ -507,19 +510,19 @@ module RiscV5StageDatapath (
     wire [31:0] mem_rs1;
     Register32b exe_mem_aluOut_inst(
         .clk(clk),
-        .enableWrite(1'b1),
+        .enableWrite(!isStallAll),
         .d(exe_wb_sel_out),
         .q(mem_aluOut)
     );
     Register32b exe_mem_rs2_inst(
         .clk(clk),
-        .enableWrite(1'b1),
+        .enableWrite(!isStallAll),
         .d(exe_rs2),
         .q(mem_rs2)
     );
     Register32b exe_mem_rs1_inst(
         .clk(clk),
-        .enableWrite(1'b1),
+        .enableWrite(!isStallAll),
         .d(exe_op1),
         .q(mem_rs1)
     );
@@ -527,7 +530,7 @@ module RiscV5StageDatapath (
     RegisterResettable32b exe_mem_controlSignals_inst(
         .clk(clk),
         .rst(rst),
-        .enableWrite(1'b1),
+        .enableWrite(!isStallAll),
         .d({
             7'b0,
             exe_signal_isBne,
@@ -590,7 +593,7 @@ module RiscV5StageDatapath (
     // begin: Stage registers
     Register32b mem_wb_wbData_inst(
         .clk(clk),
-        .enableWrite(1'b1),
+        .enableWrite(!isStallAll),
         .d(mem_wb_sel_out),
         .q(wb_wbData)
     );
@@ -599,7 +602,7 @@ module RiscV5StageDatapath (
     RegisterResettable32b mem_wb_controlSignals_inst(
         .clk(clk),
         .rst(rst),
-        .enableWrite(1'b1),
+        .enableWrite(!isStallAll),
         .d({
             7'b0,
             mem_signal_isBne,
