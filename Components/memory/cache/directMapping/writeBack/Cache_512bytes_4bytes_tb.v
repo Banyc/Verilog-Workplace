@@ -25,7 +25,7 @@ module Cache_512bytes_4bytes_tb (
 
 
     Cache_512bytes_4bytes cache(
-        clk,
+        !clk,
         rst,
         cache_req_addr,  // write/read address from pipeline
         cache_req_data,  // data to write to cache, which is required from pipeline
@@ -42,7 +42,7 @@ module Cache_512bytes_4bytes_tb (
     );
 
     LatencyRam ram(
-        .clk(clk),
+        .clk(!clk),
         .rst(rst),
         .en(mem_req_valid),
         .we(mem_req_wen),
@@ -62,61 +62,101 @@ module Cache_512bytes_4bytes_tb (
     //     .readData(mem_res_data)
     // );
 
+    reg [31:0] readData;
+
+    integer state = 0;
+    always @(posedge clk) begin
+        if (cache_res_stall) begin
+            state <= state;
+        end else begin
+            readData = cache_res_data;
+            case (state)
+                0: begin
+                    cache_req_valid = 0;
+                    state <= 1;
+                end
+                1: begin
+                    cache_req_valid = 0;
+                    state <= 2;
+                end
+                2: begin
+                    cache_req_valid = 0;
+                    state <= 3;
+                end
+                3: begin
+                    // write 0xbeef to 0x4
+                    cache_req_addr = 32'h4;
+                    cache_req_data = 32'hbeef;
+                    cache_req_wen = 1;
+                    cache_req_valid = 1;
+                    
+                    state <= 4;
+                end
+                4: begin
+                    // read 0x4
+                    cache_req_addr = 32'h4;
+                    cache_req_data = 32'haaaa;
+                    cache_req_wen = 0;
+                    cache_req_valid = 1;
+                    
+                    state <= 5;
+                end
+                5: begin
+                    // read 0x8
+                    cache_req_addr = 32'h8;
+                    cache_req_data = 32'haaaa;
+                    cache_req_wen = 0;
+                    cache_req_valid = 1;
+                    
+                    state <= 6;
+                end
+                6: begin
+                    // write 0xdead to 0x4 + (128 << 2)
+                    cache_req_addr = (32'd128 << 2) + 32'h4;
+                    cache_req_data = 32'hdead;
+                    cache_req_wen = 1;
+                    cache_req_valid = 1;
+                    
+                    state <= 7;
+                end
+                7: begin
+                    // write 0xf00d to 0x8 + (128 << 2)
+                    cache_req_addr = (32'd128 << 2) + 32'h8;
+                    cache_req_data = 32'hf00d;
+                    cache_req_wen = 1;
+                    cache_req_valid = 1;
+                    
+                    state <= 8;
+                end
+                8: begin
+                    // read 0x4
+                    cache_req_addr = 32'h4;
+                    cache_req_data = 32'haaaa;
+                    cache_req_wen = 0;
+                    cache_req_valid = 1;
+                    
+                    state <= 9;
+                end
+                9: begin
+                    // dummy state to update state
+                    cache_req_valid = 0;
+                    state <= 10;
+                end
+
+                default: begin
+                    cache_req_valid = 0;
+                    state <= state;
+                end
+            endcase
+        end
+    end
+
     initial begin
         $dumpfile("Cache_512bytes_4bytes_tb.vcd"); $dumpvars(0, Cache_512bytes_4bytes_tb);
         clk = 1;
         rst = 1;
         # 10;
         rst = 0;
-
-        # 10;
-        # 1;
-        // write 0xbeef to 0x4
-        cache_req_addr = 32'h4;
-        cache_req_data = 32'hbeef;
-        cache_req_wen = 1;
-        cache_req_valid = 1;
-        # 10;
-        cache_req_valid = 0;
-        cache_req_wen = 0;
-        # 150;
-        // read 0x4
-        cache_req_addr = 32'h4;
-        cache_req_wen = 0;
-        cache_req_valid = 1;
-        # 10;
-        cache_req_valid = 0;
-        # 150;
-        // read 0x8
-        cache_req_addr = 32'h8;
-        cache_req_wen = 0;
-        cache_req_valid = 1;
-        # 10;
-        cache_req_valid = 0;
-        # 150;
-        // write 0xdead to 0x4 + (128 << 2)
-        cache_req_addr = (32'd128 << 2) + 32'h4;
-        cache_req_data = 32'hdead;
-        cache_req_wen = 1;
-        cache_req_valid = 1;
-        # 10;
-        cache_req_valid = 0;
-        # 150;
-        // write 0xf00d to 0x8 + (128 << 2)
-        cache_req_addr = (32'd128 << 2) + 32'h8;
-        cache_req_data = 32'hf00d;
-        cache_req_wen = 1;
-        cache_req_valid = 1;
-        # 10;
-        cache_req_valid = 0;
-        # 150;
-        // read 0x4
-        cache_req_addr = 32'h4;
-        cache_req_wen = 0;
-        cache_req_valid = 1;
-        # 10;
-        cache_req_valid = 0;
-        # 150;
         
         #2900; $finish;
     end
