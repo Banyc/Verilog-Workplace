@@ -3,7 +3,7 @@
 
 `include "Components/memory/ram32b.v"
 
-
+// both write and read finish at `posedge clk`
 module LatencyRam(
     input clk,
     input rst,
