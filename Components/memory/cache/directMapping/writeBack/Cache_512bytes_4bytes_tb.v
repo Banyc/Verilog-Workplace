@@ -49,7 +49,7 @@ module Cache_512bytes_4bytes_tb (
         .addr(mem_req_addr),
         .data_in(mem_req_data),
         .data_out(mem_res_data),
-        .isFinish(mem_res_valid)
+        .hasFinished(mem_res_valid)
     );
 
     // Ram32b ram(

@@ -79,7 +79,7 @@ module RiscV5StageDatapathCacheNativeWrap (
         .addr(ram_mem_req_addr),
         .data_in(ram_mem_req_data),
         .data_out(ram_mem_res_data),
-        .isFinish(ram_mem_res_valid)
+        .hasFinished(ram_mem_res_valid)
     );
     // end: RAM datapath
 

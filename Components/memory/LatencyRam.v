@@ -12,7 +12,7 @@ module LatencyRam(
     input [31:0] addr,
     input [31:0] data_in,
     output [31:0] data_out,
-    output reg isFinish
+    output reg hasFinished  // only persists for one `clk` circle.
 );
 
 reg [31:0] clkdiv = 0; 
@@ -25,21 +25,21 @@ end
 wire clk_latency;
 assign clk_latency = clkdiv[3];
 
-// limits the positive time of `isFinish` to only one `clk` circle.
+// limits the positive time of `hasFinished` to only one `clk` circle.
 reg shouldDeactivateFinish;
 
 wire hasTaskTriggered =  we && clk_latency || !we && !clk_latency;
 
 always @(posedge clk or posedge rst) begin
     if (rst) begin
-        isFinish = 0;
+        hasFinished = 0;
         shouldDeactivateFinish = 1;
     end else begin
         if (en & hasTaskTriggered && !shouldDeactivateFinish) begin
-            isFinish = 1;
+            hasFinished = 1;
             shouldDeactivateFinish = 0;
         end else begin
-            isFinish = 0;
+            hasFinished = 0;
             if (hasTaskTriggered) begin
                 shouldDeactivateFinish = 1;
             end else begin
