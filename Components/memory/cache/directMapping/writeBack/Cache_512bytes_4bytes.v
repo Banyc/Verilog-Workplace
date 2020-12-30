@@ -20,7 +20,9 @@ module Cache_512bytes_4bytes (
     mem_req_wen,  // if memory write enable
     mem_req_valid,  // is write/read request to memory valid
     mem_res_data,  // read data from memory to cache
-    mem_res_valid  // is task that write/read data from memory done
+    mem_res_valid,  // is task that write/read data from memory done
+    debugCacheIndex,
+    debugCacheRowOutput
 );
     input  wire        clk;
     input  wire        rst;
@@ -36,6 +38,10 @@ module Cache_512bytes_4bytes (
     output reg         mem_req_valid;
     input  wire [31:0] mem_res_data;
     input  wire        mem_res_valid;
+
+    input wire [6:0] debugCacheIndex;
+    output wire [56:0] debugCacheRowOutput;
+    assign debugCacheRowOutput = dataStorage[debugCacheIndex];
 
     // data storage
     // fields:

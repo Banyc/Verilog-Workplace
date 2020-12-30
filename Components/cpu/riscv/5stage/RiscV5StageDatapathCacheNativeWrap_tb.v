@@ -11,6 +11,10 @@ module RiscV5StageDatapathCacheNativeWrap_tb(
     wire [31:0] pc;
     reg [4:0] readRegisterDebug;
     wire [31:0] readDataDebug;
+    reg [6:0] romCacheIndexDebug;
+    wire [56:0] romCacheRowOutputDebug;
+    reg [6:0] ramCacheIndexDebug;
+    wire [56:0] ramCacheRowOutputDebug;
 
     // __subject__
     // CPU
@@ -22,7 +26,12 @@ module RiscV5StageDatapathCacheNativeWrap_tb(
         .pc(pc),
         // Registers
         .regFileReadRegisterDebug(readRegisterDebug),
-        .regFileReadDataDebug(readDataDebug)
+        .regFileReadDataDebug(readDataDebug),
+        // cache
+        .romCacheIndexDebug(romCacheIndexDebug),
+        .romCacheRowOutputDebug(romCacheRowOutputDebug),
+        .ramCacheIndexDebug(ramCacheIndexDebug),
+        .ramCacheRowOutputDebug(ramCacheRowOutputDebug)
     );
 
     // __inner states__
@@ -69,6 +78,8 @@ module RiscV5StageDatapathCacheNativeWrap_tb(
         // $monitor("instruction: %b, clock:%b\n", instruction, clk);
         $monitor("instruction: %b, PC: %d", instruction, pcHuman);
         readRegisterDebug = 7;
+        romCacheIndexDebug = 0;
+        ramCacheIndexDebug = 0;
         // rst = 0;
         // # 12;
         // rst = 1;

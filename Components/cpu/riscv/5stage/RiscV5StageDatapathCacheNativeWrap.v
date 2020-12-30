@@ -12,7 +12,11 @@ module RiscV5StageDatapathCacheNativeWrap (
     instruction,
     pc,
     regFileReadRegisterDebug,
-    regFileReadDataDebug
+    regFileReadDataDebug,
+    romCacheIndexDebug,
+    romCacheRowOutputDebug,
+    ramCacheIndexDebug,
+    ramCacheRowOutputDebug
 );
     input wire clk;
     input wire rst;
@@ -25,6 +29,10 @@ module RiscV5StageDatapathCacheNativeWrap (
     wire [31:0] memoryReadData;
     input wire [4:0] regFileReadRegisterDebug;
     output wire [31:0] regFileReadDataDebug;
+    input wire [6:0] romCacheIndexDebug;
+    output wire [56:0] romCacheRowOutputDebug;
+    input wire [6:0] ramCacheIndexDebug;
+    output wire [56:0] ramCacheRowOutputDebug;
 
     wire ram_isStallAll;
     wire rom_isStallAll;
@@ -70,7 +78,9 @@ module RiscV5StageDatapathCacheNativeWrap (
         .mem_req_wen(ram_mem_req_wen),  // if memory write enable
         .mem_req_valid(ram_mem_req_valid),  // is write/read request to memory valid
         .mem_res_data(ram_mem_res_data),  // read data from memory to cache
-        .mem_res_valid(ram_mem_res_valid)  // is task that write/read data from memory done
+        .mem_res_valid(ram_mem_res_valid),  // is task that write/read data from memory done
+        .debugCacheIndex(ramCacheIndexDebug),
+        .debugCacheRowOutput(ramCacheRowOutputDebug)
     );
     LatencyRam ram_inst(
         .clk(!clk),
@@ -103,7 +113,9 @@ module RiscV5StageDatapathCacheNativeWrap (
         .mem_req_wen(),  // if memory write enable
         .mem_req_valid(rom_mem_req_valid),  // is write/read request to memory valid
         .mem_res_data(rom_mem_res_data),  // read data from memory to cache
-        .mem_res_valid(rom_mem_res_valid)  // is task that write/read data from memory done
+        .mem_res_valid(rom_mem_res_valid),  // is task that write/read data from memory done
+        .debugCacheIndex(romCacheIndexDebug),
+        .debugCacheRowOutput(romCacheRowOutputDebug)
     );
     LatencyRom rom_inst(
         .clk(!clk),

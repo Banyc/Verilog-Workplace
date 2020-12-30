@@ -23,6 +23,9 @@ module Cache_512bytes_4bytes_tb (
     wire [31:0] mem_res_data;
     wire        mem_res_valid;
 
+    reg  [6:0]  cacheIndexDebug;
+    wire [56:0] cacheRowOutputDebug;
+
 
     Cache_512bytes_4bytes cache(
         !clk,
@@ -38,7 +41,9 @@ module Cache_512bytes_4bytes_tb (
         mem_req_wen,  // if memory write enable
         mem_req_valid,  // is write/read request to memory valid
         mem_res_data,  // read data from memory to cache
-        mem_res_valid  // is task that write/read data from memory done
+        mem_res_valid,  // is task that write/read data from memory done
+        cacheIndexDebug,
+        cacheRowOutputDebug
     );
 
     LatencyRam ram(
@@ -69,6 +74,7 @@ module Cache_512bytes_4bytes_tb (
         if (cache_res_stall) begin
             state <= state;
         end else begin
+            cacheIndexDebug = 0;
             readData = cache_res_data;
             case (state)
                 0: begin
