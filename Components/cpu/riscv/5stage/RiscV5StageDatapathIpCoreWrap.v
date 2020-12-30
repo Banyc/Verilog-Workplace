@@ -80,7 +80,7 @@ module RiscV5StageDatapathIpCoreWrap (
     // // end: RAM datapath
     // begin: RAM datapath
     Ram32bIp ram32b_inst(
-        .clka(!clk),
+        .clka(!clk),  // clka posedge read; negedge write
         .wea({
             memoryWriteEnable,
             memoryWriteEnable,
