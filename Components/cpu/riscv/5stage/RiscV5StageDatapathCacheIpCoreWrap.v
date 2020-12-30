@@ -137,8 +137,8 @@ module RiscV5StageDatapathCacheIpCoreWrap (
         .hasFinished(rom_mem_res_valid)
     );
     Rom32bIp rom32b_inst(
-        .a(pc[11 : 2]),
-        .spo(instruction)
+        .a(rom_mem_req_addr[11 : 2]),
+        .spo(rom_mem_res_data)
     );
     // end: ROM datapath
     
